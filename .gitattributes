@@ -3,7 +3,6 @@
 ###############################################################################
 * text=auto
 *.html linguist-vendored=false
-*.css linguist-vendored=false
 *.css linguist-language=c#
 *.html linguist-language=c#
 ###############################################################################
