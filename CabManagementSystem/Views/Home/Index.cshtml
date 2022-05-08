@@ -1,8 +1,43 @@
-﻿@{
+﻿@using Microsoft.EntityFrameworkCore;
+@using CabManagementSystem.AppContext;
+@{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
+    OrderContext orderContext = new(new DbContextOptions<OrderContext>());
 }
 @model UserModel
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+</div>
+<div class="container">
+    <form method="post" asp-controller="Home" asp-action="OrderTaxi">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Order.PhoneNumber"></label><br />
+            <input asp-for="Order.PhoneNumber" />
+            <span asp-validation-for="Order.PhoneNumber"></span>
+        </div>
+        <div>
+            <label asp-for="Order.Description"></label><br />
+            <input asp-for="Order.Description" />
+            <span asp-validation-for="Order.Description"></span>
+        </div>
+        <div>
+            <label asp-for="Order.Address"></label><br />
+            <input asp-for="Order.Address" />
+            <span asp-validation-for="Order.Address"></span>
+        </div>
+        <div>
+            <input type="submit" value="Order Taxi" style="margin-top: 10px; " />
+        </div>
+    </form>
+    @foreach (var order in orderContext.Orders)
+    {
+        <p>ID: @order.ID</p>
+        <p>UserID: @order.UserID</p>
+        <p>PhoneNumber: @order.PhoneNumber</p>
+        <p>DriverName: @order.DriverName</p>
+        <p>Description: @order.Description</p>
+        <p>Address: @order.Address</p>
+
+        <br />
+    }
 </div>

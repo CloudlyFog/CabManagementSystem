@@ -21,8 +21,6 @@ namespace CabManagementSystem.AppContext
         }
 
 
-        //handle user data
-
         /// <summary>
         /// adds user`s data in context
         /// needed properties: ID, Name, Email, Password
@@ -108,7 +106,7 @@ namespace CabManagementSystem.AppContext
         /// <summary>
         /// can return: ID, Name, Email, Password, Autenticated, Access
         /// properties NoteModel and MessageModel are not include in context and the method can`t return it
-        /// needed properties: Email and Password, for searching definite property
+        /// needed properties: Email and Password for searching definite property
         /// </summary>
         /// <param name="receivedUser"></param>
         /// <param name="userProp"></param>

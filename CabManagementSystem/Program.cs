@@ -7,6 +7,7 @@ string connection = builder.Configuration.GetConnectionString("ConnectionToDbUse
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<OrderContext>(options => options.UseSqlServer(connection));
 builder.Services.AddSession();
 var app = builder.Build();
 
