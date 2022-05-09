@@ -36,6 +36,7 @@ namespace CabManagementSystem.Controllers
             return View(user);
         }
 
+        [Route("Privacy")]
         public IActionResult Privacy()
         {
             return View();

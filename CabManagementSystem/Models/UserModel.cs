@@ -11,8 +11,12 @@ namespace CabManagementSystem.Models
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public bool Authenticated { get; set; } = false;
+        public bool Access { get; set; } = false;
 
         [NotMapped]
         public OrderModel? Order { get; set; } = new();
+
+        [NotMapped]
+        public TaxiModel? Taxi { get; set; } = new();
     }
 }
