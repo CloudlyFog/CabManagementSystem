@@ -57,10 +57,10 @@
         </div>
     </form>
     <h4>You can delete your order</h4>
-    <form method="post" asp-controller="Home" asp-action="DeleteOrder">
+    <form method="post" asp-controller="Home" asp-action="OrderCancellation">
         <input type="hidden" asp-for="Order.PhoneNumber" value="@Model.Order.PhoneNumber" />
         <input type="hidden" asp-for="Order.Description" value="@Model.Order.Description" />
         <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
-        <input type="submit" value="Delete Order" style="margin-top: 10px; " />
+        <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
     </form>
 </div>

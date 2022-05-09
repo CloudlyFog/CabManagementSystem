@@ -68,8 +68,8 @@ namespace CabManagementSystem.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost, Route("DeleteOrder")]
-        public async Task<IActionResult> DeleteOrder(UserModel user)
+        [HttpPost, Route("OrderCancellation")]
+        public async Task<IActionResult> OrderCancellation(UserModel user)
         {
             if (!applicationContext.IsAuthanticated(user.ID) && orderContext.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
