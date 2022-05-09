@@ -34,5 +34,7 @@ namespace CabManagementSystem.AppContext
             Orders.Remove(order);
             SaveChanges();
         }
+
+        public bool AlreadyOrder(Guid userID) => Orders.Any(x => x.UserID == userID);
     }
 }

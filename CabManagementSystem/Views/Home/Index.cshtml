@@ -3,12 +3,39 @@
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     OrderContext orderContext = new(new DbContextOptions<OrderContext>());
+    ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
+    string function = string.Empty;
 }
 @model UserModel
-<div>
-</div>
+<title>Home</title>
 <div class="container">
     <form method="post" asp-controller="Home" asp-action="OrderTaxi">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Order.PhoneNumber"></label><br />
+            <input value="" asp-for="Order.PhoneNumber" />
+            <span asp-validation-for="Order.PhoneNumber"></span>
+        </div>
+        <div>
+            <label asp-for="Order.Description"></label><br />
+            <input value="" asp-for="Order.Description" />
+            <span asp-validation-for="Order.Description"></span>
+        </div>
+        <div>
+            <label asp-for="Order.Address"></label><br />
+            <input value="" asp-for="Order.Address" />
+            <span asp-validation-for="Order.Address"></span>
+        </div>
+        <div>
+            <input type="submit" value="Order Taxi" style="margin-top: 10px; " />
+        </div>
+    </form>
+</div>
+<br />
+<div>
+    <h3>Your last order</h3>
+    <h4>You can edit your order</h4>
+    <form method="post" asp-controller="Home" asp-action="EditOrder">
         <div asp-validation-summary="ModelOnly"></div>
         <div>
             <label asp-for="Order.PhoneNumber"></label><br />
@@ -26,18 +53,14 @@
             <span asp-validation-for="Order.Address"></span>
         </div>
         <div>
-            <input type="submit" value="Order Taxi" style="margin-top: 10px; " />
+            <input type="submit" value="Edit Order" style="margin-top: 10px; " />
         </div>
     </form>
-    @foreach (var order in orderContext.Orders)
-    {
-        <p>ID: @order.ID</p>
-        <p>UserID: @order.UserID</p>
-        <p>PhoneNumber: @order.PhoneNumber</p>
-        <p>DriverName: @order.DriverName</p>
-        <p>Description: @order.Description</p>
-        <p>Address: @order.Address</p>
-
-        <br />
-    }
+    <h4>You can delete your order</h4>
+    <form method="post" asp-controller="Home" asp-action="DeleteOrder">
+        <input type="hidden" asp-for="Order.PhoneNumber" value="@Model.Order.PhoneNumber" />
+        <input type="hidden" asp-for="Order.Description" value="@Model.Order.Description" />
+        <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
+        <input type="submit" value="Delete Order" style="margin-top: 10px; " />
+    </form>
 </div>

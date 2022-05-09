@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CabManagementSystem.Models
@@ -14,6 +13,6 @@ namespace CabManagementSystem.Models
         public bool Authenticated { get; set; } = false;
 
         [NotMapped]
-        public OrderModel? Order { get; set; }
+        public OrderModel? Order { get; set; } = new();
     }
 }
