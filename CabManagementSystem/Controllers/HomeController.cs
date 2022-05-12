@@ -43,12 +43,15 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("OrderTaxi")]
-        public async Task<IActionResult> OrderTaxi(UserModel user)
+        public IActionResult OrderTaxi(UserModel user)
         {
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            if (!applicationContext.IsAuthanticated(user.ID) && orderContext.AlreadyOrder(user.ID))
+            if (!applicationContext.IsAuthanticated(user.ID))
+                return RedirectToAction("Index", "Home");
+
+            if (orderContext.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
 
             orderContext.CreateOrder(user.Order);
@@ -56,7 +59,7 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("EditOrder")]
-        public async Task<IActionResult> EditOrder(UserModel user)
+        public IActionResult EditOrder(UserModel user)
         {
             if (!applicationContext.IsAuthanticated(user.ID) && orderContext.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
@@ -70,7 +73,7 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("OrderCancellation")]
-        public async Task<IActionResult> OrderCancellation(UserModel user)
+        public IActionResult OrderCancellation(UserModel user)
         {
             if (!applicationContext.IsAuthanticated(user.ID) && orderContext.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");

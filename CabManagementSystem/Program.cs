@@ -8,6 +8,7 @@ string connection = builder.Configuration.GetConnectionString("ConnectionToDbUse
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 builder.Services.AddDbContext<OrderContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<TaxiContext>(options => options.UseSqlServer(connection));
 builder.Services.AddSession();
 var app = builder.Build();
 
@@ -19,6 +20,6 @@ app.UseHttpsRedirection()
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Admin}/{action=Index}/{id?}");
 
 app.Run();

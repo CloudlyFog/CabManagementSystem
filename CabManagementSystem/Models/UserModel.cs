@@ -18,5 +18,8 @@ namespace CabManagementSystem.Models
 
         [NotMapped]
         public TaxiModel? Taxi { get; set; } = new();
+
+        [NotMapped]
+        public DriverModel? Driver { get; set; } = new();
     }
 }

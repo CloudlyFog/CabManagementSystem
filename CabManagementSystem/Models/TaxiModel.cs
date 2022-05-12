@@ -1,13 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CabManagementSystem.Models
 {
     public class TaxiModel
     {
         [Key]
-        public int Id { get; set; }
+        public Guid ID { get; set; } = Guid.NewGuid();
+        public Guid DriverID { get; set; } = Guid.NewGuid();
         public string TaxiNumber { get; set; } = string.Empty;
         public TaxiClass TaxiClass { get; set; }
+
+        [NotMapped]
+        public BindTaxiDriver BindTaxiDriver { get; set; } = new();
     }
 
     /// <summary>

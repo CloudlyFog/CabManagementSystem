@@ -1,0 +1,45 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@using CabManagementSystem.AppContext;
+@{
+    Layout = "~/Views/Shared/_LayoutHeader.cshtml";
+    ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
+    TaxiContext taxiContext = new(new DbContextOptions<TaxiContext>());
+}
+@model UserModel
+<title>Admin Panel</title>
+
+<div class="container">
+    <form method="post" asp-controller="Admin" asp-action="AddTaxi">
+        <div>
+            <label asp-for="Taxi.TaxiClass"></label><br />
+            <input value="" asp-for="Taxi.TaxiClass" />
+        </div>
+        <div>
+            <label asp-for="Taxi.TaxiNumber"></label><br />
+            <input value="" asp-for="Taxi.TaxiNumber" />
+        </div>
+        <input type="submit" value="Add Taxi" />
+    </form>
+    <form method="post" asp-controller="Admin" asp-action="EditTaxi">
+        <div>
+            <label asp-for="Taxi.ID"></label><br />
+            <input value="" asp-for="Taxi.ID" />
+        </div>
+        <div>
+            <label asp-for="Taxi.TaxiClass"></label><br />
+            <input value="" asp-for="Taxi.TaxiClass" />
+        </div>
+        <div>
+            <label asp-for="Taxi.TaxiNumber"></label><br />
+            <input value="" asp-for="Taxi.TaxiNumber" />
+        </div>
+        <input type="submit" value="Edit Taxi" />
+    </form>
+    <form method="post" asp-controller="Admin" asp-action="DeleteTaxi">
+        <div>
+            <label asp-for="Taxi.ID"></label><br />
+            <input value="" asp-for="Taxi.ID" />
+        </div>
+        <input type="submit" value="Delete Taxi" />
+    </form>
+</div>
