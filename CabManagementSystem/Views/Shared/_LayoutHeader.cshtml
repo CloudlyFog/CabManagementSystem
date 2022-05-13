@@ -43,6 +43,15 @@
                     <li class="u-nav-item">
                         <a asp-controller="Account" asp-action="SignUp" class="u-border-active-palette-1-base u-border-hover-palette-1-base u-button-style u-nav-link u-text-active-palette-1-base u-text-grey-90 u-text-hover-palette-1-base" style="padding: 10px;">Sing Up</a>
                     </li>
+                    <li class="u-nav-item">
+                        <a asp-controller="Account" asp-action="Logout" class="u-border-active-palette-1-base u-border-hover-palette-1-base u-button-style u-nav-link u-text-active-palette-1-base u-text-grey-90 u-text-hover-palette-1-base" style="padding: 10px;">Logout</a>
+                    </li>
+                    @if (Model.Access)
+                    {
+                        <li class="u-nav-item">
+                            <a asp-controller="Admin" asp-action="Index" class="u-border-active-palette-1-base u-border-hover-palette-1-base u-button-style u-nav-link u-text-active-palette-1-base u-text-grey-90 u-text-hover-palette-1-base" style="padding: 10px;">Admin Panel</a>
+                        </li>
+                    }
                 </ul>
             </div>
             <div class="u-custom-menu u-nav-container-collapse">
@@ -62,6 +71,15 @@
                             <li class="u-nav-item">
                                 <a asp-controller="Account" asp-action="SignUp" class="u-button-style u-nav-link" style="padding: 10px;">Sing Up</a>
                             </li>
+                            <li class="u-nav-item">
+                                <a asp-controller="Account" asp-action="Logout" class="u-button-style u-nav-link" style="padding: 10px;">Logout</a>
+                            </li>
+                            @if (Model.Access)
+                            {
+                                <li class="u-nav-item">
+                                    <a asp-controller="Admin" asp-action="Index" class="u-button-style u-nav-link" style="padding: 10px;">Admin Panel</a>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>

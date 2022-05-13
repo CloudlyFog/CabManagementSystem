@@ -18,6 +18,13 @@ namespace CabManagementSystem.Controllers
         [Route("SignIn")]
         public IActionResult SignIn() => View();
 
+        [Route("SignOut")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost, Route("SignIn")]
         public async Task<IActionResult> SignIn(UserModel user, string[] args = null)
         {

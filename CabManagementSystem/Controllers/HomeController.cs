@@ -18,6 +18,8 @@ namespace CabManagementSystem.Controllers
         {
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
+            user.Access = applicationContext.Users.Any(x => x.ID == user.ID)
+                ? applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).Access : user.Access;
             user.Order.UserID = user.ID;
             bool predicateForExistingRow = orderContext.Orders.Any(x => x.UserID == user.ID);
             user.Order = new()
