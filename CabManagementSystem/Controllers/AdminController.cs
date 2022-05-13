@@ -30,16 +30,16 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
 
-            taxiContext.Taxi.Add(user.Taxi);
+            taxiContext.AddTaxi(user.Taxi);
             return RedirectToAction("Index", "Admin");
         }
 
         [HttpPost]
         public IActionResult EditTaxi(UserModel user)
         {
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
+
             user.Taxi.DriverID = taxiContext.Taxi.Any(x => x.ID == user.Taxi.ID)
                 ? taxiContext.Taxi.FirstOrDefault(x => x.ID == user.Taxi.ID).DriverID : new();
             taxiContext.ChangeTracker.Clear();
@@ -51,10 +51,11 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult DeleteTaxi(UserModel user)
         {
+            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
 
-            taxiContext.Taxi.Remove(user.Taxi);
+            taxiContext.DeleteTaxi(user.Taxi);
             return RedirectToAction("Index", "Admin");
         }
     }

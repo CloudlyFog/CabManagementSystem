@@ -33,22 +33,35 @@ namespace CabManagementSystem.AppContext
         }
         public void DeleteTaxi(TaxiModel taxi)
         {
+            taxi.TaxiClass = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
+            taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
+            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID) ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            //
+            taxi.BindTaxiDriver.TaxiID = taxi.ID;
+            taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
+                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).DriverID : new();
+            taxi.BindTaxiDriver.ID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
+                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).ID : new();
+            //
+            ChangeTracker.Clear();
             DeleteBindTaxiDriver(taxi.BindTaxiDriver);
             Taxi.Remove(taxi);
             SaveChanges();
         }
 
-        public void AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
+        private void AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             BindTaxiDriver.Add(bindTaxiDriver);
             SaveChanges();
         }
-        public void UpdateBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
+        private void UpdateBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             BindTaxiDriver.Update(bindTaxiDriver);
             SaveChanges();
         }
-        public void DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
+        private void DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             BindTaxiDriver.Remove(bindTaxiDriver);
             SaveChanges();
