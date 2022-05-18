@@ -1,19 +1,19 @@
 ﻿using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CabManagementSystem.Controllers
 {
     public class AdminController : Controller
     {
         private readonly TaxiContext taxiContext;
-        private readonly OrderContext orderContext;
         private readonly ApplicationContext applicationContext;
-        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext, OrderContext orderContext)
+        private const string PathSerializeJsonAjax = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
+        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext)
         {
             this.applicationContext = applicationContext;
             this.taxiContext = taxiContext;
-            this.orderContext = orderContext;
         }
 
         public IActionResult Index(UserModel user)
@@ -21,14 +21,20 @@ namespace CabManagementSystem.Controllers
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
             user.Order.UserID = user.ID;
+
+            user.Taxi = JsonSerializer.Deserialize<TaxiModel>(PathSerializeJsonAjax);
+
             return View(user);
         }
 
         [HttpPost]
         public IActionResult AddTaxi(UserModel user)
         {
+            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
+
+            applicationContext.SerializeData(PathSerializeJsonAjax, user.Taxi);
 
             taxiContext.AddTaxi(user.Taxi);
             return RedirectToAction("Index", "Admin");

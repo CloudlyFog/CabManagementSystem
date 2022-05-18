@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace CabManagementSystem.AppContext
 {
@@ -16,6 +17,7 @@ namespace CabManagementSystem.AppContext
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseSqlServer(
                 @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
         }
@@ -86,6 +88,26 @@ namespace CabManagementSystem.AppContext
             reader.Close();
             connection.Close();
             return name;
+        }
+
+        public void SerializeData(string path, object data)
+        {
+            if (!File.Exists(path))
+                return;
+            string jsonData = JsonSerializer.Serialize(data);
+            File.WriteAllText(path, jsonData);
+        }
+        public bool SerializeData(string path)
+        {
+            if (!File.Exists(path))
+                return false;
+            return true;
+        }
+
+        public void DeserializeData(string path)
+        {
+            string jsonData = File.ReadAllText(path);
+            JsonSerializer.Deserialize<TaxiModel>(jsonData);
         }
     }
 }

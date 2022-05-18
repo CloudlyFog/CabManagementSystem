@@ -9,16 +9,16 @@
 <title>Admin Panel</title>
 
 <div class="container">
-    <form method="post" asp-controller="Admin" asp-action="AddTaxi">
+    <form method="post" asp-controller="Admin" asp-action="AddTaxi" id="add-taxi-id">
         <div>
             <label asp-for="Taxi.TaxiClass"></label><br />
-            <input value="" asp-for="Taxi.TaxiClass" />
+            <input value="" asp-for="Taxi.TaxiClass" id="taxi-taxiclass" />
         </div>
         <div>
             <label asp-for="Taxi.TaxiNumber"></label><br />
-            <input value="" asp-for="Taxi.TaxiNumber" />
+            <input value="" asp-for="Taxi.TaxiNumber" id="taxi-taxinumber" />
         </div>
-        <input type="submit" value="Add Taxi" />
+        <input type="submit" value="Add Taxi" id="submit-button-add-taxi" />
     </form>
     <form method="post" asp-controller="Admin" asp-action="EditTaxi">
         <div>
@@ -43,3 +43,28 @@
         <input type="submit" value="Delete Taxi" />
     </form>
 </div>
+<script>
+    $(function () {
+        $.ajax('D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json', {
+            success: function data() {
+                var temp = $('#add-taxi-id');
+                template.tmpl(data.slice(0, 3)).appendTo('#taxi-taxiclass');
+                template.tmpl(data.slice(3)).appendTo('#taxi-taxinumber');
+            }
+        });
+    });
+    $('#submit-button-add-taxi').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: 'D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json',
+            data: {
+                TaxiClass: $('#taxi-taxiclass').val(),
+                TaxiNumber: $('#taxi-taxinumber').val()
+            },
+            success: function (data) {
+                alert('Taxi Added');
+            }
+        });
+    });
+
+</script>

@@ -66,5 +66,23 @@ namespace CabManagementSystem.AppContext
             BindTaxiDriver.Remove(bindTaxiDriver);
             SaveChanges();
         }
+
+        public TaxiModel GetTaxi(Guid taxiID)
+        {
+            TaxiModel taxi = new();
+            taxi.ID = taxiID;
+            taxi.TaxiClass = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
+            taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
+            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID) ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            //
+            taxi.BindTaxiDriver.TaxiID = taxi.ID;
+            taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
+                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).DriverID : new();
+            taxi.BindTaxiDriver.ID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
+                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).ID : new();
+            return taxi;
+        }
     }
 }

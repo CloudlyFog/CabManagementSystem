@@ -15,7 +15,7 @@ namespace CabManagementSystem.Controllers
         [Route("SignUp")]
         public IActionResult SignUp() => View();
 
-        [Route("SignIn")]
+        //[Route("SignIn")]
         public IActionResult SignIn() => View();
 
         [Route("SignOut")]

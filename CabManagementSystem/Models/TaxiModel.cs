@@ -6,7 +6,7 @@ namespace CabManagementSystem.Models
     public class TaxiModel
     {
         [Key]
-        public Guid ID { get; set; } = Guid.NewGuid();
+        public Guid ID { get; set; } = new();
         public Guid DriverID { get; set; } = Guid.NewGuid();
         public string TaxiNumber { get; set; } = string.Empty;
         public TaxiClass TaxiClass { get; set; }
