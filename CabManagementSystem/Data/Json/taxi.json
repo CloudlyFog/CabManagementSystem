@@ -1,11 +1,28 @@
 {
-  "ID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
-  "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65",
-  "TaxiNumber": "А032КР36",
-  "TaxiClass": 2,
-  "BindTaxiDriver": {
-    "ID": "d78d5101-7876-477a-84ea-50e61519943d",
-    "TaxiID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
-    "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65"
-  }
+  "TaxiList": [
+    {
+      "ID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+      "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65",
+      "TaxiNumber": "А032КР36",
+      "TaxiClass": 2,
+      "SpecialName": "TaxiComfortAlex",
+      "BindTaxiDriver": {
+        "ID": "d78d5101-7876-477a-84ea-50e61519943d",
+        "TaxiID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+        "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65"
+      }
+    },
+    {
+      "ID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+      "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65",
+      "TaxiNumber": "А032КР36",
+      "TaxiClass": 2,
+      "SpecialName": "TaxiComfortJin",
+      "BindTaxiDriver": {
+        "ID": "d78d5101-7876-477a-84ea-50e61519943d",
+        "TaxiID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+        "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65"
+      }
+    }
+  ]
 }

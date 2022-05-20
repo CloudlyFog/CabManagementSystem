@@ -23,7 +23,8 @@ namespace CMSTest
                 TaxiNumber = "À032ÊÐ36",
                 TaxiClass = TaxiClass.Comfort
             };
-            var actual = applicationContext.DeserializeData<TaxiModel>(PathSerializationJsonAjax);
+            var list = applicationContext.DeserializeData(PathSerializationJsonAjax);
+            var actual = list[0];
             Assert.AreEqual(expected.ID, actual.ID);
             Assert.AreEqual(expected.DriverID, actual.DriverID);
             Assert.AreEqual(expected.TaxiNumber, actual.TaxiNumber);

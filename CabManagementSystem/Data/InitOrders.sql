@@ -34,10 +34,11 @@ CREATE TABLE Taxi
 	ID UNIQUEIDENTIFIER,
 	DriverID UNIQUEIDENTIFIER,
 	TaxiNumber NVARCHAR(8),
-	TaxiClass INT
+	TaxiClass INT,
+	SpecialName NVARCHAR(50),
 )
-INSERT INTO Taxi(ID, DriverID, TaxiNumber, TaxiClass) VALUES 
-('f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'bd1e063f-b343-4387-812c-e203bfaa1f65',  'À032ÊÐ36', 2)
+INSERT INTO Taxi(ID, DriverID, TaxiNumber, TaxiClass, SpecialName) VALUES 
+('f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'bd1e063f-b343-4387-812c-e203bfaa1f65',  'À032ÊÐ36', 2, 'TaxiComfortAlex')
 
 DROP TABLE Drivers
 CREATE TABLE Drivers

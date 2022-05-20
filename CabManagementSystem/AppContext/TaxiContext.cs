@@ -37,7 +37,10 @@ namespace CabManagementSystem.AppContext
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
             taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
-            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID) ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.SpecialName = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).SpecialName : taxi.SpecialName;
             //
             taxi.BindTaxiDriver.TaxiID = taxi.ID;
             taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
@@ -75,7 +78,10 @@ namespace CabManagementSystem.AppContext
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
             taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
-            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID) ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.SpecialName = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).SpecialName : taxi.SpecialName;
             //
             taxi.BindTaxiDriver.TaxiID = taxi.ID;
             taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)

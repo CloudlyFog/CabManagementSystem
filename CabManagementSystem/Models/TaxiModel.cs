@@ -10,6 +10,7 @@ namespace CabManagementSystem.Models
         public Guid DriverID { get; set; } = Guid.NewGuid();
         public string TaxiNumber { get; set; } = string.Empty;
         public TaxiClass TaxiClass { get; set; }
+        public string SpecialName { get; set; } = string.Empty;
 
         [NotMapped]
         public List<TaxiModel> TaxiList { get; set; } = new();
