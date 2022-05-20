@@ -2,6 +2,7 @@
 @using CabManagementSystem.AppContext;
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
+    string? PathSerialization = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
     ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
     TaxiContext taxiContext = new(new DbContextOptions<TaxiContext>());
 }
@@ -17,6 +18,10 @@
         <div>
             <label asp-for="Taxi.TaxiNumber"></label><br />
             <input value="" asp-for="Taxi.TaxiNumber" id="taxi-taxinumber" />
+        </div>
+        <div>
+            <label asp-for="Taxi.DriverID"></label><br />
+            <input value="" asp-for="Taxi.DriverID" id="taxi-driver-id" />
         </div>
         <input type="submit" value="Add Taxi" id="submit-button-add-taxi" />
     </form>
@@ -45,26 +50,28 @@
 </div>
 <script>
     $(function () {
-        $.ajax('D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json', {
+        $.ajax(@PathSerialization, {
             success: function data() {
                 var temp = $('#add-taxi-id');
                 template.tmpl(data.slice(0, 3)).appendTo('#taxi-taxiclass');
                 template.tmpl(data.slice(3)).appendTo('#taxi-taxinumber');
+                template.tmpl(data.slice(3)).appendTo('#taxi-driver-id');
             }
         });
     });
     $('#submit-button-add-taxi').click(function () {
         $.ajax({
             type: 'POST',
-            url: 'D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json',
+            url: @PathSerialization,
             data: {
                 TaxiClass: $('#taxi-taxiclass').val(),
-                TaxiNumber: $('#taxi-taxinumber').val()
+                TaxiNumber: $('#taxi-taxinumber').val(),
+                TaxiDriverID: $('#taxi-driver-id').val()
             },
             success: function (data) {
                 alert('Taxi Added');
             }
         });
     });
-
 </script>
+<script src="~/js/GetData.js"></script>

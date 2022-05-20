@@ -90,24 +90,20 @@ namespace CabManagementSystem.AppContext
             return name;
         }
 
-        public void SerializeData(string path, object data)
-        {
-            if (!File.Exists(path))
-                return;
-            string jsonData = JsonSerializer.Serialize(data);
-            File.WriteAllText(path, jsonData);
-        }
-        public bool SerializeData(string path)
-        {
-            if (!File.Exists(path))
-                return false;
-            return true;
-        }
+        /// <summary>
+        /// serialize taxi's data in json format
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="path"></param>
+        public void SerializeData<T>(object data, string path) where T : new() => File.WriteAllText(path, JsonSerializer.Serialize(data));
 
-        public void DeserializeData(string path)
-        {
-            string jsonData = File.ReadAllText(path);
-            JsonSerializer.Deserialize<TaxiModel>(jsonData);
-        }
+        /// <summary>
+        /// deserialize taxi's data from json format
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <returns>instance of model UserModel with filled data of model TaxiModel</returns>
+        public TaxiModel DeserializeData<T>(string path) where T : new() => JsonSerializer.Deserialize<TaxiModel>(File.ReadAllText(path));
     }
 }

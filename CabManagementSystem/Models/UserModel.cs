@@ -13,6 +13,7 @@ namespace CabManagementSystem.Models
         public bool Authenticated { get; set; } = false;
         public bool Access { get; set; } = false;
 
+
         [NotMapped]
         public OrderModel? Order { get; set; } = new();
 
@@ -21,5 +22,6 @@ namespace CabManagementSystem.Models
 
         [NotMapped]
         public DriverModel? Driver { get; set; } = new();
+
     }
 }
