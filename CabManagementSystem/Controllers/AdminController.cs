@@ -17,7 +17,7 @@ namespace CabManagementSystem.Controllers
 
         public IActionResult Index(UserModel user)
         {
-            //user.Taxi = applicationContext.DeserializeData<TaxiModel>(PathSerialization);
+            user.Taxi.TaxiList = applicationContext.DeserializeData(PathSerialization);
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
             user.Order.UserID = user.ID;
@@ -32,7 +32,7 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
 
-            applicationContext.SerializeData<TaxiModel>(user.Taxi.TaxiList, PathSerialization);
+            applicationContext.SerializeData(user.Taxi, PathSerialization);
 
             taxiContext.AddTaxi(user.Taxi);
             return RedirectToAction("Index", "Admin");

@@ -96,7 +96,16 @@ namespace CabManagementSystem.AppContext
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="path"></param>
-        public void SerializeData<T>(object data, string path) where T : new() => File.WriteAllText(path, JsonSerializer.Serialize(data));
+        public void SerializeData(TaxiModel data, string path)
+        {
+            var jsonDes = JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path));
+            if (jsonDes is null)
+                return;
+            jsonDes.TaxiList.Add(data);
+            var json = JsonSerializer.Serialize(jsonDes);
+            File.Delete(path);
+            File.AppendAllText(path, json);
+        }
 
         /// <summary>
         /// deserialize taxi's data from json format

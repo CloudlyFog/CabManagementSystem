@@ -49,29 +49,16 @@
     </form>
 </div>
 <script>
-    $(function () {
-        $.ajax(@PathSerialization, {
-            success: function data() {
-                var temp = $('#add-taxi-id');
-                template.tmpl(data.slice(0, 3)).appendTo('#taxi-taxiclass');
-                template.tmpl(data.slice(3)).appendTo('#taxi-taxinumber');
-                template.tmpl(data.slice(3)).appendTo('#taxi-driver-id');
-            }
-        });
-    });
-    $('#submit-button-add-taxi').click(function () {
-        $.ajax({
-            type: 'POST',
-            url: @PathSerialization,
-            data: {
-                TaxiClass: $('#taxi-taxiclass').val(),
-                TaxiNumber: $('#taxi-taxinumber').val(),
-                TaxiDriverID: $('#taxi-driver-id').val()
-            },
-            success: function (data) {
-                alert('Taxi Added');
-            }
-        });
+    $.click().ajax({
+        url: @Html.Raw(@Url.Action("GetTaxi", "Admin")),
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            var taxi = JSON.parse(data);
+            $("#taxi-taxiclass").val(taxi.TaxiClass);
+            $("#taxi-taxinumber").val(taxi.TaxiNumber);
+            $("#taxi-driver-id").val(taxi.DriverID);
+        }
     });
 </script>
 <script src="~/js/GetData.js"></script>
