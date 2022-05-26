@@ -1,1 +1,56 @@
-{"TaxiList":[{"ID":"f6c6ed2d-86b4-41b4-af23-4f1f0915b665","DriverID":"bd1e063f-b343-4387-812c-e203bfaa1f65","TaxiNumber":"\u0410032\u041A\u042036","TaxiClass":2,"SpecialName":"TaxiComfortAlex","TaxiList":[],"BindTaxiDriver":{"ID":"d78d5101-7876-477a-84ea-50e61519943d","TaxiID":"f6c6ed2d-86b4-41b4-af23-4f1f0915b665","DriverID":"bd1e063f-b343-4387-812c-e203bfaa1f65"}},{"ID":"f6c6ed2d-86b4-41b4-af23-4f1f0915b665","DriverID":"bd1e063f-b343-4387-812c-e203bfaa1f65","TaxiNumber":"\u0410032\u041A\u042036","TaxiClass":2,"SpecialName":"TaxiComfortJin","TaxiList":[],"BindTaxiDriver":{"ID":"d78d5101-7876-477a-84ea-50e61519943d","TaxiID":"f6c6ed2d-86b4-41b4-af23-4f1f0915b665","DriverID":"bd1e063f-b343-4387-812c-e203bfaa1f65"}},{"ID":"f6c6ed2d-86b4-41b4-af23-4f1f0915b665","DriverID":"bd1e063f-b343-4387-812c-e203bfaa1f65","TaxiNumber":"\u0410332\u041A\u042046","TaxiClass":2,"SpecialName":"","TaxiList":[],"BindTaxiDriver":{"ID":"dd65de59-2eac-46ee-ab20-eff63d5b47ab","TaxiID":"89c05dc5-a76b-4d04-bf38-2ce049cbe856","DriverID":"6fc48f9b-ab21-4737-b2d7-4a7bdd01c637"}},{"ID":"f6c6ed2d-86b4-41b4-af23-4f1f0915b665","DriverID":"bd1e063f-b343-4387-812c-e203bfaa1f65","TaxiNumber":"\u0410332\u041A\u042046","TaxiClass":2,"SpecialName":"","TaxiList":[],"BindTaxiDriver":{"ID":"640490f6-9462-4f4c-8936-5f02cc86af7e","TaxiID":"0dbf8a22-cd47-4e27-81b4-989c6fe94fc6","DriverID":"68eb0a2f-d78a-406a-8a19-70402a002351"}}],"ID":"00000000-0000-0000-0000-000000000000","DriverID":"ef4973ae-b34e-4718-9b2a-6357bf1ad68b","TaxiNumber":"","TaxiClass":0,"SpecialName":"","BindTaxiDriver":{"ID":"b50b7a65-bb20-4d36-89f1-4175077c98dc","TaxiID":"3d870ce9-b041-4115-a4d7-4ca7194a7f21","DriverID":"6f17265b-32dc-458d-affb-84f4b0b0e919"}}
+{
+  "TaxiList": [
+    {
+      "ID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+      "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65",
+      "TaxiNumber": "\u0410032\u041A\u042036",
+      "TaxiClass": 2,
+      "SpecialName": "TaxiComfortAlex",
+      "TaxiList": [],
+      "BindTaxiDriver": {
+        "ID": "d78d5101-7876-477a-84ea-50e61519943d",
+        "TaxiID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+        "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65"
+      }
+    },
+    {
+      "ID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+      "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65",
+      "TaxiNumber": "\u0410032\u041A\u042036",
+      "TaxiClass": 2,
+      "SpecialName": "TaxiComfortJin",
+      "TaxiList": [],
+      "BindTaxiDriver": {
+        "ID": "d78d5101-7876-477a-84ea-50e61519943d",
+        "TaxiID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+        "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65"
+      }
+    },
+    {
+      "ID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+      "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65",
+      "TaxiNumber": "\u0410332\u041A\u042046",
+      "TaxiClass": 2,
+      "SpecialName": "",
+      "TaxiList": [],
+      "BindTaxiDriver": {
+        "ID": "dd65de59-2eac-46ee-ab20-eff63d5b47ab",
+        "TaxiID": "89c05dc5-a76b-4d04-bf38-2ce049cbe856",
+        "DriverID": "6fc48f9b-ab21-4737-b2d7-4a7bdd01c637"
+      }
+    },
+    {
+      "ID": "f6c6ed2d-86b4-41b4-af23-4f1f0915b665",
+      "DriverID": "bd1e063f-b343-4387-812c-e203bfaa1f65",
+      "TaxiNumber": "\u0410332\u041A\u042046",
+      "TaxiClass": 2,
+      "SpecialName": "",
+      "TaxiList": [],
+      "BindTaxiDriver": {
+        "ID": "640490f6-9462-4f4c-8936-5f02cc86af7e",
+        "TaxiID": "0dbf8a22-cd47-4e27-81b4-989c6fe94fc6",
+        "DriverID": "68eb0a2f-d78a-406a-8a19-70402a002351"
+      }
+    }
+  ]
+}

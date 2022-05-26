@@ -1,11 +1,11 @@
-﻿let path = '../../Data/Json/taxi.json';
+﻿function setProp(prop, id, conectionString) {
+    var connection = new ActiveXObject("adodb.Connection");
 
-let taxiData = $.getJSON(path, function () {
-    $.ajax({
-        url: path,
-        data: $.getJSON(path, function (data) {
-            return data
-        })
-    });
-});
-alert(taxiData);
+    connection.Open(conectionString);
+    var rs = new ActiveXObject("adodb.Recordset");
+
+    var suggestion = rs.Open(`SELECT ${prop} FROM Taxi WHERE ID = ${id}`, connection);
+    rs.Close();
+    connection.Close();
+    return suggestion;
+}

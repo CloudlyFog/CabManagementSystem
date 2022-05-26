@@ -114,5 +114,6 @@ namespace CabManagementSystem.AppContext
         /// <param name="path"></param>
         /// <returns>instance of model UserModel with filled data of model TaxiModel</returns>
         public List<TaxiModel> DeserializeData(string path) => JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
+
     }
 }

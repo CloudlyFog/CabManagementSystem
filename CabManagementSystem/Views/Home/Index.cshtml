@@ -4,31 +4,45 @@
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     OrderContext orderContext = new(new DbContextOptions<OrderContext>());
     ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
+    TaxiContext taxiContext = new(new DbContextOptions<TaxiContext>());
 }
 @model UserModel
+
 <title>Home</title>
 <div class="container">
-    <form method="post" asp-controller="Home" asp-action="OrderTaxi">
-        <div asp-validation-summary="ModelOnly"></div>
-        <div>
-            <label asp-for="Order.PhoneNumber"></label><br />
-            <input value="" asp-for="Order.PhoneNumber" />
-            <span asp-validation-for="Order.PhoneNumber"></span>
-        </div>
-        <div>
-            <label asp-for="Order.Description"></label><br />
-            <input value="" asp-for="Order.Description" />
-            <span asp-validation-for="Order.Description"></span>
-        </div>
-        <div>
-            <label asp-for="Order.Address"></label><br />
-            <input value="" asp-for="Order.Address" />
-            <span asp-validation-for="Order.Address"></span>
-        </div>
-        <div>
-            <input type="submit" value="Order Taxi" style="margin-top: 10px; " />
-        </div>
-    </form>
+    @if (Model.HasOrder)
+    {
+        <p><strong>ID: @Model.Taxi.ID</strong></p>
+        <p><strong>Driver's ID': @Model.Taxi.DriverID</strong></p>
+        <p><strong>Taxi's Number: @Model.Taxi.TaxiNumber</strong></p>
+        <p><strong>Taxi's Class: @Model.Taxi.TaxiClass</strong></p>
+        <p><strong>Price: @Model.Taxi.Price</strong></p>
+        <p><strong>Special Name: @Model.Taxi.SpecialName</strong></p>
+    }
+    else
+    {
+        <form method="post" asp-controller="Home" asp-action="OrderTaxi">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div>
+                <label asp-for="Order.PhoneNumber"></label><br />
+                <input value="" asp-for="Order.PhoneNumber" />
+                <span asp-validation-for="Order.PhoneNumber"></span>
+            </div>
+            <div>
+                <label asp-for="Order.Description"></label><br />
+                <input value="" asp-for="Order.Description" />
+                <span asp-validation-for="Order.Description"></span>
+            </div>
+            <div>
+                <label asp-for="Order.Address"></label><br />
+                <input value="" asp-for="Order.Address" />
+                <span asp-validation-for="Order.Address"></span>
+            </div>
+            <div>
+                <input type="submit" value="Order Taxi" style="margin-top: 10px; " />
+            </div>
+        </form>
+    }
 </div>
 <br />
 <div>

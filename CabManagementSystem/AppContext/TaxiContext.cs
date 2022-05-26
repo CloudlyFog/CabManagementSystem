@@ -19,7 +19,7 @@ namespace CabManagementSystem.AppContext
 
         public DbSet<TaxiModel> Taxi { get; set; }
         public DbSet<BindTaxiDriver> BindTaxiDriver { get; set; }
-        public DbSet<DriverModel> Driver { get; set; }
+        public DbSet<DriverModel> Drivers { get; set; }
         public void AddTaxi(TaxiModel taxi)
         {
             AddBindTaxiDriver(taxi.BindTaxiDriver);
