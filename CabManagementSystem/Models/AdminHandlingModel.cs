@@ -4,13 +4,13 @@
     {
         public int ID { get; set; }
         public Guid UserID { get; set; } = new();
-        public SelectIDInput SelectID { get; set; } = SelectIDInput.Default;
+        public SelectModeEnum SelectMode { get; set; } = SelectModeEnum.Default;
     }
 
     /// <summary>
     /// defines the type of the select id input
     /// </summary>
-    public enum SelectIDInput
+    public enum SelectModeEnum
     {
         Default,
         BySelect,

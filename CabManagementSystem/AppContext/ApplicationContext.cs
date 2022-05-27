@@ -63,6 +63,16 @@ namespace CabManagementSystem.AppContext
         public Guid GetID(UserModel user) => Users.Any(x => x.Name == GetUserProp(user, "Name") && x.Email == user.Email && x.Password == user.Password)
             ? Users.FirstOrDefault(x => x.Name == GetUserProp(user, "Name") && x.Email == user.Email && x.Password == user.Password).ID : new();
 
+        public void ChangeSelectMode(Guid userID, SelectModeEnum mode)
+        {
+            var selectMode = AdminHandling.FirstOrDefault(x => x.UserID == userID);
+            if (selectMode is not null)
+            {
+                selectMode.SelectMode = mode;
+                SaveChanges();
+            }
+        }
+
         /// <summary>
         /// can return: ID, Name, Email, Password, Autenticated, Access
         /// properties NoteModel and MessageModel are not include in context and the method can`t return it

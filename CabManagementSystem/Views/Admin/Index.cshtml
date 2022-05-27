@@ -11,7 +11,7 @@
     var json = applicationContext.DeserializeData(PathSerialization);
     //
     var ListOfIDs = ApplicationContext.GetTaxiPropList("ID");
-    var select = applicationContext.AdminHandling.Any(x => x.UserID == Model.ID) ? applicationContext.AdminHandling.First(x => x.UserID == Model.ID).SelectID : 0;
+    var select = applicationContext.AdminHandling.Any(x => x.UserID == Model.ID) ? applicationContext.AdminHandling.First(x => x.UserID == Model.ID).SelectMode : 0;
 }
 <title>Admin Panel</title>
 
@@ -49,7 +49,7 @@
     <form method="post" asp-controller="Admin" asp-action="DeleteTaxi">
         <div>
             <label asp-for="Taxi.ID"></label><br />
-            @if (select == SelectIDInput.BySelect)
+            @if (select == SelectModeEnum.BySelect)
             {
                 <select>
                     @foreach (var id in ListOfIDs)
@@ -64,5 +64,16 @@
             }
         </div>
         <input type="submit" value="Delete Taxi" />
+    </form>
+    <form method="post" asp-controller="Admin" asp-action="ChangeSelectMode">
+        <div>
+            <label>Default</label>
+            <input name="selectMode" type="radio" value="@SelectModeEnum.Default" /><br />
+            <label>ByInput</label>
+            <input name="selectMode" type="radio" value="@SelectModeEnum.ByInput" /><br />
+            <label>BySelect</label>
+            <input name="selectMode" type="radio" value="@SelectModeEnum.BySelect" /><br />
+            <input type="submit" value="Change" />
+        </div>
     </form>
 </div>
