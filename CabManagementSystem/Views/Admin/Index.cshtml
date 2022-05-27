@@ -1,13 +1,18 @@
 ﻿@using Microsoft.EntityFrameworkCore;
 @using CabManagementSystem.AppContext;
+@using CabManagementSystem.Models;
+
+@model UserModel
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
-    string? PathSerialization = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
-    ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
-    TaxiContext taxiContext = new(new DbContextOptions<TaxiContext>());
+    var PathSerialization = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
+    var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
+    var taxiContext = new TaxiContext(new DbContextOptions<TaxiContext>());
     var json = applicationContext.DeserializeData(PathSerialization);
+    //
+    var ListOfIDs = ApplicationContext.GetTaxiPropList("ID");
+    var select = applicationContext.AdminHandling.Any(x => x.UserID == Model.ID) ? applicationContext.AdminHandling.First(x => x.UserID == Model.ID).SelectID : 0;
 }
-@model UserModel
 <title>Admin Panel</title>
 
 <div class="container">
@@ -29,22 +34,34 @@
     <form method="post" asp-controller="Admin" asp-action="EditTaxi">
         <div>
             <label asp-for="Taxi.ID"></label><br />
-            <input asp-for="Taxi.ID" id="taxi" />
+            <input value="" asp-for="Taxi.ID" id="taxi" />
         </div>
         <div>
             <label asp-for="Taxi.TaxiClass"></label><br />
-            <input asp-for="Taxi.TaxiClass" id="taxi" />
+            <input value="" asp-for="Taxi.TaxiClass" id="taxi" />
         </div>
         <div>
             <label asp-for="Taxi.TaxiNumber"></label><br />
-            <input asp-for="Taxi.TaxiNumber" id="taxi" />
+            <input value="" asp-for="Taxi.TaxiNumber" id="taxi" />
         </div>
         <input type="submit" value="Edit Taxi" />
     </form>
     <form method="post" asp-controller="Admin" asp-action="DeleteTaxi">
         <div>
             <label asp-for="Taxi.ID"></label><br />
-            <input value="" asp-for="Taxi.ID" />
+            @if (select == SelectIDInput.BySelect)
+            {
+                <select>
+                    @foreach (var id in ListOfIDs)
+                    {
+                        <option value="@id">@id</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <input value="" asp-for="Taxi.ID" id="taxi" />
+            }
         </div>
         <input type="submit" value="Delete Taxi" />
     </form>

@@ -11,6 +11,7 @@ namespace CabManagementSystem.AppContext
         public const string QUERYCONNECTION = "Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
 
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<AdminHandlingModel> AdminHandling { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             Database.EnsureCreated();
@@ -115,5 +116,24 @@ namespace CabManagementSystem.AppContext
         /// <returns>instance of model UserModel with filled data of model TaxiModel</returns>
         public List<TaxiModel> DeserializeData(string path) => JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
 
+        /// <summary>
+        /// get list of definite TaxiModel's property
+        /// </summary>
+        /// <param name="nameNewsPart"></param>
+        /// <returns>list of: ID, DriverID, TaxiNumber, TaxiClass, Price, SpecialName<returns>
+        public static List<object> GetTaxiPropList(string taxiProp)
+        {
+            var newsParts = new List<object>();
+            var connection = new SqlConnection(QUERYCONNECTION);
+            var command = new SqlCommand($"SELECT {taxiProp} FROM Taxi", connection);
+            connection.Open();
+            command.ExecuteNonQuery();
+            SqlDataReader reader = command.ExecuteReader();
+            for (int i = 0; reader.Read(); i++)
+                newsParts.Add(reader.GetValue(0));
+            reader.Close();
+            connection.Close();
+            return newsParts;
+        }
     }
 }

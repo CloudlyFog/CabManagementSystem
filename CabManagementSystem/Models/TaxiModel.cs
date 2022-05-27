@@ -30,6 +30,10 @@ namespace CabManagementSystem.Models
         Premium,
         Economy
     }
+
+    /// <summary>
+    /// defines taxi's price for class of taxi
+    /// </summary>
     public enum TaxiPrice
     {
         Buisness = 260,

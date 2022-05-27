@@ -24,5 +24,7 @@ namespace CabManagementSystem.Models
         [NotMapped]
         public DriverModel? Driver { get; set; } = new();
 
+        [NotMapped]
+        public AdminHandlingModel? AdminHandling { get; set; }
     }
 }
