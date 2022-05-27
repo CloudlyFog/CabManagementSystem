@@ -1,7 +1,6 @@
 ﻿using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace CabManagementSystem.Controllers
 {
@@ -9,7 +8,7 @@ namespace CabManagementSystem.Controllers
     {
         private readonly TaxiContext taxiContext;
         private readonly ApplicationContext applicationContext;
-        private const string PathSerializeJsonAjax = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
+        private const string PathSerialization = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
         public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext)
         {
             this.applicationContext = applicationContext;
@@ -18,11 +17,11 @@ namespace CabManagementSystem.Controllers
 
         public IActionResult Index(UserModel user)
         {
+            user.Taxi.TaxiList = applicationContext.DeserializeData(PathSerialization);
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
+            //user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             user.Order.UserID = user.ID;
-
-            user.Taxi = JsonSerializer.Deserialize<TaxiModel>(PathSerializeJsonAjax);
 
             return View(user);
         }
@@ -30,11 +29,10 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult AddTaxi(UserModel user)
         {
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
 
-            applicationContext.SerializeData(PathSerializeJsonAjax, user.Taxi);
+            applicationContext.SerializeData(user.Taxi, PathSerialization);
 
             taxiContext.AddTaxi(user.Taxi);
             return RedirectToAction("Index", "Admin");

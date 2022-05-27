@@ -11,6 +11,7 @@ namespace CabManagementSystem.AppContext
         public const string QUERYCONNECTION = "Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
 
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<AdminHandlingModel> AdminHandling { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             Database.EnsureCreated();
@@ -90,24 +91,49 @@ namespace CabManagementSystem.AppContext
             return name;
         }
 
-        public void SerializeData(string path, object data)
+        /// <summary>
+        /// serialize taxi's data in json format
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="path"></param>
+        public void SerializeData(TaxiModel data, string path)
         {
-            if (!File.Exists(path))
+            var jsonDes = JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path));
+            if (jsonDes is null)
                 return;
-            string jsonData = JsonSerializer.Serialize(data);
-            File.WriteAllText(path, jsonData);
-        }
-        public bool SerializeData(string path)
-        {
-            if (!File.Exists(path))
-                return false;
-            return true;
+            jsonDes.TaxiList.Add(data);
+            var json = JsonSerializer.Serialize(jsonDes);
+            File.Delete(path);
+            File.AppendAllText(path, json);
         }
 
-        public void DeserializeData(string path)
+        /// <summary>
+        /// deserialize taxi's data from json format
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <returns>instance of model UserModel with filled data of model TaxiModel</returns>
+        public List<TaxiModel> DeserializeData(string path) => JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
+
+        /// <summary>
+        /// get list of definite TaxiModel's property
+        /// </summary>
+        /// <param name="nameNewsPart"></param>
+        /// <returns>list of: ID, DriverID, TaxiNumber, TaxiClass, Price, SpecialName<returns>
+        public static List<object> GetTaxiPropList(string taxiProp)
         {
-            string jsonData = File.ReadAllText(path);
-            JsonSerializer.Deserialize<TaxiModel>(jsonData);
+            var newsParts = new List<object>();
+            var connection = new SqlConnection(QUERYCONNECTION);
+            var command = new SqlCommand($"SELECT {taxiProp} FROM Taxi", connection);
+            connection.Open();
+            command.ExecuteNonQuery();
+            SqlDataReader reader = command.ExecuteReader();
+            for (int i = 0; reader.Read(); i++)
+                newsParts.Add(reader.GetValue(0));
+            reader.Close();
+            connection.Close();
+            return newsParts;
         }
     }
 }

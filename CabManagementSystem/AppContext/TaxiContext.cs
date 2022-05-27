@@ -19,7 +19,7 @@ namespace CabManagementSystem.AppContext
 
         public DbSet<TaxiModel> Taxi { get; set; }
         public DbSet<BindTaxiDriver> BindTaxiDriver { get; set; }
-        public DbSet<DriverModel> Driver { get; set; }
+        public DbSet<DriverModel> Drivers { get; set; }
         public void AddTaxi(TaxiModel taxi)
         {
             AddBindTaxiDriver(taxi.BindTaxiDriver);
@@ -37,7 +37,10 @@ namespace CabManagementSystem.AppContext
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
             taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
-            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID) ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.SpecialName = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).SpecialName : taxi.SpecialName;
             //
             taxi.BindTaxiDriver.TaxiID = taxi.ID;
             taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
@@ -75,7 +78,10 @@ namespace CabManagementSystem.AppContext
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
             taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
                 ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
-            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID) ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
+            taxi.SpecialName = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).SpecialName : taxi.SpecialName;
             //
             taxi.BindTaxiDriver.TaxiID = taxi.ID;
             taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
@@ -84,5 +90,7 @@ namespace CabManagementSystem.AppContext
                 ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).ID : new();
             return taxi;
         }
+
+
     }
 }

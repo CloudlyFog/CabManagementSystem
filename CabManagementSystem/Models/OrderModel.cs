@@ -9,6 +9,7 @@ namespace CabManagementSystem.Models
         public Guid UserID { get; set; } = new();
         public string PhoneNumber { get; set; } = string.Empty;
         public string DriverName { get; set; } = string.Empty;
+        public TaxiPrice Price { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
     }

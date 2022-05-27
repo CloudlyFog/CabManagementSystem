@@ -1,2 +1,1 @@
-﻿SELECT * FROM Taxi 
-SELECT * FROM BindTaxiDriver 
+﻿SELECT * FROM Users 
