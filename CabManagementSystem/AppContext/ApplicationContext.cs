@@ -63,6 +63,11 @@ namespace CabManagementSystem.AppContext
         public Guid GetID(UserModel user) => Users.Any(x => x.Name == GetUserProp(user, "Name") && x.Email == user.Email && x.Password == user.Password)
             ? Users.FirstOrDefault(x => x.Name == GetUserProp(user, "Name") && x.Email == user.Email && x.Password == user.Password).ID : new();
 
+        /// <summary>
+        /// changes property SelectMode of specified user
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="mode"></param>
         public void ChangeSelectMode(Guid userID, SelectModeEnum mode)
         {
             var selectMode = AdminHandling.FirstOrDefault(x => x.UserID == userID);
@@ -138,7 +143,7 @@ namespace CabManagementSystem.AppContext
             var command = new SqlCommand($"SELECT {taxiProp} FROM Taxi", connection);
             connection.Open();
             command.ExecuteNonQuery();
-            SqlDataReader reader = command.ExecuteReader();
+            var reader = command.ExecuteReader();
             for (int i = 0; reader.Read(); i++)
                 newsParts.Add(reader.GetValue(0));
             reader.Close();

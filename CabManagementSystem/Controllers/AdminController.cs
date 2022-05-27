@@ -20,7 +20,6 @@ namespace CabManagementSystem.Controllers
             user.Taxi.TaxiList = applicationContext.DeserializeData(PathSerialization);
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             user.Order.UserID = user.ID;
 
             return View(user);
@@ -66,9 +65,8 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult ChangeSelectMode(UserModel user, SelectModeEnum selectMode)
         {
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
-            //user.ID = HttpContext.Session.GetString("userID") is not null
-            //    ? new(HttpContext.Session.GetString("userID")) : new();
+            user.ID = HttpContext.Session.GetString("userID") is not null
+                ? new(HttpContext.Session.GetString("userID")) : new();
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
 
