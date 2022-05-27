@@ -16,7 +16,7 @@
         <p><strong>Driver's ID': @Model.Taxi.DriverID</strong></p>
         <p><strong>Taxi's Number: @Model.Taxi.TaxiNumber</strong></p>
         <p><strong>Taxi's Class: @Model.Taxi.TaxiClass</strong></p>
-        <p><strong>Price: @Model.Taxi.Price</strong></p>
+        <p><strong>Price: ₽@Model.Taxi.Price.GetHashCode()</strong></p>
         <p><strong>Special Name: @Model.Taxi.SpecialName</strong></p>
     }
     else
