@@ -27,7 +27,7 @@ namespace CMSTest
             // Serialization data
             applicationContext.SerializeData(expected, PathSerializationJsonAjax);
 
-            var list = applicationContext.DeserializeData(PathSerializationJsonAjax);
+            var list = applicationContext.DeserializeTaxiData(PathSerializationJsonAjax);
             var actual = list[2];
 
             // tests
@@ -47,7 +47,7 @@ namespace CMSTest
                 TaxiNumber = "À032ÊÐ36",
                 TaxiClass = TaxiClass.Comfort
             };
-            var list = applicationContext.DeserializeData(PathSerializationJsonAjax);
+            var list = applicationContext.DeserializeTaxiData(PathSerializationJsonAjax);
             var actual = list[0];
             Assert.AreEqual(expected.ID, actual.ID);
             Assert.AreEqual(expected.DriverID, actual.DriverID);

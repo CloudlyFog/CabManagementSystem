@@ -5,6 +5,18 @@
         public int ID { get; set; }
         public Guid UserID { get; set; } = new();
         public SelectModeEnum SelectMode { get; set; } = SelectModeEnum.Default;
+        public DateTime Time { get; set; } = DateTime.Now;
+        public List<OrderTimeModel> TimeList { get; set; } = new();
+
+    }
+
+    /// <summary>
+    /// defines model of time in which was cab ordered
+    /// </summary>
+    public class OrderTimeModel
+    {
+        public int ID { get; set; }
+        public DateTime Time { get; set; } = DateTime.Now;
     }
 
     /// <summary>

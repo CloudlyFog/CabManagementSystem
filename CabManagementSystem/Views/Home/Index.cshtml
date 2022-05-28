@@ -12,6 +12,10 @@
 <div class="container">
     @if (Model.HasOrder)
     {
+        <p>
+            <strong>Before arriving taxi left </strong>
+            <strong id="arrivingTime"></strong>
+        </p>
         <p><strong>ID: @Model.Taxi.ID</strong></p>
         <p><strong>Driver's ID': @Model.Taxi.DriverID</strong></p>
         <p><strong>Taxi's Number: @Model.Taxi.TaxiNumber</strong></p>
@@ -69,11 +73,12 @@
             <input type="submit" value="Edit Order" style="margin-top: 10px; " />
         </div>
     </form>
-    <h4>You can delete your order</h4>
     <form method="post" asp-controller="Home" asp-action="OrderCancellation">
         <input type="hidden" asp-for="Order.PhoneNumber" value="@Model.Order.PhoneNumber" />
         <input type="hidden" asp-for="Order.Description" value="@Model.Order.Description" />
         <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
         <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
     </form>
+    
 </div>
+<script src="~/js/script.js"></script>
