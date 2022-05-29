@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json;
 
 namespace CabManagementSystem.Models
 {
@@ -22,17 +20,20 @@ namespace CabManagementSystem.Models
         public Guid ID { get; set; } = Guid.NewGuid();
         public DateTime Time { get; set; } = DateTime.Now;
 
-        [NotMapped, JsonIgnore]
-        public List<OrderTimeModel> ListOrderTimes { get; set; } = new();
 
+        /// <summary>
+        /// serialize data of order's time from json format
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="path"></param>
+        /// <exception cref="Exception"></exception>
         public static void SerializeOrderTimeData(OrderTimeModel data, string path)
         {
-            var jsonDes = JsonSerializer.Deserialize<OrderTimeModel>(File.ReadAllText(path));
-            if (jsonDes is null)
-                throw new Exception("variable jsonDes is null.");
-            jsonDes.ListOrderTimes.Add(data);
-            //File.Delete(path);
-            File.WriteAllText(path, JsonSerializer.Serialize(jsonDes.ListOrderTimes));
+            var listOrderTimes = JsonSerializer.Deserialize<RootObjectOrdertimeModel>(File.ReadAllText(path));
+            if (listOrderTimes is null)
+                throw new Exception("variable listOrderTimes is null.");
+            listOrderTimes.ListOrderTimes.Add(data);
+            File.WriteAllText(path, JsonSerializer.Serialize(listOrderTimes)); // need to add whole instance of RootObjectOrdertimeModel rather than only ListOrderTimes
         }
 
 
@@ -41,7 +42,12 @@ namespace CabManagementSystem.Models
         /// </summary>
         /// <param name="path"></param>
         /// <returns>list of model OrderTimeModel</returns>
-        public static List<OrderTimeModel> DeserializeTaxiData(string path) => JsonSerializer.Deserialize<OrderTimeModel>(File.ReadAllText(path)).ListOrderTimes;
+        public static List<OrderTimeModel> DeserializeTaxiData(string path) => JsonSerializer.Deserialize<RootObjectOrdertimeModel>(File.ReadAllText(path)).ListOrderTimes;
+    }
+
+    public class RootObjectOrdertimeModel
+    {
+        public List<OrderTimeModel> ListOrderTimes { get; set; } = new();
     }
 
     /// <summary>
