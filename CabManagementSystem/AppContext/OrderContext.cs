@@ -16,12 +16,12 @@ namespace CabManagementSystem.AppContext
         }
 
         public DbSet<OrderModel> Orders { get; set; }
-        private readonly ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
+        private readonly TaxiContext orderContext = new(new DbContextOptions<TaxiContext>());
         private readonly string pathOrderTime = "";
 
         public void CreateOrder(OrderModel order)
         {
-            applicationContext.SerializeData(order.OrderTime, pathOrderTime);
+            OrderTimeModel.SerializeOrderTimeData(new OrderTimeModel(), pathOrderTime);
             Orders.Add(order);
             SaveChanges();
         }

@@ -1,5 +1,6 @@
 ﻿using CabManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace CabManagementSystem.AppContext
 {
@@ -91,6 +92,21 @@ namespace CabManagementSystem.AppContext
             return taxi;
         }
 
+        /// <summary>
+        /// serialize taxi's data in json format
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="path"></param>
+        public void SerializeTaxiData(TaxiModel data, string path)
+        {
+            var jsonDes = JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path));
+            if (jsonDes is null)
+                throw new Exception("jsonDes is null.");
+            jsonDes.TaxiList.Add(data);
+            var json = JsonSerializer.Serialize(jsonDes);
+            File.Delete(path);
+            File.AppendAllText(path, json);
+        }
 
     }
 }

@@ -7,10 +7,33 @@ namespace CMSTest
     public class Tests
     {
         private const string PathSerializationJsonAjax = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
+        private const string pathOrderTime = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
         private readonly ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
         [SetUp]
         public void Setup()
         {
+        }
+
+        [Test]
+        public void SerializeOrderTime()
+        {
+            var expected = new OrderTimeModel()
+            {
+                ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
+                Time = DateTime.Parse("2022-05-29T12:35:45.5600099+03:00")
+            };
+
+            // Serialization data
+            //applicationContext.SerializeData(expected, pathOrderTime);
+            OrderTimeModel.SerializeOrderTimeData(expected, pathOrderTime);
+            var actual = OrderTimeModel.DeserializeTaxiData(pathOrderTime)[0];
+            Assert.Multiple(() =>
+            {
+
+                // tests
+                Assert.That(actual.ID, Is.EqualTo(expected.ID));
+                Assert.That(actual.Time, Is.EqualTo(expected.Time));
+            });
         }
 
         [Test]
@@ -25,9 +48,9 @@ namespace CMSTest
             };
 
             // Serialization data
-            applicationContext.SerializeData(expected, PathSerializationJsonAjax);
+            applicationContext.SerializeData(expected, pathOrderTime);
 
-            var list = applicationContext.DeserializeTaxiData(PathSerializationJsonAjax);
+            var list = applicationContext.DeserializeTaxiData(pathOrderTime);
             var actual = list[2];
 
             // tests
