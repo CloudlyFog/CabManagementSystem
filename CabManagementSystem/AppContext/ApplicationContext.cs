@@ -112,13 +112,15 @@ namespace CabManagementSystem.AppContext
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="path"></param>
-        public void SerializeData(object data, string path)
+        public void SerializeData(TaxiModel data, string path)
         {
-            var jsonDes = JsonConvert.DeserializeObject<List<OrderTimeModel>>(File.ReadAllText(path));
+            var jsonDes = JsonConvert.DeserializeObject<JsonTaxiModel>(File.ReadAllText(path));
             if (jsonDes is null)
-                throw new Exception("variable jsonDes is null.");
-            jsonDes.Add((OrderTimeModel)data);
-            JsonConvert.SerializeObject(jsonDes, Formatting.Indented);
+                return;
+            jsonDes.TaxiList.Add(data);
+            var json = JsonConvert.SerializeObject(jsonDes);
+            File.Delete(path);
+            File.AppendAllText(path, json);
         }
 
 

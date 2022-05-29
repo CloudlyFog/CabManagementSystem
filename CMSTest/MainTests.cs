@@ -51,7 +51,7 @@ namespace CMSTest
             applicationContext.SerializeData(expected, pathOrderTime);
 
             var list = applicationContext.DeserializeTaxiData(pathOrderTime);
-            var actual = list[2];
+            var actual = list[0];
 
             // tests
             Assert.AreEqual(expected.ID, actual.ID);
