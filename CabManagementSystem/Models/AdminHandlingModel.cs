@@ -18,7 +18,9 @@ namespace CabManagementSystem.Models
     public class OrderTimeModel
     {
         public Guid ID { get; set; } = Guid.NewGuid();
-        public DateTime Time { get; set; } = DateTime.Now;
+        public Guid UserID { get; set; } = new();
+        public DateTime ArrivingTime { get; set; } = new DateTime();
+        public DateTime CurrentTime { get; set; } = DateTime.Now;
 
 
         /// <summary>
@@ -29,9 +31,9 @@ namespace CabManagementSystem.Models
         /// <exception cref="Exception"></exception>
         public static void SerializeOrderTimeData(OrderTimeModel data, string path)
         {
-            var listOrderTimes = JsonSerializer.Deserialize<RootObjectOrdertimeModel>(File.ReadAllText(path));
+            var listOrderTimes = JsonSerializer.Deserialize<RootObjectOrderTimeModel>(File.ReadAllText(path));
             if (listOrderTimes is null)
-                throw new Exception("variable listOrderTimes is null.");
+                throw new ArgumentNullException("variable listOrderTimes is null.");
             listOrderTimes.ListOrderTimes.Add(data);
             File.WriteAllText(path, JsonSerializer.Serialize(listOrderTimes)); // need to add whole instance of RootObjectOrdertimeModel rather than only ListOrderTimes
         }
@@ -42,10 +44,10 @@ namespace CabManagementSystem.Models
         /// </summary>
         /// <param name="path"></param>
         /// <returns>list of model OrderTimeModel</returns>
-        public static List<OrderTimeModel> DeserializeTaxiData(string path) => JsonSerializer.Deserialize<RootObjectOrdertimeModel>(File.ReadAllText(path)).ListOrderTimes;
+        public static List<OrderTimeModel> DeserializeTaxiData(string path) => JsonSerializer.Deserialize<RootObjectOrderTimeModel>(File.ReadAllText(path)).ListOrderTimes;
     }
 
-    public class RootObjectOrdertimeModel
+    public class RootObjectOrderTimeModel
     {
         public List<OrderTimeModel> ListOrderTimes { get; set; } = new();
     }

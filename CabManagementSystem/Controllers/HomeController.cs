@@ -27,33 +27,16 @@ namespace CabManagementSystem.Controllers
 
             user.HasOrder = conditionForExistingRowApp && applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).HasOrder;
             user.Access = conditionForExistingRowApp && applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).Access;
+
             user.Order.UserID = user.ID;
-
-            user.Order = new()
-            {
-                UserID = user.ID,
-                PhoneNumber = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID).PhoneNumber : string.Empty,
-                Description = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID).Description : string.Empty,
-                Address = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID).Address : string.Empty,
-                DriverName = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID).DriverName : string.Empty,
-                ID = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID).ID : new()
-
-            };
+            user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
 
             user.Driver.DriverID = taxiContext.Drivers.Any(x => x.Name == user.Order.DriverName)
                 ? taxiContext.Drivers.FirstOrDefault(x => x.Name == user.Order.DriverName).DriverID : new();
 
             bool conditionForExistingRowDriver = taxiContext.Drivers.Any(x => x.DriverID == user.Driver.DriverID);
 
-            user.Taxi = new()
-            {
-                ID = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID).ID : new(),
-                DriverID = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID).DriverID : new(),
-                TaxiNumber = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID).TaxiNumber : string.Empty,
-                TaxiClass = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID).TaxiClass : TaxiClass.Economy,
-                Price = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID).Price : TaxiPrice.Economy,
-                SpecialName = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID).SpecialName : string.Empty,
-            };
+            user.Taxi = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID) : new();
 
             HttpContext.Session.SetString("orderID", user.Order.ID.ToString());
             HttpContext.Session.SetString("DriverName", user.Order.DriverName);

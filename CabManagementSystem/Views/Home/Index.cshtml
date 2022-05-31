@@ -5,6 +5,12 @@
     OrderContext orderContext = new(new DbContextOptions<OrderContext>());
     ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
     TaxiContext taxiContext = new(new DbContextOptions<TaxiContext>());
+    var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
+    var orderTimeModel = (OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID));
+    var orderTimeMinutes = (orderTimeModel.ArrivingTime - DateTime.Now).Minutes;
+    var orderTimeSec = (orderTimeModel.ArrivingTime - DateTime.Now).Seconds;
+    if (orderTimeMinutes < 0 && orderTimeSec < 0)
+        throw new Exception("orderTimeMinutes & orderTimeSec below than 0");
 }
 @model UserModel
 
@@ -12,10 +18,14 @@
 <div class="container">
     @if (Model.HasOrder)
     {
-        <p>
-            <strong>Before arriving taxi left </strong>
-            <strong id="arrivingTime"></strong>
-        </p>
+        <h4>
+            <p>
+                <strong>Before arriving taxi left </strong>
+                <strong id="arrivingTime">
+                    @orderTimeMinutes mins & @orderTimeSec seconds
+                </strong>
+            </p>
+        </h4>
         <p><strong>ID: @Model.Taxi.ID</strong></p>
         <p><strong>Driver's ID': @Model.Taxi.DriverID</strong></p>
         <p><strong>Taxi's Number: @Model.Taxi.TaxiNumber</strong></p>
@@ -79,6 +89,6 @@
         <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
         <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
     </form>
-    
+
 </div>
-<script src="~/js/script.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>

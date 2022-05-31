@@ -24,11 +24,12 @@ CREATE TABLE Orders
 	PhoneNumber NVARCHAR(12),
 	Price INT,
 	Description NVARCHAR(1000),
-	Address NVARCHAR(1000)
+	Address NVARCHAR(1000),
+	OrderTime DATETIME
 );
 
-INSERT INTO Orders(ID, UserID, DriverName, PhoneNumber, Price, Description, Address) VALUES
-('4bc89c1a-b818-4bbf-8905-ffaae04fb9c3', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'Alex', '+79611750020', 100,  'please take some dishes', 'Baker Street 12')
+INSERT INTO Orders(ID, UserID, DriverName, PhoneNumber, Price, Description, Address, OrderTime) VALUES
+('4bc89c1a-b818-4bbf-8905-ffaae04fb9c3', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'Alex', '+79611750020', 100,  'please take some dishes', 'Baker Street 12', CURRENT_TIMESTAMP)
 
 DROP TABLE Taxi
 CREATE TABLE Taxi
