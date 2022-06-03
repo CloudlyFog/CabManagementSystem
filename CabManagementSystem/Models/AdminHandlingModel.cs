@@ -2,13 +2,14 @@
 
 namespace CabManagementSystem.Models
 {
+    /// <summary>
+    /// model for functions handling in admin panel
+    /// </summary>
     public class AdminHandlingModel
     {
         public int ID { get; set; }
         public Guid UserID { get; set; } = new();
         public SelectModeEnum SelectMode { get; set; } = SelectModeEnum.Default;
-        public DateTime Time { get; set; } = DateTime.Now;
-        public List<OrderTimeModel> TimeList { get; set; } = new();
 
     }
 
@@ -47,6 +48,9 @@ namespace CabManagementSystem.Models
         public static List<OrderTimeModel> DeserializeTaxiData(string path) => JsonSerializer.Deserialize<RootObjectOrderTimeModel>(File.ReadAllText(path)).ListOrderTimes;
     }
 
+    /// <summary>
+    /// defines object for serializing model OrderTimeModel
+    /// </summary>
     public class RootObjectOrderTimeModel
     {
         public List<OrderTimeModel> ListOrderTimes { get; set; } = new();

@@ -25,7 +25,6 @@ namespace CMSTest
             };
 
             // Serialization data
-            //applicationContext.SerializeData(expected, pathOrderTime);
             OrderTimeModel.SerializeOrderTimeData(expected, pathOrderTime);
             var actual = OrderTimeModel.DeserializeTaxiData(pathOrderTime)[1];
             Assert.Multiple(() =>

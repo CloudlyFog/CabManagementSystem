@@ -2,15 +2,13 @@
 @using CabManagementSystem.AppContext;
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
-    OrderContext orderContext = new(new DbContextOptions<OrderContext>());
-    ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
-    TaxiContext taxiContext = new(new DbContextOptions<TaxiContext>());
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
+    var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
+    var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
+    var taxiContext = new TaxiContext(new DbContextOptions<TaxiContext>());
     var orderTimeModel = (OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID));
-    var orderTimeMinutes = (orderTimeModel.ArrivingTime - DateTime.Now).Minutes;
-    var orderTimeSec = (orderTimeModel.ArrivingTime - DateTime.Now).Seconds;
-    if (orderTimeMinutes < 0 && orderTimeSec < 0)
-        throw new Exception("orderTimeMinutes & orderTimeSec below than 0");
+    var orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
+    var orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
 }
 @model UserModel
 
@@ -20,14 +18,13 @@
     {
         <h4>
             <p>
-                <strong>Before arriving taxi left </strong>
+                <strong id="arrived">Before arriving taxi left </strong>
                 <strong id="arrivingTime">
-                    @orderTimeMinutes mins & @orderTimeSec seconds
                 </strong>
             </p>
         </h4>
         <p><strong>ID: @Model.Taxi.ID</strong></p>
-        <p><strong>Driver's ID': @Model.Taxi.DriverID</strong></p>
+        <p><strong>Driver's Name: @Model.Order.DriverName</strong></p>
         <p><strong>Taxi's Number: @Model.Taxi.TaxiNumber</strong></p>
         <p><strong>Taxi's Class: @Model.Taxi.TaxiClass</strong></p>
         <p><strong>Price: ₽@Model.Taxi.Price.GetHashCode()</strong></p>
@@ -61,7 +58,6 @@
 <br />
 <div>
     <h3>Your last order</h3>
-    <h4>You can edit your order</h4>
     <form method="post" asp-controller="Home" asp-action="EditOrder">
         <div asp-validation-summary="ModelOnly"></div>
         <div>
@@ -89,6 +85,10 @@
         <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
         <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
     </form>
-
 </div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/script.js"></script>
+<script>
+    getTimes(@orderTimeLeftMinutes, @orderTimeLeftSeconds);
+    asyncReloadOrderTime();
+</script>

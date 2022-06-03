@@ -22,8 +22,8 @@ namespace CabManagementSystem.Controllers
                 ? new(HttpContext.Session.GetString("userID")) : new();
             user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
 
-            bool conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
-            bool conditionForExistingRowApp = applicationContext.Users.Any(x => x.ID == user.ID);
+            var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
+            var conditionForExistingRowApp = applicationContext.Users.Any(x => x.ID == user.ID);
 
             user.HasOrder = conditionForExistingRowApp && applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).HasOrder;
             user.Access = conditionForExistingRowApp && applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).Access;
@@ -34,7 +34,7 @@ namespace CabManagementSystem.Controllers
             user.Driver.DriverID = taxiContext.Drivers.Any(x => x.Name == user.Order.DriverName)
                 ? taxiContext.Drivers.FirstOrDefault(x => x.Name == user.Order.DriverName).DriverID : new();
 
-            bool conditionForExistingRowDriver = taxiContext.Drivers.Any(x => x.DriverID == user.Driver.DriverID);
+            var conditionForExistingRowDriver = taxiContext.Drivers.Any(x => x.DriverID == user.Driver.DriverID);
 
             user.Taxi = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID) : new();
 
