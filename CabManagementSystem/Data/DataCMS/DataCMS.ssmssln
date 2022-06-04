@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# SQL Server Management Studio Solution File, Format Version 18.00
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "DataCMS", "DataCMS\DataCMS.ssmssqlproj", "{54942940-BF2D-4FB0-BF37-ADA5571D4180}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F443828-4623-4730-ABCF-CFF89F9A44EA}"
+	ProjectSection(SolutionItems) = preProject
+		InitOrders.sql = InitOrders.sql
+		test.sql = test.sql
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Default = Default|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54942940-BF2D-4FB0-BF37-ADA5571D4180}.Default|Default.ActiveCfg = Default
+		{64A570AC-80DE-4E0A-A2D4-07C808EB30C6}.Default|Default.ActiveCfg = Default
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7703DB37-9BC3-4671-8C67-17FBEC6C8517}
+	EndGlobalSection
+EndGlobal

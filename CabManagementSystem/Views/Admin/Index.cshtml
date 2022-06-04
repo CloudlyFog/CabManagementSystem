@@ -8,7 +8,7 @@
     var PathSerialization = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
     var taxiContext = new TaxiContext(new DbContextOptions<TaxiContext>());
-    var json = applicationContext.DeserializeData(PathSerialization);
+    var json = applicationContext.DeserializeTaxiData(PathSerialization);
     //
     var ListOfIDs = ApplicationContext.GetTaxiPropList("ID");
     var select = applicationContext.AdminHandling.Any(x => x.UserID == Model.ID) ? applicationContext.AdminHandling.First(x => x.UserID == Model.ID).SelectMode : 0;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace CabManagementSystem.AppContext
 {
@@ -114,14 +114,24 @@ namespace CabManagementSystem.AppContext
         /// <param name="path"></param>
         public void SerializeData(TaxiModel data, string path)
         {
-            var jsonDes = JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path));
+            var jsonDes = JsonConvert.DeserializeObject<JsonTaxiModel>(File.ReadAllText(path));
             if (jsonDes is null)
                 return;
             jsonDes.TaxiList.Add(data);
-            var json = JsonSerializer.Serialize(jsonDes);
+            var json = JsonConvert.SerializeObject(jsonDes);
             File.Delete(path);
             File.AppendAllText(path, json);
         }
+
+
+        /// <summary>
+        /// deserialize data from json format
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <returns>any data from json file in datatype object</returns>
+        public object? DeserializeData(string path) => JsonConvert.DeserializeObject<object>(File.ReadAllText(path)) is not null
+            ? JsonConvert.DeserializeObject<object>(File.ReadAllText(path)) : new Exception();
 
         /// <summary>
         /// deserialize taxi's data from json format
@@ -129,7 +139,7 @@ namespace CabManagementSystem.AppContext
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
         /// <returns>instance of model UserModel with filled data of model TaxiModel</returns>
-        public List<TaxiModel> DeserializeData(string path) => JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
+        public List<TaxiModel> DeserializeTaxiData(string path) => JsonConvert.DeserializeObject<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
 
         /// <summary>
         /// get list of definite TaxiModel's property

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CabManagementSystem.Models
 {
@@ -12,5 +13,9 @@ namespace CabManagementSystem.Models
         public TaxiPrice Price { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public DateTime OrderTime { get; set; } = DateTime.Now;
+
+        [NotMapped]
+        public OrderTimeModel? OrderTimeModel { get; set; } = new();
     }
 }
