@@ -1,10 +1,1 @@
-{
-  "ListOrderTimes": [
-    {
-      "ID": "c62d43f7-ee3e-4f34-b337-7100970fa87b",
-      "UserID": "a08ab3e5-e3ec-47cd-84ef-c0eb75045a70",
-      "ArrivingTime": "2022-06-04T10:05:45.5600099+03:00",
-      "CurrentTime": "2022-06-04T09:14:31.8514165+03:00"
-    }
-  ]
-}
+{"ListOrderTimes":[{"ID":"c62d43f7-ee3e-4f34-b337-7100970fa87b","UserID":"a08ab3e5-e3ec-47cd-84ef-c0eb75045a70","ArrivingTime":"2022-06-04T10:07:45.5600099+03:00","CurrentTime":"2022-06-04T10:05:45.5600099+03:00"}]}

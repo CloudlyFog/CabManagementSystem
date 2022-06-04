@@ -13,6 +13,30 @@ namespace CMSTest
         public void Setup()
         {
         }
+        [Test]
+        public void UpdateData()
+        {
+            var actual = new OrderTimeModel()
+            {
+                ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
+                UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
+                ArrivingTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00")
+            };
+            var updated = new OrderTimeModel()
+            {
+                ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
+                UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
+                ArrivingTime = DateTime.Parse("2022-06-04T10:07:45.5600099+03:00"),
+                CurrentTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00")
+            };
+            OrderTimeModel.UpdateSerializeData(updated, pathOrderTime, actual.ID);
+            Assert.Multiple(() =>
+            {
+                Assert.That(actual.ID, Is.EqualTo(updated.ID));
+                Assert.That(actual.ArrivingTime, Is.EqualTo(updated.ArrivingTime));
+                Assert.That(actual.UserID, Is.EqualTo(updated.UserID));
+            });
+        }
 
         [Test]
         public void SerializeOrderTime()
@@ -23,16 +47,12 @@ namespace CMSTest
                 UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
                 ArrivingTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00")
             };
-
-            // Serialization data
             OrderTimeModel.SerializeOrderTimeData(expected, pathOrderTime);
             var actual = OrderTimeModel.DeserializeTaxiData(pathOrderTime)[0];
             Assert.Multiple(() =>
                     {
-
-                        // tests
                         Assert.That(actual.ID, Is.EqualTo(expected.ID));
-                        Assert.That(actual.CurrentTime, Is.EqualTo(expected.CurrentTime));
+                        Assert.That(actual.ArrivingTime, Is.EqualTo(expected.ArrivingTime));
                         Assert.That(actual.UserID, Is.EqualTo(expected.UserID));
                     });
         }
