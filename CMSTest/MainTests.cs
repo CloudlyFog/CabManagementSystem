@@ -21,12 +21,12 @@ namespace CMSTest
             {
                 ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
                 UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
-                ArrivingTime = DateTime.Parse("2022-05-31T17:55:45.5600099+03:00")
+                ArrivingTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00")
             };
 
             // Serialization data
             OrderTimeModel.SerializeOrderTimeData(expected, pathOrderTime);
-            var actual = OrderTimeModel.DeserializeTaxiData(pathOrderTime)[1];
+            var actual = OrderTimeModel.DeserializeTaxiData(pathOrderTime)[0];
             Assert.Multiple(() =>
                     {
 
