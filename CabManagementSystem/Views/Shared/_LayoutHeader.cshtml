@@ -52,6 +52,9 @@
                             <a asp-controller="Admin" asp-action="Index" class="u-border-active-palette-1-base u-border-hover-palette-1-base u-button-style u-nav-link u-text-active-palette-1-base u-text-grey-90 u-text-hover-palette-1-base" style="padding: 10px;">Admin Panel</a>
                         </li>
                     }
+                    <li class="u-nav-item">
+                        <p class="u-border-active-palette-1-base u-border-hover-palette-1-base u-button-style u-nav-link u-text-active-palette-1-base u-text-grey-90 u-text-hover-palette-1-base" style="padding: 10px;">Amount on account: @Model.BankAccountAmount</p>
+                    </li>
                 </ul>
             </div>
             <div class="u-custom-menu u-nav-container-collapse">
@@ -80,6 +83,9 @@
                                     <a asp-controller="Admin" asp-action="Index" class="u-button-style u-nav-link" style="padding: 10px;">Admin Panel</a>
                                 </li>
                             }
+                            <li class="u-nav-item">
+                                <a class="u-button-style u-nav-link" style="padding: 10px;">Amount on account: @Model.BankAccountAmount</a>
+                            </li>
                         </ul>
                     </div>
                 </div>

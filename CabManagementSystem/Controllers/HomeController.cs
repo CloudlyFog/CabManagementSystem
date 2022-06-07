@@ -21,6 +21,8 @@ namespace CabManagementSystem.Controllers
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
             user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
+            user = applicationContext.Users.FirstOrDefault(x => x.ID == user.ID) is not null
+                ? applicationContext.Users.First(x => x.ID == user.ID) : new();
 
             var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
             var conditionForExistingRowApp = applicationContext.Users.Any(x => x.ID == user.ID);
