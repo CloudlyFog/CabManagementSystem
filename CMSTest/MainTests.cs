@@ -13,8 +13,51 @@ namespace CMSTest
         public void Setup()
         {
         }
+
         [Test]
-        public void UpdateData()
+        public void UpdateCurrentTime()
+        {
+            var actual = new OrderTimeModel()
+            {
+                ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
+                UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
+                ArrivingTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00"),
+                CurrentTime = DateTime.Parse("2022-06-04T10:00:45.5600099+03:00")
+            };
+            var updated = new OrderTimeModel()
+            {
+                ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
+                UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
+                ArrivingTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00"),
+                CurrentTime = DateTime.Parse("2022-06-04T10:00:45.5600099+03:00")
+            };
+            OrderTimeModel.UpdateTime(pathOrderTime, actual.ID, updated.CurrentTime, updated.ArrivingTime = default);
+            Assert.That(actual.CurrentTime, Is.EqualTo(updated.CurrentTime));
+        }
+
+        [Test]
+        public void UpdateArrivingTime()
+        {
+            var actual = new OrderTimeModel()
+            {
+                ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
+                UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
+                ArrivingTime = DateTime.Parse("2022-06-04T10:07:45.5600099+03:00"),
+                CurrentTime = DateTime.Parse("2022-06-04T10:00:45.5600099+03:00")
+            };
+            var updated = new OrderTimeModel()
+            {
+                ID = new("c62d43f7-ee3e-4f34-b337-7100970fa87b"),
+                UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70"),
+                ArrivingTime = DateTime.Parse("2022-06-04T10:07:45.5600099+03:00"),
+                CurrentTime = DateTime.Parse("2022-06-04T10:00:45.5600099+03:00")
+            };
+            OrderTimeModel.UpdateTime(pathOrderTime, actual.ID, updated.CurrentTime = default, updated.ArrivingTime);
+            Assert.That(actual.ArrivingTime, Is.EqualTo(updated.ArrivingTime));
+        }
+
+        [Test]
+        public void UpdateOrderTime()
         {
             var actual = new OrderTimeModel()
             {
@@ -29,7 +72,7 @@ namespace CMSTest
                 ArrivingTime = DateTime.Parse("2022-06-04T10:07:45.5600099+03:00"),
                 CurrentTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00")
             };
-            OrderTimeModel.UpdateSerializeData(updated, pathOrderTime, actual.ID);
+            OrderTimeModel.UpdateOrderTimeJson(updated, pathOrderTime, actual.ID);
             Assert.Multiple(() =>
             {
                 Assert.That(actual.ID, Is.EqualTo(updated.ID));
@@ -48,7 +91,7 @@ namespace CMSTest
                 ArrivingTime = DateTime.Parse("2022-06-04T10:05:45.5600099+03:00")
             };
             OrderTimeModel.SerializeOrderTimeData(expected, pathOrderTime);
-            var actual = OrderTimeModel.DeserializeTaxiData(pathOrderTime)[0];
+            var actual = OrderTimeModel.DeserializeTimeModelJson(pathOrderTime)[0];
             Assert.Multiple(() =>
                     {
                         Assert.That(actual.ID, Is.EqualTo(expected.ID));

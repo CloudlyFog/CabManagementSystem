@@ -9,6 +9,7 @@ namespace CabManagementSystem.Controllers
         private readonly ApplicationContext applicationContext;
         private readonly OrderContext orderContext;
         private readonly TaxiContext taxiContext;
+        private const string pathOrderTime = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
         public HomeController(ApplicationContext applicationContext, OrderContext orderContext, TaxiContext taxiContext)
         {
             this.applicationContext = applicationContext;
@@ -38,8 +39,10 @@ namespace CabManagementSystem.Controllers
 
             user.Taxi = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID) : new();
 
+
             HttpContext.Session.SetString("orderID", user.Order.ID.ToString());
             HttpContext.Session.SetString("DriverName", user.Order.DriverName);
+
 
             return View(user);
         }
@@ -96,5 +99,6 @@ namespace CabManagementSystem.Controllers
             orderContext.DeleteOrder(user.Order);
             return RedirectToAction("Index", "Home");
         }
+
     }
 }
