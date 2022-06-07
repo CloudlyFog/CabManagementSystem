@@ -6,9 +6,10 @@
     var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
     var taxiContext = new TaxiContext(new DbContextOptions<TaxiContext>());
-    var orderTimeModel = (OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID));
-    var orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
-    var orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
+    var orderTimeModel = (OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID));
+    orderTimeModel.CurrentTime = DateTime.Now;
+    var orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute - orderTimeModel.CurrentTime.Minute;
+    var orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second - orderTimeModel.CurrentTime.Second;
 }
 @model UserModel
 
@@ -89,6 +90,6 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/script.js"></script>
 <script>
-    getTimes(@orderTimeLeftMinutes, @orderTimeLeftSeconds);
+    setTimes(@orderTimeLeftMinutes, @orderTimeLeftSeconds);
     asyncReloadOrderTime();
 </script>

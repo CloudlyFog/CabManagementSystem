@@ -123,7 +123,6 @@ namespace CabManagementSystem.AppContext
             File.AppendAllText(path, json);
         }
 
-
         /// <summary>
         /// deserialize data from json format
         /// </summary>
