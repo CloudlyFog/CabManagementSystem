@@ -49,6 +49,16 @@
                 <span asp-validation-for="Order.Address"></span>
             </div>
             <div>
+                <label>Buisness</label>
+                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
+                <label>Comfort</label>
+                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
+                <label>Premium</label>
+                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
+                <label>Economy</label>
+                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
+            </div>
+            <div>
                 <input type="submit" value="Order Taxi" style="margin-top: 10px; " />
             </div>
         </form>

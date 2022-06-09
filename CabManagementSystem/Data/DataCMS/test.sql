@@ -1,1 +1,2 @@
-﻿SELECT * FROM AdminHandling 
+﻿--SELECT ID, BankAccountAmount FROM Users 
+SELECT * FROM Orders

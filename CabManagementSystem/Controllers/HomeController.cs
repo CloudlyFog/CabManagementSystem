@@ -1,6 +1,7 @@
 ﻿using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace CabManagementSystem.Controllers
 {
@@ -21,8 +22,10 @@ namespace CabManagementSystem.Controllers
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
             user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
+
             user = applicationContext.Users.FirstOrDefault(x => x.ID == user.ID) is not null
                 ? applicationContext.Users.First(x => x.ID == user.ID) : new();
+            user.BankAccountAmountString = ConvertAmount(user.BankAccountAmount.ToString());
 
             var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
             var conditionForExistingRowApp = applicationContext.Users.Any(x => x.ID == user.ID);
@@ -57,13 +60,14 @@ namespace CabManagementSystem.Controllers
         {
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
+            user.Order.UserID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
 
-            if (!applicationContext.IsAuthanticated(user.ID))
+            if (!applicationContext.IsAuthanticated(user.Order.UserID))
                 return RedirectToAction("Index", "Home");
 
-            if (orderContext.AlreadyOrder(user.ID))
+            if (orderContext.AlreadyOrder(user.Order.UserID))
                 return RedirectToAction("Index", "Home");
-
+            user.Order.Price = user.Taxi.Price;
             orderContext.CreateOrder(user.Order);
             return RedirectToAction("Index", "Home");
         }
@@ -88,15 +92,27 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(user.ID) && orderContext.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
 
-            user.Order.UserID = HttpContext.Session.GetString("userID") is not null
+            user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
-            user.Order.ID = HttpContext.Session.GetString("orderID") is not null
-                ? new(HttpContext.Session.GetString("orderID")) : new();
-            user.Order.DriverName = HttpContext.Session.GetString("DriverName") is not null
-                ? new(HttpContext.Session.GetString("DriverName")) : string.Empty;
 
+            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
+            user.Order = orderContext.Orders.FirstOrDefault(x => x.UserID == user.ID);
             orderContext.DeleteOrder(user.Order);
             return RedirectToAction("Index", "Home");
+        }
+
+        private static string ConvertAmount(string number)
+        {
+            if (number.Length == 3)
+                return number;
+            var sb = new StringBuilder();
+            for (int i = 0; i < number.Length; i++)
+            {
+                if (i % 3 == 0)
+                    sb.Append(' ');
+                sb.Append(number[i]);
+            }
+            return sb.ToString();
         }
     }
 }

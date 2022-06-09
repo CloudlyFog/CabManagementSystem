@@ -16,6 +16,9 @@ namespace CabManagementSystem.Models
         public Guid BankAccountID { get; set; } = Guid.NewGuid();
         public decimal BankAccountAmount { get; set; } = 0;
 
+        [NotMapped]
+        public string BankAccountAmountString { get; set; } = string.Empty;
+
 
         [NotMapped]
         public BankModel? BankModel { get; set; } = new();
