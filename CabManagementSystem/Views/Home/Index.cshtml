@@ -5,10 +5,14 @@
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
     var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
-    var taxiContext = new TaxiContext(new DbContextOptions<TaxiContext>());
-    var orderTimeModel = (OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID));
-    var orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
-    var orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
+    var orderTimeModel = OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID);
+    var orderTimeLeftMinutes = 0;
+    var orderTimeLeftSeconds = 0;
+    if (orderTimeModel is not null)
+    {
+        orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
+        orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
+    }
 }
 @model UserModel
 
@@ -22,12 +26,9 @@
                 <strong id="arrivingTime"></strong>
             </p>
         </h4>
-        <p><strong>ID: @Model.Taxi.ID</strong></p>
+        <p><strong>ID: @Model.Order.ID</strong></p>
         <p><strong>Driver's Name: @Model.Order.DriverName</strong></p>
-        <p><strong>Taxi's Number: @Model.Taxi.TaxiNumber</strong></p>
-        <p><strong>Taxi's Class: @Model.Taxi.TaxiClass</strong></p>
-        <p><strong>Price: ₽@Model.Taxi.Price.GetHashCode()</strong></p>
-        <p><strong>Special Name: @Model.Taxi.SpecialName</strong></p>
+        <p><strong>Price: ₽@Model.Order.Price.GetHashCode()</strong></p>
     }
     else
     {
@@ -49,14 +50,12 @@
                 <span asp-validation-for="Order.Address"></span>
             </div>
             <div>
-                <label>Buisness</label>
-                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
-                <label>Comfort</label>
-                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
-                <label>Premium</label>
-                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
-                <label>Economy</label>
-                <input asp-for="@Model.Taxi.TaxiClass" type="radio" value="@Model.Taxi.TaxiClass" /><br />
+                <select asp-for="@Model.Order.Price">
+                    <option value="@TaxiPrice.Buisness">Buisness</option>
+                    <option value="@TaxiPrice.Premium">Premium</option>
+                    <option value="@TaxiPrice.Comfort">Comfort</option>
+                    <option value="@TaxiPrice.Economy">Economy</option>
+                </select>
             </div>
             <div>
                 <input type="submit" value="Order Taxi" style="margin-top: 10px; " />

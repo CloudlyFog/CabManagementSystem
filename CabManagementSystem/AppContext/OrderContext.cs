@@ -22,7 +22,8 @@ namespace CabManagementSystem.AppContext
         public void CreateOrder(OrderModel order)
         {
             Orders.Add(order);
-            bankAccountContext.Withdraw(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), (decimal)order.Price);
+            bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true;
+            bankAccountContext.Withdraw(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), order.Price.GetHashCode());
             SaveChanges();
         }
 
@@ -34,10 +35,10 @@ namespace CabManagementSystem.AppContext
 
         public void DeleteOrder(OrderModel order)
         {
-            int price = int.Parse(order.Price.ToString());
+            decimal price = decimal.Parse(order.Price.GetHashCode().ToString());
             Orders.Remove(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = false;
-            bankAccountContext.Accrual(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), (decimal)price);
+            bankAccountContext.Accrual(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), price);
             bankAccountContext.SaveChanges();
             SaveChanges();
         }

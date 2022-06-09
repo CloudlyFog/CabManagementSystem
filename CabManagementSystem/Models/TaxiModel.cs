@@ -37,8 +37,8 @@ namespace CabManagementSystem.Models
     public enum TaxiPrice
     {
         Buisness = 260,
-        Comfort = 235,
-        Premium = 180,
+        Premium = 235,
+        Comfort = 180,
         Economy = 150
     }
 }

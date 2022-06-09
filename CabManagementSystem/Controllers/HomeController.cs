@@ -21,11 +21,10 @@ namespace CabManagementSystem.Controllers
         {
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
+            //user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
 
             user = applicationContext.Users.FirstOrDefault(x => x.ID == user.ID) is not null
                 ? applicationContext.Users.First(x => x.ID == user.ID) : new();
-            user.BankAccountAmountString = ConvertAmount(user.BankAccountAmount.ToString());
 
             var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
             var conditionForExistingRowApp = applicationContext.Users.Any(x => x.ID == user.ID);
@@ -33,15 +32,7 @@ namespace CabManagementSystem.Controllers
             user.HasOrder = conditionForExistingRowApp && applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).HasOrder;
             user.Access = conditionForExistingRowApp && applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).Access;
 
-            user.Order.UserID = user.ID;
             user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
-
-            user.Driver.DriverID = taxiContext.Drivers.Any(x => x.Name == user.Order.DriverName)
-                ? taxiContext.Drivers.FirstOrDefault(x => x.Name == user.Order.DriverName).DriverID : new();
-
-            var conditionForExistingRowDriver = taxiContext.Drivers.Any(x => x.DriverID == user.Driver.DriverID);
-
-            user.Taxi = conditionForExistingRowDriver ? taxiContext.Taxi.First(x => x.DriverID == user.Driver.DriverID) : new();
 
             HttpContext.Session.SetString("orderID", user.Order.ID.ToString());
             HttpContext.Session.SetString("DriverName", user.Order.DriverName);
@@ -67,7 +58,7 @@ namespace CabManagementSystem.Controllers
 
             if (orderContext.AlreadyOrder(user.Order.UserID))
                 return RedirectToAction("Index", "Home");
-            user.Order.Price = user.Taxi.Price;
+            //user.Order.Price = user.Taxi.Price;
             orderContext.CreateOrder(user.Order);
             return RedirectToAction("Index", "Home");
         }
@@ -95,7 +86,6 @@ namespace CabManagementSystem.Controllers
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             user.Order = orderContext.Orders.FirstOrDefault(x => x.UserID == user.ID);
             orderContext.DeleteOrder(user.Order);
             return RedirectToAction("Index", "Home");

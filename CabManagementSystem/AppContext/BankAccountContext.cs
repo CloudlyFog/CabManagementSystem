@@ -31,10 +31,9 @@ namespace CabManagementSystem.AppContext
         {
             if (user is null || !Users.Any(x => x.ID == user.ID))
                 throw new ArgumentNullException();
-            var userAcc = Users.First(x => x.ID == user.ID);
-            if (userAcc.BankAccountAmount < amountWithdraw)
+            if (user.BankAccountAmount < amountWithdraw)
                 throw new ArgumentException();
-            userAcc.BankAccountAmount -= amountWithdraw;
+            user.BankAccountAmount -= amountWithdraw;
             SaveChanges();
         }
     }
