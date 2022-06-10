@@ -5,7 +5,7 @@
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
     var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
-    var orderTimeModel = OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID);
+    var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;
     if (orderTimeModel is not null)
@@ -65,36 +65,39 @@
     }
 </div>
 <br />
-<div>
-    <h3>Your last order</h3>
-    <form method="post" asp-controller="Home" asp-action="EditOrder">
-        <div asp-validation-summary="ModelOnly"></div>
-        <div>
-            <label asp-for="Order.PhoneNumber"></label><br />
-            <input asp-for="Order.PhoneNumber" />
-            <span asp-validation-for="Order.PhoneNumber"></span>
-        </div>
-        <div>
-            <label asp-for="Order.Description"></label><br />
-            <input asp-for="Order.Description" />
-            <span asp-validation-for="Order.Description"></span>
-        </div>
-        <div>
-            <label asp-for="Order.Address"></label><br />
-            <input asp-for="Order.Address" />
-            <span asp-validation-for="Order.Address"></span>
-        </div>
-        <div>
-            <input type="submit" value="Edit Order" style="margin-top: 10px; " />
-        </div>
-    </form>
-    <form method="post" asp-controller="Home" asp-action="OrderCancellation">
-        <input type="hidden" asp-for="Order.PhoneNumber" value="@Model.Order.PhoneNumber" />
-        <input type="hidden" asp-for="Order.Description" value="@Model.Order.Description" />
-        <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
-        <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
-    </form>
-</div>
+@if (Model.HasOrder)
+{
+    <div>
+        <h3>Your last order</h3>
+        <form method="post" asp-controller="Home" asp-action="EditOrder">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div>
+                <label asp-for="Order.PhoneNumber"></label><br />
+                <input asp-for="Order.PhoneNumber" />
+                <span asp-validation-for="Order.PhoneNumber"></span>
+            </div>
+            <div>
+                <label asp-for="Order.Description"></label><br />
+                <input asp-for="Order.Description" />
+                <span asp-validation-for="Order.Description"></span>
+            </div>
+            <div>
+                <label asp-for="Order.Address"></label><br />
+                <input asp-for="Order.Address" />
+                <span asp-validation-for="Order.Address"></span>
+            </div>
+            <div>
+                <input type="submit" value="Edit Order" style="margin-top: 10px; " />
+            </div>
+        </form>
+        <form method="post" asp-controller="Home" asp-action="OrderCancellation">
+            <input type="hidden" asp-for="Order.PhoneNumber" value="@Model.Order.PhoneNumber" />
+            <input type="hidden" asp-for="Order.Description" value="@Model.Order.Description" />
+            <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
+            <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
+        </form>
+    </div>
+}
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/script.js"></script>
 <script>

@@ -1,5 +1,3 @@
 ﻿--SELECT ID, BankAccountAmount FROM Users 
 
-
-UPDATE Users SET BankAccountAmount = 1000 WHERE ID = '011A3C87-D2E7-4C31-FC43-08DA4AE393F9'
 SELECT * FROM Users

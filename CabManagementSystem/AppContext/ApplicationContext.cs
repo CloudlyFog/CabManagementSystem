@@ -35,6 +35,7 @@ namespace CabManagementSystem.AppContext
             if (IsAuthanticated(receivedUser))//if user isn`t exist method will send false
                 return;
             receivedUser.Authenticated = true;
+            receivedUser.ID = Guid.NewGuid();
             Users.Add(receivedUser);
             SaveChanges();
         }
