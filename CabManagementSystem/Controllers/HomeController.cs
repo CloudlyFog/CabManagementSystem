@@ -1,4 +1,4 @@
-﻿using CabManagementSystem.AppContext;
+using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
@@ -24,10 +24,10 @@ namespace CabManagementSystem.Controllers
                 ? applicationContext.Users.First(x => x.ID == user.ID) : new();
 
             var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
-            var conditionForExistingRowApp = applicationContext.Users.Any(x => x.ID == user.ID);
+            var conditionForExistingRowApplication = applicationContext.Users.Any(x => x.ID == user.ID);
 
-            user.HasOrder = conditionForExistingRowApp && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
-            user.Access = conditionForExistingRowApp && applicationContext.Users.First(x => x.ID == user.ID).Access;
+            user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
+            user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
 
             user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
 

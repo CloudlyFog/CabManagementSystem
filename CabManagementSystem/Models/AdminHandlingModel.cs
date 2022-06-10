@@ -39,13 +39,67 @@ namespace CabManagementSystem.Models
             File.WriteAllText(path, JsonSerializer.Serialize(listOrderTimes)); // need to add whole instance of RootObjectOrdertimeModel rather than only ListOrderTimes
         }
 
+        /// <summary>
+        /// updates data of order's time with definite ID
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="path"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static void UpdateTime(string path, Guid timeID, DateTime currentTime = default, DateTime arrivingTime = default)
+        {
+            var listOrderTimes = JsonSerializer.Deserialize<RootObjectOrderTimeModel>(File.ReadAllText(path));
+            if (listOrderTimes is null)
+                throw new ArgumentNullException("variable jsonDes is null.");
+
+            var time = listOrderTimes.ListOrderTimes.FirstOrDefault(x => x.ID == timeID) is not null
+                ? listOrderTimes.ListOrderTimes.FirstOrDefault(x => x.ID == timeID) : throw new ArgumentNullException("varible time is null.");
+
+
+            listOrderTimes.ListOrderTimes.Remove(time);// remove filed with old data
+
+            if (currentTime != default)
+                time.CurrentTime = currentTime;
+
+            if (arrivingTime != default)
+                time.ArrivingTime = arrivingTime;
+
+            listOrderTimes.ListOrderTimes.Add(time);// add filed with new data
+            var json = JsonSerializer.Serialize(listOrderTimes);
+            File.Delete(path);
+            File.AppendAllText(path, json);
+        }
+
+        /// <summary>
+        /// updates data of order's time with definite ID
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="path"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static void UpdateOrderTimeJson(OrderTimeModel data, string path, Guid timeID)
+        {
+            var listOrderTimes = JsonSerializer.Deserialize<RootObjectOrderTimeModel>(File.ReadAllText(path));
+            if (listOrderTimes is null)
+                throw new ArgumentNullException("variable jsonDes is null.");
+
+            var time = listOrderTimes.ListOrderTimes.FirstOrDefault(x => x.ID == timeID) is not null
+                ? listOrderTimes.ListOrderTimes.FirstOrDefault(x => x.ID == timeID) : throw new ArgumentNullException("varible time is null.");
+
+            listOrderTimes.ListOrderTimes.Remove(time);// remove filed with old data
+            data.ID = time.ID;
+            time = data;
+            listOrderTimes.ListOrderTimes.Add(time);// add filed with new data
+            var json = JsonSerializer.Serialize(listOrderTimes);
+            File.Delete(path);
+            File.AppendAllText(path, json);
+        }
 
         /// <summary>
         /// deserialize data of order's time from json format
         /// </summary>
         /// <param name="path"></param>
         /// <returns>list of model OrderTimeModel</returns>
-        public static List<OrderTimeModel> DeserializeTaxiData(string path) => JsonSerializer.Deserialize<RootObjectOrderTimeModel>(File.ReadAllText(path)).ListOrderTimes;
+        public static List<OrderTimeModel> DeserializeTimeModelJson(string path) => JsonSerializer.Deserialize<RootObjectOrderTimeModel>(File.ReadAllText(path)).ListOrderTimes;
+
     }
 
     /// <summary>
