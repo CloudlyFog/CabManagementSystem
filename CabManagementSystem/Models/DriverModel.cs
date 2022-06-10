@@ -8,5 +8,6 @@ namespace CabManagementSystem.Models
         public Guid DriverID { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        public bool Busy { get; set; }
     }
 }

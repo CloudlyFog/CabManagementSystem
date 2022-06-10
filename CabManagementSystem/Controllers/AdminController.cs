@@ -54,7 +54,6 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult DeleteTaxi(UserModel user)
         {
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
 

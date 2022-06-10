@@ -15,14 +15,16 @@ namespace CabManagementSystem.AppContext
                 @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
         }
 
+        private readonly BankAccountContext bankAccountContext = new(new DbContextOptions<BankAccountContext>());
         public DbSet<OrderModel> Orders { get; set; }
-        private readonly TaxiContext orderContext = new(new DbContextOptions<TaxiContext>());
-        private readonly string pathOrderTime = "";
+        public DbSet<DriverModel> Drivers { get; set; }
 
         public void CreateOrder(OrderModel order)
         {
-            OrderTimeModel.SerializeOrderTimeData(new OrderTimeModel(), pathOrderTime);
+            order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
             Orders.Add(order);
+            bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true;
+            bankAccountContext.Withdraw(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), order.Price.GetHashCode());
             SaveChanges();
         }
 
@@ -34,7 +36,11 @@ namespace CabManagementSystem.AppContext
 
         public void DeleteOrder(OrderModel order)
         {
+            var price = decimal.Parse(order.Price.GetHashCode().ToString());
             Orders.Remove(order);
+            bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = false;
+            bankAccountContext.Accrual(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), price);
+            bankAccountContext.SaveChanges();
             SaveChanges();
         }
 

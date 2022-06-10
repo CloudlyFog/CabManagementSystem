@@ -1,15 +1,18 @@
-﻿@using Microsoft.EntityFrameworkCore;
+@using Microsoft.EntityFrameworkCore;
 @using CabManagementSystem.AppContext;
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
     var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
-    var taxiContext = new TaxiContext(new DbContextOptions<TaxiContext>());
-    var orderTimeModel = (OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID));
-    orderTimeModel.CurrentTime = DateTime.Now;
-    var orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute - orderTimeModel.CurrentTime.Minute;
-    var orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second - orderTimeModel.CurrentTime.Second;
+    var orderTimeModel = OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID);
+    var orderTimeLeftMinutes = 0;
+    var orderTimeLeftSeconds = 0;
+    if (orderTimeModel is not null)
+    {
+        orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
+        orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
+    }
 }
 @model UserModel
 
@@ -20,16 +23,13 @@
         <h4>
             <p>
                 <strong id="arrived">Before arriving taxi left </strong>
-                <strong id="arrivingTime">
-                </strong>
+                <strong id="arrivingTime"></strong>
             </p>
         </h4>
-        <p><strong>ID: @Model.Taxi.ID</strong></p>
+        <p><strong>ID: @Model.Order.ID</strong></p>
         <p><strong>Driver's Name: @Model.Order.DriverName</strong></p>
-        <p><strong>Taxi's Number: @Model.Taxi.TaxiNumber</strong></p>
-        <p><strong>Taxi's Class: @Model.Taxi.TaxiClass</strong></p>
-        <p><strong>Price: ₽@Model.Taxi.Price.GetHashCode()</strong></p>
-        <p><strong>Special Name: @Model.Taxi.SpecialName</strong></p>
+        <p><strong>Price: ₽@Model.Order.Price.GetHashCode()</strong></p>
+        <p><strong>Address: @Model.Order.Address</strong></p>
     }
     else
     {
@@ -49,6 +49,14 @@
                 <label asp-for="Order.Address"></label><br />
                 <input value="" asp-for="Order.Address" />
                 <span asp-validation-for="Order.Address"></span>
+            </div>
+            <div>
+                <select asp-for="@Model.Order.Price">
+                    <option value="@TaxiPrice.Buisness">Buisness</option>
+                    <option value="@TaxiPrice.Premium">Premium</option>
+                    <option value="@TaxiPrice.Comfort">Comfort</option>
+                    <option value="@TaxiPrice.Economy">Economy</option>
+                </select>
             </div>
             <div>
                 <input type="submit" value="Order Taxi" style="margin-top: 10px; " />
@@ -90,6 +98,6 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/script.js"></script>
 <script>
-    setTimes(@orderTimeLeftMinutes, @orderTimeLeftSeconds);
+    getTimes(@orderTimeLeftMinutes, @orderTimeLeftSeconds);
     asyncReloadOrderTime();
 </script>
