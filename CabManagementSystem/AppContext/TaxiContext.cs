@@ -34,20 +34,8 @@ namespace CabManagementSystem.AppContext
         }
         public void DeleteTaxi(TaxiModel taxi)
         {
-            taxi.TaxiClass = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
-            taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
-            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
-            taxi.SpecialName = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).SpecialName : taxi.SpecialName;
-            //
-            taxi.BindTaxiDriver.TaxiID = taxi.ID;
-            taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
-                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).DriverID : new();
-            taxi.BindTaxiDriver.ID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
-                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).ID : new();
+            taxi = Taxi.Any(x => x.ID == taxi.ID)
+                ? Taxi.First(x => x.ID == taxi.ID) : new();
             //
             ChangeTracker.Clear();
             DeleteBindTaxiDriver(taxi.BindTaxiDriver);

@@ -10,9 +10,9 @@ namespace CabManagementSystem.Models
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public bool Authenticated { get; set; } = false;
-        public bool Access { get; set; } = false;
-        public bool HasOrder { get; set; } = false;
+        public bool Authenticated { get; set; }
+        public bool Access { get; set; }
+        public bool HasOrder { get; set; }
         public Guid BankAccountID { get; set; } = Guid.NewGuid();
         public decimal BankAccountAmount { get; set; } = 0;
 

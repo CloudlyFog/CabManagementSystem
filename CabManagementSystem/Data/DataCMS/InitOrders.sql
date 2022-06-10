@@ -51,10 +51,12 @@ CREATE TABLE Drivers
 (
 	DriverID UNIQUEIDENTIFIER,
 	Name NVARCHAR(50),
-	PhoneNumber NVARCHAR(12)
+	PhoneNumber NVARCHAR(12),
+	Busy BIT
 )
-INSERT INTO Drivers(DriverID, Name, PhoneNumber) VALUES
-('bd1e063f-b343-4387-812c-e203bfaa1f65', 'Alex', '+79611750020')
+INSERT INTO Drivers(DriverID, Name, PhoneNumber, Busy) VALUES
+('bd1e063f-b343-4387-812c-e203bfaa1f65', 'Alex', '+79611750020', 1),
+('96583972-f4f2-4c73-99b6-0708fd53aa97', 'Nick', '+79046438918', 0)
 
 DROP TABLE BindTaxiDriver
 CREATE TABLE BindTaxiDriver

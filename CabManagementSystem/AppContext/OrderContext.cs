@@ -17,10 +17,11 @@ namespace CabManagementSystem.AppContext
 
         private readonly BankAccountContext bankAccountContext = new(new DbContextOptions<BankAccountContext>());
         public DbSet<OrderModel> Orders { get; set; }
-
+        public DbSet<DriverModel> Drivers { get; set; }
 
         public void CreateOrder(OrderModel order)
         {
+            order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
             Orders.Add(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true;
             bankAccountContext.Withdraw(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), order.Price.GetHashCode());
@@ -35,7 +36,7 @@ namespace CabManagementSystem.AppContext
 
         public void DeleteOrder(OrderModel order)
         {
-            decimal price = decimal.Parse(order.Price.GetHashCode().ToString());
+            var price = decimal.Parse(order.Price.GetHashCode().ToString());
             Orders.Remove(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = false;
             bankAccountContext.Accrual(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), price);
