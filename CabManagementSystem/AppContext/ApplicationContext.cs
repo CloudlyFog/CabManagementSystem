@@ -122,15 +122,6 @@ namespace CabManagementSystem.AppContext
         }
 
         /// <summary>
-        /// deserialize data from json format
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="path"></param>
-        /// <returns>any data from json file in datatype object</returns>
-        public object? DeserializeData(string path) => JsonConvert.DeserializeObject<object>(File.ReadAllText(path)) is not null
-            ? JsonConvert.DeserializeObject<object>(File.ReadAllText(path)) : new Exception();
-
-        /// <summary>
         /// deserialize taxi's data from json format
         /// </summary>
         /// <typeparam name="T"></typeparam>

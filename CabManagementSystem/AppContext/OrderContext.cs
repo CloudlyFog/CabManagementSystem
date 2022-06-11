@@ -16,21 +16,33 @@ namespace CabManagementSystem.AppContext
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<DriverModel> Drivers { get; set; }
 
+        /// <summary>
+        /// adds data of user order and withdraw money from account
+        /// </summary>
+        /// <param name="order"></param>
         public void CreateOrder(OrderModel order)
         {
             order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
             Orders.Add(order);
-            bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true;
+            bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true; // sets that definite user ordered taxi
             bankAccountContext.Withdraw(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), order.Price.GetHashCode());
             SaveChanges();
         }
 
+        /// <summary>
+        /// updates data of user order
+        /// </summary>
+        /// <param name="order"></param>
         public void UpdateOrder(OrderModel order)
         {
             Orders.Update(order);
             SaveChanges();
         }
 
+        /// <summary>
+        /// removes data of user order and accrual money on account
+        /// </summary>
+        /// <param name="order"></param>
         public void DeleteOrder(OrderModel order)
         {
             var price = decimal.Parse(order.Price.GetHashCode().ToString());
@@ -41,6 +53,11 @@ namespace CabManagementSystem.AppContext
             SaveChanges();
         }
 
+        /// <summary>
+        /// defines user already has order or not
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns><see langword="true"/> if the database there's order with the same user id</returns>
         public bool AlreadyOrder(Guid userID) => Orders.Any(x => x.UserID == userID);
     }
 }

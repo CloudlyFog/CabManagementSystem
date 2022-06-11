@@ -39,10 +39,7 @@ namespace CabManagementSystem.Controllers
         }
 
         [Route("Privacy")]
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View();
 
         [HttpPost, Route("OrderTaxi")]
         public IActionResult OrderTaxi(UserModel user)
@@ -83,20 +80,6 @@ namespace CabManagementSystem.Controllers
             user.Order = orderContext.Orders.FirstOrDefault(x => x.UserID == user.ID);
             orderContext.DeleteOrder(user.Order);
             return RedirectToAction("Index", "Home");
-        }
-
-        private static string ConvertAmount(string number)
-        {
-            if (number.Length == 3)
-                return number;
-            var sb = new StringBuilder();
-            for (int i = 0; i < number.Length; i++)
-            {
-                if (i % 3 == 0)
-                    sb.Append(' ');
-                sb.Append(number[i]);
-            }
-            return sb.ToString();
         }
     }
 }

@@ -17,10 +17,6 @@ namespace CabManagementSystem.Models
         public decimal BankAccountAmount { get; set; } = 0;
 
         [NotMapped]
-        public string BankAccountAmountString { get; set; } = string.Empty;
-
-
-        [NotMapped]
         public BankModel? BankModel { get; set; } = new();
 
         [NotMapped]
@@ -28,11 +24,5 @@ namespace CabManagementSystem.Models
 
         [NotMapped]
         public TaxiModel? Taxi { get; set; } = new();
-
-        [NotMapped]
-        public DriverModel? Driver { get; set; } = new();
-
-        [NotMapped]
-        public AdminHandlingModel? AdminHandling { get; set; } = new();
     }
 }
