@@ -1,2 +1,2 @@
-# CabManagementSystem
-system for taxies ordering.
+# Project CabManagementSystem
+that project is a system for managing ordering taxi.
