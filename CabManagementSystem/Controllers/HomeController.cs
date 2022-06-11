@@ -19,7 +19,6 @@ namespace CabManagementSystem.Controllers
         {
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
-            user.ID = new("7aec92dc-fb2a-45d2-a0db-3e6f66aa9ebb");
 
             user = applicationContext.Users.FirstOrDefault(x => x.ID == user.ID) is not null
                 ? applicationContext.Users.First(x => x.ID == user.ID) : new();
@@ -65,7 +64,6 @@ namespace CabManagementSystem.Controllers
 
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
                     ? new(HttpContext.Session.GetString("userID")) : new();
-            user.Order.ID = new("7aec92dc-fb2a-45d2-a0db-3e6f66aa9ebb");
 
             user.Order.ID = HttpContext.Session.GetString("orderID") is not null
                     ? new(HttpContext.Session.GetString("orderID")) : new();
