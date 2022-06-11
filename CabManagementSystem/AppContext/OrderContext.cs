@@ -35,6 +35,9 @@ namespace CabManagementSystem.AppContext
         /// <param name="order"></param>
         public void UpdateOrder(OrderModel order)
         {
+            order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
+            order.Price = Orders.First(x => x.ID == order.ID).Price;
+            ChangeTracker.Clear();
             Orders.Update(order);
             SaveChanges();
         }
