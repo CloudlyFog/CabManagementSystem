@@ -27,9 +27,10 @@
             </p>
         </h4>
         <p><strong>ID: @Model.Order.ID</strong></p>
-        <p><strong>Driver's Name: @Model.Order.DriverName</strong></p>
         <p><strong>Price: ₽@Model.Order.Price.GetHashCode()</strong></p>
         <p><strong>Address: @Model.Order.Address</strong></p>
+        <p><strong>Driver's Name: @Model.Driver.Name</strong></p>
+        <p><strong>Driver's Phone Number: @Model.Driver.PhoneNumber</strong></p>
     }
     else
     {

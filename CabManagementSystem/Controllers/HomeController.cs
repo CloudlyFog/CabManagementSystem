@@ -25,12 +25,14 @@ namespace CabManagementSystem.Controllers
 
             var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
             var conditionForExistingRowApplication = applicationContext.Users.Any(x => x.ID == user.ID);
+            var conditionForExistingRowDriver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName);
 
             user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
             user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
 
             user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
-
+            user.Driver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName)
+                ? orderContext.Drivers.First(x => x.Name == orderContext.Orders.First(x => x.UserID == user.ID).DriverName) : new();
 
             HttpContext.Session.SetString("orderID", user.Order.ID.ToString());
             HttpContext.Session.SetString("DriverName", user.Order.DriverName);
