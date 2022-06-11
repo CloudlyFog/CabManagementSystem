@@ -6,10 +6,7 @@ namespace CabManagementSystem.AppContext
 {
     public class TaxiContext : DbContext
     {
-        public TaxiContext(DbContextOptions<TaxiContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public TaxiContext(DbContextOptions<TaxiContext> options) : base(options) => Database.EnsureCreated();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

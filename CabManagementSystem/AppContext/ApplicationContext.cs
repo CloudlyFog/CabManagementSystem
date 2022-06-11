@@ -12,10 +12,7 @@ namespace CabManagementSystem.AppContext
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<AdminHandlingModel> AdminHandling { get; set; }
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) => Database.EnsureCreated();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();

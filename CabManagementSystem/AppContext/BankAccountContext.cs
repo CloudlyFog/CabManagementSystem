@@ -5,10 +5,7 @@ namespace CabManagementSystem.AppContext
 {
     public class BankAccountContext : DbContext
     {
-        public BankAccountContext(DbContextOptions<BankAccountContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public BankAccountContext(DbContextOptions<BankAccountContext> options) : base(options) => Database.EnsureCreated();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
