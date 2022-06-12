@@ -31,8 +31,32 @@
         <input type="submit" value="remove" id="submit-button-add-taxi" />
     </form>
     
+</div><br />
+<h4>Bank</h4>
+<div>
+    <form method="post" asp-controller="Admin" asp-action="Accrual" id="add-taxi-id">
+        <div>
+            <label asp-for="ID"></label><br />
+            <input value="" asp-for="ID" id="taxi" />
+        </div>
+        <div>
+            <label asp-for="BankAccountAmount"></label><br />
+            <input value="" asp-for="BankAccountAmount" id="taxi" />
+        </div>
+        <input type="submit" value="accrual" id="submit-button-add-taxi" />
+    </form><br />
+    <form method="post" asp-controller="Admin" asp-action="Withdraw" id="add-taxi-id">
+        <div>
+            <label asp-for="ID"></label><br />
+            <input value="" asp-for="ID" id="taxi" />
+        </div>
+        <div>
+            <label asp-for="BankAccountAmount"></label><br />
+            <input value="" asp-for="BankAccountAmount" id="taxi" />
+        </div>
+        <input type="submit" value="withdraw" id="submit-button-add-taxi" />
+    </form><br />
 </div>
-
 <h2>Taxi</h2>
 <div class="container">
     <form method="post" asp-controller="Admin" asp-action="AddTaxi" id="add-taxi-id">

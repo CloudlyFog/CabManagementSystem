@@ -8,21 +8,19 @@ namespace CabManagementSystem.Controllers
     {
         private readonly TaxiContext taxiContext;
         private readonly ApplicationContext applicationContext;
-        private const string PathSerialization = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
-        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext)
+        private readonly BankAccountContext bankAccountContext;
+        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext, BankAccountContext bankAccountContext)
         {
             this.applicationContext = applicationContext;
             this.taxiContext = taxiContext;
+            this.bankAccountContext = bankAccountContext;
         }
 
         public IActionResult Index(UserModel user)
         {
-            user.Taxi.TaxiList = applicationContext.DeserializeTaxiData(PathSerialization);
-
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             user.Order.UserID = user.ID;
 
             return View(user);
@@ -31,10 +29,9 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult AddTaxi(UserModel user)
         {
-            if (!applicationContext.IsAuthanticated(user.ID))
+            if (!applicationContext.IsAuthanticated(user.ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).Access)
                 return RedirectToAction("Index", "Admin");
 
-            applicationContext.SerializeData(user.Taxi, PathSerialization);
 
             taxiContext.AddTaxi(user.Taxi);
             return RedirectToAction("Index", "Admin");
@@ -81,7 +78,7 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult GiveAdmin(Guid ID)
         {
-            if (!applicationContext.IsAuthanticated(ID))
+            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             applicationContext.GiveAdminRights(ID);
@@ -91,10 +88,30 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult RemoveAdmin(Guid ID)
         {
-            if (!applicationContext.IsAuthanticated(ID))
+            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             applicationContext.RemoveAdminRights(ID);
+            return RedirectToAction("Index", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult Accrual(Guid ID, decimal BankAccountAmount)
+        {
+            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
+                return RedirectToAction("Index", "Admin");
+
+            bankAccountContext.Accrual(applicationContext.Users.FirstOrDefault(x => x.ID == ID), BankAccountAmount);
+            return RedirectToAction("Index", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult Withdraw(Guid ID, decimal BankAccountAmount)
+        {
+            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
+                return RedirectToAction("Index", "Admin");
+
+            bankAccountContext.Withdraw(applicationContext.Users.FirstOrDefault(x => x.ID == ID), BankAccountAmount);
             return RedirectToAction("Index", "Admin");
         }
     }
