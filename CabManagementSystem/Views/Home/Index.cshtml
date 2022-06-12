@@ -5,7 +5,7 @@
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
     var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
-    var orderTimeModel = OrderTimeModel.DeserializeTaxiData(path).FirstOrDefault(x => x.UserID == Model.ID);
+    var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;
     if (orderTimeModel is not null)

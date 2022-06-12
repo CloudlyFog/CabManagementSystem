@@ -14,10 +14,8 @@ namespace CabManagementSystem.Models
         public bool Access { get; set; }
         public bool HasOrder { get; set; }
         public Guid BankAccountID { get; set; } = Guid.NewGuid();
+        public Guid BankID { get; set; } = Guid.NewGuid();
         public decimal BankAccountAmount { get; set; } = 0;
-
-        [NotMapped]
-        public string BankAccountAmountString { get; set; } = string.Empty;
 
 
         [NotMapped]

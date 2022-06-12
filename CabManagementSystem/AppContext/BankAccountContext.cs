@@ -13,15 +13,24 @@ namespace CabManagementSystem.AppContext
                 @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
         }
 
-        public DbSet<BankModel> Banks { get; set; }
         public DbSet<UserModel> Users { get; set; }
+        private readonly BankContext bankContext = new(new DbContextOptions<BankContext>());
 
         public void Accrual(UserModel user, decimal amountAccrual)
         {
             if (user is null || !Users.Any(x => x.ID == user.ID))
                 throw new ArgumentNullException();
-            var userAcc = Users.First(x => x.ID == user.ID);
-            userAcc.BankAccountAmount += amountAccrual;
+
+            var operation = new OperationModel()
+            {
+                BankID = user.BankID,
+                SenderID = user.BankID,
+                ReceiverID = user.ID,
+                TransferAmount = amountAccrual
+            };
+            bankContext.CreateOperation(operation);
+            user.BankAccountAmount += amountAccrual;
+            Users.Update(user);
             SaveChanges();
         }
         public void Withdraw(UserModel user, decimal amountWithdraw)
@@ -30,7 +39,17 @@ namespace CabManagementSystem.AppContext
                 throw new ArgumentNullException();
             if (user.BankAccountAmount < amountWithdraw)
                 throw new ArgumentException();
+
+            var operation = new OperationModel()
+            {
+                BankID = user.BankID,
+                SenderID = user.ID,
+                ReceiverID = user.BankID,
+                TransferAmount = amountWithdraw
+            };
+            bankContext.CreateOperation(operation);
             user.BankAccountAmount -= amountWithdraw;
+            Users.Update(user);
             SaveChanges();
         }
     }

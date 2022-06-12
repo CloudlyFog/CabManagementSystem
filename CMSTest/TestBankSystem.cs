@@ -7,6 +7,7 @@ namespace CMSTest
     internal class TestBankSystem
     {
         private readonly BankAccountContext bankAccountContext = new(new DbContextOptions<BankAccountContext>());
+        private readonly BankContext bankContext = new(new DbContextOptions<BankContext>());
         private readonly Guid id = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
 
         [SetUp]
@@ -52,6 +53,13 @@ namespace CMSTest
             };
 
             Assert.That(actual.BankAccountAmount, Is.EqualTo(expected.BankAccountAmount));
+        }
+
+        [Test]
+        public void Operations()
+        {
+            var operation = bankContext.Operations.FirstOrDefault(x => x.ID == new Guid("AE734776-9CB6-464E-9ADF-638A04DB8E0F"));
+            bankContext.CreateOperation(operation, OperationKind.Accrual);
         }
     }
 }

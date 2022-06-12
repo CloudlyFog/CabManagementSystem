@@ -11,7 +11,7 @@ namespace CabManagementSystem.Models
         public decimal AccountAmount { get; set; }
 
         [NotMapped]
-        public UserModel? User { get; set; } = new();
+        public OperationModel? OperationModel { get; set; } = new();
     }
     public class OperationModel
     {
@@ -20,7 +20,9 @@ namespace CabManagementSystem.Models
         public Guid ReceiverID { get; set; } = Guid.NewGuid();
         public Guid SenderID { get; set; } = Guid.NewGuid();
         public decimal TransferAmount { get; set; }
-        public StatusOperationCode OperationStatus { get; set; } = StatusOperationCode.Default;
+        public StatusOperationCode OperationStatus { get; set; } = StatusOperationCode.Successfull;
+        public OperationKind OperationKind { get; set; }
+
     }
     public enum StatusOperationCode
     {
@@ -28,5 +30,10 @@ namespace CabManagementSystem.Models
         Successfull = 200,
         Restricted = 300,
         Error = 400,
+    }
+    public enum OperationKind
+    {
+        Accrual = 1,
+        Withdraw
     }
 }
