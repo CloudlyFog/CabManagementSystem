@@ -26,8 +26,8 @@ namespace CabManagementSystem.AppContext
         {
             if (user is null || !Users.Any(x => x.ID == user.ID))
                 throw new ArgumentNullException();
-            var userAcc = Users.First(x => x.ID == user.ID);
-            userAcc.BankAccountAmount += amountAccrual;
+            user.BankAccountAmount += amountAccrual;
+            Users.Update(user);
             SaveChanges();
         }
 
@@ -45,6 +45,7 @@ namespace CabManagementSystem.AppContext
             if (user.BankAccountAmount < amountWithdraw)
                 throw new ArgumentException();
             user.BankAccountAmount -= amountWithdraw;
+            Users.Update(user);
             SaveChanges();
         }
     }
