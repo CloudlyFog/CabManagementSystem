@@ -14,7 +14,26 @@
     var select = applicationContext.AdminHandling.Any(x => x.UserID == Model.ID) ? applicationContext.AdminHandling.First(x => x.UserID == Model.ID).SelectMode : 0;
 }
 <title>Admin Panel</title>
+<h2>User</h2>
+<div>
+    <form method="post" asp-controller="Admin" asp-action="GiveAdmin" id="add-taxi-id">
+        <div>
+            <label asp-for="ID"></label><br />
+            <input value="" asp-for="ID" id="taxi" />
+        </div>
+        <input type="submit" value="give" id="submit-button-add-taxi" />
+    </form><br />
+    <form method="post" asp-controller="Admin" asp-action="RemoveAdmin" id="add-taxi-id">
+        <div>
+            <label asp-for="ID"></label><br />
+            <input value="" asp-for="ID" id="taxi" />
+        </div>
+        <input type="submit" value="remove" id="submit-button-add-taxi" />
+    </form>
+    
+</div>
 
+<h2>Taxi</h2>
 <div class="container">
     <form method="post" asp-controller="Admin" asp-action="AddTaxi" id="add-taxi-id">
         <div>

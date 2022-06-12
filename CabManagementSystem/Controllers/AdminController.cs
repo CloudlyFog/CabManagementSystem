@@ -21,6 +21,8 @@ namespace CabManagementSystem.Controllers
 
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
+
+            user.ID = new("A08AB3E5-E3EC-47CD-84EF-C0EB75045A70");
             user.Order.UserID = user.ID;
 
             return View(user);
@@ -73,6 +75,26 @@ namespace CabManagementSystem.Controllers
 
             applicationContext.ChangeSelectMode(user.ID, selectMode);
 
+            return RedirectToAction("Index", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult GiveAdmin(Guid ID)
+        {
+            if (!applicationContext.IsAuthanticated(ID))
+                return RedirectToAction("Index", "Admin");
+
+            applicationContext.GiveAdminRights(ID);
+            return RedirectToAction("Index", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult RemoveAdmin(Guid ID)
+        {
+            if (!applicationContext.IsAuthanticated(ID))
+                return RedirectToAction("Index", "Admin");
+
+            applicationContext.RemoveAdminRights(ID);
             return RedirectToAction("Index", "Admin");
         }
     }
