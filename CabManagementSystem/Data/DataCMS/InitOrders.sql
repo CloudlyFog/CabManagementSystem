@@ -44,10 +44,10 @@ CREATE TABLE Operations
 	OperationStatus INT,
 	OperationKind INT
 )
-INSERT INTO Operations(ID, BankID, ReceiverID, SenderID, TransferAmount, OperationStatus, OperationKind) VALUES
-('ae734776-9cb6-464e-9adf-638a04db8e0f', 'bed62930-9356-477a-bed5-b84d59336122', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'bed62930-9356-477a-bed5-b84d59336122', 120, 200, 1),
-('84840c88-d183-491c-9e6e-19b16e26fbc9', 'bed62930-9356-477a-bed5-b84d59336122', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'bed62930-9356-477a-bed5-b84d59336122', 1234,  300, 1),
-('5091ef5f-973a-4e46-9428-7b8f69dcc23d', 'e4c18139-f2c8-4a4b-a8b8-cf0d230b37fa', '7aec92dc-fb2a-45d2-a0db-3e6f66aa9ebb', 'b56c8051-6eee-4441-a7de-7cb4789de362', 5234, 400, 2)
+--INSERT INTO Operations(ID, BankID, ReceiverID, SenderID, TransferAmount, OperationStatus, OperationKind) VALUES
+--('ae734776-9cb6-464e-9adf-638a04db8e0f', 'bed62930-9356-477a-bed5-b84d59336122', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'bed62930-9356-477a-bed5-b84d59336122', 120, 200, 1),
+--('84840c88-d183-491c-9e6e-19b16e26fbc9', 'bed62930-9356-477a-bed5-b84d59336122', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'bed62930-9356-477a-bed5-b84d59336122', 1234,  300, 1),
+--('5091ef5f-973a-4e46-9428-7b8f69dcc23d', 'e4c18139-f2c8-4a4b-a8b8-cf0d230b37fa', '7aec92dc-fb2a-45d2-a0db-3e6f66aa9ebb', 'b56c8051-6eee-4441-a7de-7cb4789de362', 5234, 400, 2)
 
 DROP TABLE Orders
 CREATE TABLE Orders

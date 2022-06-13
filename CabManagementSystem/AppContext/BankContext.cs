@@ -23,7 +23,7 @@ namespace CabManagementSystem.AppContext
             Operations.Add(operationModel);
             SaveChanges();
         }
-        public void DeleteOperation(OperationModel operationModel)
+        private void DeleteOperation(OperationModel operationModel)
         {
             if (operationModel is null)
                 throw new ArgumentNullException();
@@ -42,6 +42,7 @@ namespace CabManagementSystem.AppContext
             Banks.Update(bankModel);
             Users.Update(user);
             SaveChanges();
+            DeleteOperation(operationModel);
         }
 
         public void BankWithdraw(UserModel user, BankModel bankModel, OperationModel operationModel)
@@ -53,6 +54,7 @@ namespace CabManagementSystem.AppContext
             Banks.Update(bankModel);
             Users.Update(user);
             SaveChanges();
+            DeleteOperation(operationModel);
         }
 
         /// <summary>
@@ -86,6 +88,10 @@ namespace CabManagementSystem.AppContext
 
             if (Banks.FirstOrDefault(x => x.BankID == operationModel.SenderID)?.AccountAmount < operationModel.TransferAmount)
                 operationModel.OperationStatus = StatusOperationCode.Error;
+
+            if (Users.FirstOrDefault(x => x.ID == operationModel.ReceiverID)?.BankAccountAmount < operationModel.TransferAmount)
+                operationModel.OperationStatus = StatusOperationCode.Error;
+
             return operationModel.OperationStatus;
         }
     }

@@ -1,1 +1,1 @@
-﻿SELECT * FROM Banks
+﻿SELECT AccountAmount FROM Banks

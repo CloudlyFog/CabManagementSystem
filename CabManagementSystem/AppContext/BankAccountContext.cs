@@ -26,31 +26,27 @@ namespace CabManagementSystem.AppContext
                 BankID = user.BankID,
                 SenderID = user.BankID,
                 ReceiverID = user.ID,
-                TransferAmount = amountAccrual
+                TransferAmount = amountAccrual,
+                OperationKind = OperationKind.Accrual
             };
             bankContext.CreateOperation(operation, OperationKind.Accrual);
-            user.BankAccountAmount += amountAccrual;
-            Users.Update(user);
-            SaveChanges();
+            bankContext.BankAccrual(user, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation);
         }
         public void Withdraw(UserModel user, decimal amountWithdraw)
         {
             if (user is null || !Users.Any(x => x.ID == user.ID))
                 throw new ArgumentNullException();
-            if (user.BankAccountAmount < amountWithdraw)
-                throw new ArgumentException();
 
             var operation = new OperationModel()
             {
                 BankID = user.BankID,
                 SenderID = user.ID,
                 ReceiverID = user.BankID,
-                TransferAmount = amountWithdraw
+                TransferAmount = amountWithdraw,
+                OperationKind = OperationKind.Withdraw
             };
             bankContext.CreateOperation(operation, OperationKind.Withdraw);
-            user.BankAccountAmount -= amountWithdraw;
-            Users.Update(user);
-            SaveChanges();
+            bankContext.BankWithdraw(user, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation);
         }
     }
 }
