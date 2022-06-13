@@ -12,10 +12,7 @@ namespace CabManagementSystem.AppContext
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<AdminHandlingModel> AdminHandling { get; set; }
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) => Database.EnsureCreated();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
@@ -35,6 +32,7 @@ namespace CabManagementSystem.AppContext
             if (IsAuthanticated(receivedUser))//if user isn`t exist method will send false
                 return;
             receivedUser.Authenticated = true;
+            receivedUser.ID = Guid.NewGuid();
             Users.Add(receivedUser);
             SaveChanges();
         }
@@ -53,6 +51,26 @@ namespace CabManagementSystem.AppContext
         /// <param name="ID"></param>
         /// <returns><see langword="true"/> if user was authenticate</returns>
         public bool IsAuthanticated(Guid ID) => Users.Any(user => user.ID == ID && user.Authenticated);
+
+        /// <summary>
+        /// gives admin rights to definite user
+        /// </summary>
+        /// <param name="ID"></param>
+        public void GiveAdminRights(Guid ID)
+        {
+            Users.First(x => x.ID == ID).Access = true;
+            SaveChanges();
+        }
+
+        /// <summary>
+        /// removes admin rights from definite user
+        /// </summary>
+        /// <param name="ID"></param>
+        public void RemoveAdminRights(Guid ID)
+        {
+            Users.First(x => x.ID == ID).Access = false;
+            SaveChanges();
+        }
 
         /// <summary>
         /// determines whether user's data satisfied a condition
@@ -122,15 +140,6 @@ namespace CabManagementSystem.AppContext
             File.Delete(path);
             File.AppendAllText(path, json);
         }
-
-        /// <summary>
-        /// deserialize data from json format
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="path"></param>
-        /// <returns>any data from json file in datatype object</returns>
-        public object? DeserializeData(string path) => JsonConvert.DeserializeObject<object>(File.ReadAllText(path)) is not null
-            ? JsonConvert.DeserializeObject<object>(File.ReadAllText(path)) : new Exception();
 
         /// <summary>
         /// deserialize taxi's data from json format

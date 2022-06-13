@@ -1,15 +1,11 @@
 ﻿using CabManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace CabManagementSystem.AppContext
 {
     public class TaxiContext : DbContext
     {
-        public TaxiContext(DbContextOptions<TaxiContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public TaxiContext(DbContextOptions<TaxiContext> options) : base(options) => Database.EnsureCreated();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -20,18 +16,32 @@ namespace CabManagementSystem.AppContext
 
         public DbSet<TaxiModel> Taxi { get; set; }
         public DbSet<BindTaxiDriver> BindTaxiDriver { get; set; }
-        public DbSet<DriverModel> Drivers { get; set; }
+
+        /// <summary>
+        /// adds data of taxi in the database
+        /// </summary>
+        /// <param name="taxi"></param>
         public void AddTaxi(TaxiModel taxi)
         {
             AddBindTaxiDriver(taxi.BindTaxiDriver);
             Taxi.Add(taxi);
             SaveChanges();
         }
+
+        /// <summary>
+        /// updates data of taxi in the database
+        /// </summary>
+        /// <param name="taxi"></param>
         public void UpdateTaxi(TaxiModel taxi)
         {
             Taxi.Update(taxi);
             SaveChanges();
         }
+
+        /// <summary>
+        /// removes data of taxi in the database
+        /// </summary>
+        /// <param name="taxi"></param>
         public void DeleteTaxi(TaxiModel taxi)
         {
             taxi = Taxi.Any(x => x.ID == taxi.ID)
@@ -43,58 +53,32 @@ namespace CabManagementSystem.AppContext
             SaveChanges();
         }
 
+        /// <summary>
+        /// adds bind's data of taxi and its driver in the database
+        /// </summary>
+        /// <param name="bindTaxiDriver"></param>
         private void AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             BindTaxiDriver.Add(bindTaxiDriver);
             SaveChanges();
         }
-        private void UpdateBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
-        {
-            BindTaxiDriver.Update(bindTaxiDriver);
-            SaveChanges();
-        }
+
+        /// <summary>
+        /// removes bind's data of taxi and its driver in the database
+        /// </summary>
+        /// <param name="bindTaxiDriver"></param>
         private void DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             BindTaxiDriver.Remove(bindTaxiDriver);
             SaveChanges();
         }
 
-        public TaxiModel GetTaxi(Guid taxiID)
-        {
-            TaxiModel taxi = new();
-            taxi.ID = taxiID;
-            taxi.TaxiClass = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiClass : taxi.TaxiClass;
-            taxi.TaxiNumber = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).TaxiNumber : taxi.TaxiNumber;
-            taxi.DriverID = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).DriverID : taxi.DriverID;
-            taxi.SpecialName = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.FirstOrDefault(x => x.ID == taxi.ID).SpecialName : taxi.SpecialName;
-            //
-            taxi.BindTaxiDriver.TaxiID = taxi.ID;
-            taxi.BindTaxiDriver.DriverID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
-                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).DriverID : new();
-            taxi.BindTaxiDriver.ID = BindTaxiDriver.Any(x => x.TaxiID == taxi.ID)
-                ? BindTaxiDriver.FirstOrDefault(x => x.TaxiID == taxi.ID).ID : new();
-            return taxi;
-        }
-
         /// <summary>
-        /// serialize taxi's data in json format
+        /// gets an instance of definite taxi
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="path"></param>
-        public void SerializeTaxiData(TaxiModel data, string path)
-        {
-            var jsonDes = JsonSerializer.Deserialize<JsonTaxiModel>(File.ReadAllText(path));
-            if (jsonDes is null)
-                throw new Exception("jsonDes is null.");
-            jsonDes.TaxiList.Add(data);
-            var json = JsonSerializer.Serialize(jsonDes);
-            File.Delete(path);
-            File.AppendAllText(path, json);
-        }
+        /// <param name="taxiID"></param>
+        /// <returns>instance of TaxiModel if taxi with the same ID is exist</returns>
+        public TaxiModel GetTaxi(Guid taxiID) => Taxi.Any(x => x.ID == taxiID) ? Taxi.First(x => x.ID == taxiID) : new();
 
     }
 }

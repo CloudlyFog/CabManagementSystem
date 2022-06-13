@@ -6,12 +6,11 @@ string connection = builder.Configuration.GetConnectionString("ConnectionToDbCab
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
-builder.Services.AddDbContext<OrderContext>(options => options.UseSqlServer(connection));
-builder.Services.AddDbContext<TaxiContext>(options => options.UseSqlServer(connection));
-builder.Services.AddDbContext<BankAccountContext>(options => options.UseSqlServer(connection));
-builder.Services.AddDbContext<BankContext>(options => options.UseSqlServer(connection));
-builder.Services.AddSession();
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection))
+                .AddDbContext<OrderContext>(options => options.UseSqlServer(connection))
+                .AddDbContext<TaxiContext>(options => options.UseSqlServer(connection))
+                .AddDbContext<BankAccountContext>(options => options.UseSqlServer(connection))
+                .AddSession();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

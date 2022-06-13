@@ -11,7 +11,6 @@ namespace CabManagementSystem.Models
         public string TaxiNumber { get; set; } = string.Empty;
         public TaxiClass TaxiClass { get; set; }
         public TaxiPrice Price { get; set; }
-        public string SpecialName { get; set; } = string.Empty;
 
         [NotMapped]
         public List<TaxiModel> TaxiList { get; set; } = new();

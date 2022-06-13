@@ -27,9 +27,10 @@
             </p>
         </h4>
         <p><strong>ID: @Model.Order.ID</strong></p>
-        <p><strong>Driver's Name: @Model.Order.DriverName</strong></p>
         <p><strong>Price: ₽@Model.Order.Price.GetHashCode()</strong></p>
         <p><strong>Address: @Model.Order.Address</strong></p>
+        <p><strong>Driver's Name: @Model.Driver.Name</strong></p>
+        <p><strong>Driver's Phone Number: @Model.Driver.PhoneNumber</strong></p>
     }
     else
     {
@@ -65,36 +66,39 @@
     }
 </div>
 <br />
-<div>
-    <h3>Your last order</h3>
-    <form method="post" asp-controller="Home" asp-action="EditOrder">
-        <div asp-validation-summary="ModelOnly"></div>
-        <div>
-            <label asp-for="Order.PhoneNumber"></label><br />
-            <input asp-for="Order.PhoneNumber" />
-            <span asp-validation-for="Order.PhoneNumber"></span>
-        </div>
-        <div>
-            <label asp-for="Order.Description"></label><br />
-            <input asp-for="Order.Description" />
-            <span asp-validation-for="Order.Description"></span>
-        </div>
-        <div>
-            <label asp-for="Order.Address"></label><br />
-            <input asp-for="Order.Address" />
-            <span asp-validation-for="Order.Address"></span>
-        </div>
-        <div>
-            <input type="submit" value="Edit Order" style="margin-top: 10px; " />
-        </div>
-    </form>
-    <form method="post" asp-controller="Home" asp-action="OrderCancellation">
-        <input type="hidden" asp-for="Order.PhoneNumber" value="@Model.Order.PhoneNumber" />
-        <input type="hidden" asp-for="Order.Description" value="@Model.Order.Description" />
-        <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
-        <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
-    </form>
-</div>
+@if (Model.HasOrder)
+{
+    <div>
+        <h3>Your last order</h3>
+        <form method="post" asp-controller="Home" asp-action="EditOrder">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div>
+                <label asp-for="Order.PhoneNumber"></label><br />
+                <input asp-for="Order.PhoneNumber" />
+                <span asp-validation-for="Order.PhoneNumber"></span>
+            </div>
+            <div>
+                <label asp-for="Order.Description"></label><br />
+                <input asp-for="Order.Description" />
+                <span asp-validation-for="Order.Description"></span>
+            </div>
+            <div>
+                <label asp-for="Order.Address"></label><br />
+                <input asp-for="Order.Address" />
+                <span asp-validation-for="Order.Address"></span>
+            </div>
+            <div>
+                <input type="submit" value="Edit Order" style="margin-top: 10px; " />
+            </div>
+        </form>
+        <form method="post" asp-controller="Home" asp-action="OrderCancellation">
+            <input type="hidden" asp-for="Order.PhoneNumber" value="@Model.Order.PhoneNumber" />
+            <input type="hidden" asp-for="Order.Description" value="@Model.Order.Description" />
+            <input type="hidden" asp-for="Order.Address" value="@Model.Order.Address" />
+            <input type="submit" value="Order Cancellation" style="margin-top: 10px; " />
+        </form>
+    </div>
+}
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/script.js"></script>
 <script>

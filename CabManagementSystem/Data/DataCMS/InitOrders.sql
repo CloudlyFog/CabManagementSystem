@@ -76,7 +76,7 @@ CREATE TABLE Taxi
 	SpecialName NVARCHAR(50),
 )
 INSERT INTO Taxi(ID, DriverID, TaxiNumber, Price, TaxiClass, SpecialName) VALUES 
-('f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'bd1e063f-b343-4387-812c-e203bfaa1f65',  '¿032 –36', 235, 2, 'TaxiComfortAlex')
+('f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'bd1e063f-b343-4387-812c-e203bfaa1f65',  '–ê032–ö–†36', 235, 2, 'TaxiComfortAlex')
 
 DROP TABLE Drivers
 CREATE TABLE Drivers
