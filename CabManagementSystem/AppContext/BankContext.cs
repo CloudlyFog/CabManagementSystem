@@ -27,18 +27,20 @@ namespace CabManagementSystem.AppContext
         {
             if (operationModel is null)
                 throw new ArgumentNullException();
-            if (Operations.Any(x => x.ID == operationModel.ID))
-                Operations.Remove(operationModel);
+            if (!Operations.Any(x => x.ID == operationModel.ID))
+                throw new ArgumentNullException();
+            Operations.Remove(operationModel);
             SaveChanges();
         }
 
 
         public void BankAccrual(UserModel user, BankModel bankModel, OperationModel operationModel)
         {
-            if (StatusOperation(operationModel, operationModel.OperationKind) != StatusOperationCode.Successfull)
+            if (operationModel.OperationStatus != StatusOperationCode.Successfull)
                 throw new Exception($"operation status is {operationModel.OperationStatus}");
             bankModel.AccountAmount -= operationModel.TransferAmount;
             user.BankAccountAmount += operationModel.TransferAmount;
+            ChangeTracker.Clear();
             Banks.Update(bankModel);
             Users.Update(user);
             SaveChanges();
@@ -47,7 +49,7 @@ namespace CabManagementSystem.AppContext
 
         public void BankWithdraw(UserModel user, BankModel bankModel, OperationModel operationModel)
         {
-            if (StatusOperation(operationModel, operationModel.OperationKind) != StatusOperationCode.Successfull)
+            if (operationModel.OperationStatus != StatusOperationCode.Successfull)
                 throw new Exception($"operation status is {operationModel.OperationStatus}");
             bankModel.AccountAmount += operationModel.TransferAmount;
             user.BankAccountAmount -= operationModel.TransferAmount;

@@ -67,6 +67,10 @@ namespace CabManagementSystem.Controllers
                     ? new(HttpContext.Session.GetString("userID")) : new();
             user.Order.ID = HttpContext.Session.GetString("orderID") is not null
                     ? new(HttpContext.Session.GetString("orderID")) : new();
+
+            if (user.Order is null)
+                return RedirectToAction("Index", "Home");
+
             orderContext.UpdateOrder(user.Order);
             return RedirectToAction("Index", "Home");
         }
@@ -81,22 +85,12 @@ namespace CabManagementSystem.Controllers
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
             user.Order = orderContext.Orders.FirstOrDefault(x => x.UserID == user.ID);
+
+            if (user.Order is null)
+                return RedirectToAction("Index", "Home");
+
             orderContext.DeleteOrder(user.Order);
             return RedirectToAction("Index", "Home");
-        }
-
-        private static string ConvertAmount(string number)
-        {
-            if (number.Length == 3)
-                return number;
-            var sb = new StringBuilder();
-            for (int i = 0; i < number.Length; i++)
-            {
-                if (i % 3 == 0)
-                    sb.Append(' ');
-                sb.Append(number[i]);
-            }
-            return sb.ToString();
         }
     }
 }

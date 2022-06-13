@@ -1,1 +1,1 @@
-﻿SELECT AccountAmount FROM Banks
+﻿SELECT * FROM Operations
