@@ -16,6 +16,12 @@ namespace CabManagementSystem.AppContext
         public DbSet<UserModel> Users { get; set; }
         private readonly BankContext bankContext = new(new DbContextOptions<BankContext>());
 
+        /// <summary>
+        /// accrual money on account with the same user id
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="amountAccrual"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void Accrual(UserModel user, decimal amountAccrual)
         {
             if (user is null || !Users.Any(x => x.ID == user.ID))
@@ -32,6 +38,14 @@ namespace CabManagementSystem.AppContext
             bankContext.CreateOperation(operation, OperationKind.Accrual);
             bankContext.BankAccrual(user, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation);
         }
+
+        /// <summary>
+        /// withdraw money from account with the same user id
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="amountWithdraw"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public void Withdraw(UserModel user, decimal amountWithdraw)
         {
             if (user is null || !Users.Any(x => x.ID == user.ID))

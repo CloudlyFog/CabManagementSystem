@@ -1,17 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace CabManagementSystem.Models
+﻿namespace CabManagementSystem.Models
 {
     public class BankModel
     {
         public Guid ID { get; set; } = Guid.NewGuid(); // id for identification in the database
         public Guid BankID { get; set; }
         public string BankName { get; set; } = string.Empty;
-        public int MembersAmount { get; set; }
         public decimal AccountAmount { get; set; }
-
-        [NotMapped]
-        public OperationModel? OperationModel { get; set; } = new();
     }
     public class OperationModel
     {

@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "<Pending>", Scope = "member", Target = "~M:CabManagementSystem.AppContext.BankAccountContext.Withdraw(CabManagementSystem.Models.UserModel,System.Decimal)")]
+[assembly: SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "<Pending>", Scope = "member", Target = "~M:CabManagementSystem.AppContext.BankContext.StatusOperation(CabManagementSystem.Models.OperationModel,CabManagementSystem.Models.OperationKind)~CabManagementSystem.Models.StatusOperationCode")]

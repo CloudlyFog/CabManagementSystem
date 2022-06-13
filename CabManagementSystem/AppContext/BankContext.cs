@@ -17,12 +17,23 @@ namespace CabManagementSystem.AppContext
         public DbSet<BankModel> Banks { get; set; }
         public DbSet<OperationModel> Operations { get; set; }
 
+        /// <summary>
+        /// creates transaction operation
+        /// </summary>
+        /// <param name="operationModel"></param>
+        /// <param name="operationKind"></param>
         public void CreateOperation(OperationModel operationModel, OperationKind operationKind)
         {
             operationModel.OperationStatus = StatusOperation(operationModel, operationKind);
             Operations.Add(operationModel);
             SaveChanges();
         }
+
+        /// <summary>
+        /// delete transaction operation
+        /// </summary>
+        /// <param name="operationModel"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         private void DeleteOperation(OperationModel operationModel)
         {
             if (operationModel is null)
@@ -33,7 +44,13 @@ namespace CabManagementSystem.AppContext
             SaveChanges();
         }
 
-
+        /// <summary>
+        /// accrual money to user bank account from bank's account
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="bankModel"></param>
+        /// <param name="operationModel"></param>
+        /// <exception cref="Exception"></exception>
         public void BankAccrual(UserModel user, BankModel bankModel, OperationModel operationModel)
         {
             if (operationModel.OperationStatus != StatusOperationCode.Successfull)
@@ -47,6 +64,13 @@ namespace CabManagementSystem.AppContext
             DeleteOperation(operationModel);
         }
 
+        /// <summary>
+        /// withdraw money from user bank account and accrual to bank's account
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="bankModel"></param>
+        /// <param name="operationModel"></param>
+        /// <exception cref="Exception"></exception>
         public void BankWithdraw(UserModel user, BankModel bankModel, OperationModel operationModel)
         {
             if (operationModel.OperationStatus != StatusOperationCode.Successfull)
@@ -64,6 +88,7 @@ namespace CabManagementSystem.AppContext
         /// 1) is exist user with the same ID and bank with the same BankID as a sender or reciever in the database.
         /// 2) is exist bank with the same BankID as a single bank.
         /// 3) is bank's money enough for transaction.
+        /// 4) is user's money enough for transaction.
         /// </summary>
         /// <param name="operationModel"></param>
         /// <param name="operationKind"></param>
@@ -76,11 +101,15 @@ namespace CabManagementSystem.AppContext
 
             if (operationKind == OperationKind.Accrual)
             {
+                // SenderID is ID of bank
+                // ReceiverID is ID of user
                 if (!Banks.Any(x => x.BankID == operationModel.SenderID) || !Users.Any(x => x.ID == operationModel.ReceiverID))
                     operationModel.OperationStatus = StatusOperationCode.Error;
             }
             else
             {
+                // SenderID is ID of user
+                // ReceiverID is ID of bank
                 if (!Banks.Any(x => x.BankID == operationModel.ReceiverID) || !Users.Any(x => x.ID == operationModel.SenderID))
                     operationModel.OperationStatus = StatusOperationCode.Error;
             }
