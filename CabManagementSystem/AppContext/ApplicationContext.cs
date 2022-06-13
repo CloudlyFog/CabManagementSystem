@@ -32,6 +32,7 @@ namespace CabManagementSystem.AppContext
             if (IsAuthanticated(receivedUser))//if user isn`t exist method will send false
                 return;
             receivedUser.Authenticated = true;
+            receivedUser.ID = Guid.NewGuid();
             Users.Add(receivedUser);
             SaveChanges();
         }
@@ -50,6 +51,26 @@ namespace CabManagementSystem.AppContext
         /// <param name="ID"></param>
         /// <returns><see langword="true"/> if user was authenticate</returns>
         public bool IsAuthanticated(Guid ID) => Users.Any(user => user.ID == ID && user.Authenticated);
+
+        /// <summary>
+        /// gives admin rights to definite user
+        /// </summary>
+        /// <param name="ID"></param>
+        public void GiveAdminRights(Guid ID)
+        {
+            Users.First(x => x.ID == ID).Access = true;
+            SaveChanges();
+        }
+
+        /// <summary>
+        /// removes admin rights from definite user
+        /// </summary>
+        /// <param name="ID"></param>
+        public void RemoveAdminRights(Guid ID)
+        {
+            Users.First(x => x.ID == ID).Access = false;
+            SaveChanges();
+        }
 
         /// <summary>
         /// determines whether user's data satisfied a condition

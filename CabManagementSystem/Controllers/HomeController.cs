@@ -25,12 +25,14 @@ namespace CabManagementSystem.Controllers
 
             var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
             var conditionForExistingRowApplication = applicationContext.Users.Any(x => x.ID == user.ID);
+            var conditionForExistingRowDriver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName);
 
             user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
             user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
 
             user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
-
+            user.Driver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName)
+                ? orderContext.Drivers.First(x => x.Name == orderContext.Orders.First(x => x.UserID == user.ID).DriverName) : new();
 
             HttpContext.Session.SetString("orderID", user.Order.ID.ToString());
             HttpContext.Session.SetString("DriverName", user.Order.DriverName);
@@ -39,10 +41,7 @@ namespace CabManagementSystem.Controllers
         }
 
         [Route("Privacy")]
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View();
 
         [HttpPost, Route("OrderTaxi")]
         public IActionResult OrderTaxi(UserModel user)
@@ -65,6 +64,7 @@ namespace CabManagementSystem.Controllers
 
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
                     ? new(HttpContext.Session.GetString("userID")) : new();
+
             user.Order.ID = HttpContext.Session.GetString("orderID") is not null
                     ? new(HttpContext.Session.GetString("orderID")) : new();
 

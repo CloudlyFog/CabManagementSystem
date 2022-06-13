@@ -19,8 +19,8 @@ namespace CabManagementSystem.Models
     public class OrderTimeModel
     {
         public Guid ID { get; set; } = Guid.NewGuid();
-        public Guid UserID { get; set; } = new();
-        public DateTime ArrivingTime { get; set; } = new DateTime();
+        public Guid UserID { get; set; }
+        public DateTime ArrivingTime { get; set; }
         public DateTime CurrentTime { get; set; } = DateTime.Now;
 
 
