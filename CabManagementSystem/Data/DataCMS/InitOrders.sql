@@ -29,7 +29,7 @@ CREATE TABLE Banks
 	AccountAmount DECIMAL
 )
 INSERT INTO Banks(ID, BankID, BankName, MembersAmount, AccountAmount) VALUES
-('ae59b1df-089d-4823-a32a-41a44f878b4b', 'bed62930-9356-477a-bed5-b84d59336122', 'Tinkoff', 4321, 10523400000),
+('ae59b1df-089d-4823-a32a-41a44f878b4b', 'bed62930-9356-477a-bed5-b84d59336122', 'Tinkoff', 4321, 234523450),
 ('c2c4fc26-e503-4d48-8a24-ad9233e0e603', 'e4c18139-f2c8-4a4b-a8b8-cf0d230b37fa', 'SberBank', 532, 1043200000),
 ('335ba509-2994-4068-9a50-f703490891ba', 'b56c8051-6eee-4441-a7de-7cb4789de362', 'PochtaBank', 1235, 100650000)
 

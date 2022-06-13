@@ -28,7 +28,7 @@ namespace CabManagementSystem.AppContext
                 ReceiverID = user.ID,
                 TransferAmount = amountAccrual
             };
-            bankContext.CreateOperation(operation);
+            bankContext.CreateOperation(operation, OperationKind.Accrual);
             user.BankAccountAmount += amountAccrual;
             Users.Update(user);
             SaveChanges();
@@ -47,7 +47,7 @@ namespace CabManagementSystem.AppContext
                 ReceiverID = user.BankID,
                 TransferAmount = amountWithdraw
             };
-            bankContext.CreateOperation(operation);
+            bankContext.CreateOperation(operation, OperationKind.Withdraw);
             user.BankAccountAmount -= amountWithdraw;
             Users.Update(user);
             SaveChanges();

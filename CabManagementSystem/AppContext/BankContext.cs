@@ -33,11 +33,38 @@ namespace CabManagementSystem.AppContext
         }
 
 
-        public void BankWithdraw(BankModel bankModel, OperationModel operationModel)
+        public void BankAccrual(UserModel user, BankModel bankModel, OperationModel operationModel)
         {
-            operationModel.OperationStatus = StatusOperation(operationModel, operationModel.OperationKind);
+            if (StatusOperation(operationModel, operationModel.OperationKind) != StatusOperationCode.Successfull)
+                throw new Exception($"operation status is {operationModel.OperationStatus}");
+            bankModel.AccountAmount -= operationModel.TransferAmount;
+            user.BankAccountAmount += operationModel.TransferAmount;
+            Banks.Update(bankModel);
+            Users.Update(user);
+            SaveChanges();
         }
 
+        public void BankWithdraw(UserModel user, BankModel bankModel, OperationModel operationModel)
+        {
+            if (StatusOperation(operationModel, operationModel.OperationKind) != StatusOperationCode.Successfull)
+                throw new Exception($"operation status is {operationModel.OperationStatus}");
+            bankModel.AccountAmount += operationModel.TransferAmount;
+            user.BankAccountAmount -= operationModel.TransferAmount;
+            Banks.Update(bankModel);
+            Users.Update(user);
+            SaveChanges();
+        }
+
+        /// <summary>
+        /// check: 
+        /// 1) is exist user with the same ID and bank with the same BankID as a sender or reciever in the database.
+        /// 2) is exist bank with the same BankID as a single bank.
+        /// 3) is bank's money enough for transaction.
+        /// </summary>
+        /// <param name="operationModel"></param>
+        /// <param name="operationKind"></param>
+        /// <returns>status of operation, default - successfull</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         private StatusOperationCode StatusOperation(OperationModel operationModel, OperationKind operationKind)
         {
             if (operationModel is null)

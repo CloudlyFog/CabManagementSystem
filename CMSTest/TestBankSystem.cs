@@ -58,8 +58,11 @@ namespace CMSTest
         [Test]
         public void Operations()
         {
-            var operation = bankContext.Operations.FirstOrDefault(x => x.ID == new Guid("AE734776-9CB6-464E-9ADF-638A04DB8E0F"));
-            bankContext.CreateOperation(operation, OperationKind.Accrual);
+            var user = bankContext.Users.First(x => x.ID == id);
+            var bank = bankContext.Banks.First(x => x.BankID == new Guid("bed62930-9356-477a-bed5-b84d59336122"));
+            var operation = bankContext.Operations.First(x => x.ID == new Guid("AE734776-9CB6-464E-9ADF-638A04DB8E0F"));
+            bankContext.BankAccrual(user, bank, operation);
+            Assert.That(bankContext.Banks.First(x => x.BankID == new Guid("bed62930-9356-477a-bed5-b84d59336122")).AccountAmount - 120, Is.EqualTo(bank.AccountAmount));
         }
     }
 }
