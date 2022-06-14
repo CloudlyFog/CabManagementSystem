@@ -8,11 +8,13 @@ namespace CabManagementSystem.AppContext
         public OrderContext(DbContextOptions<OrderContext> options) : base(options) => Database.EnsureCreated();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseSqlServer(
                 @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
         }
 
         private readonly BankAccountContext bankAccountContext = new(new DbContextOptions<BankAccountContext>());
+        private readonly BankContext bankContext = new(new DbContextOptions<BankContext>());
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<DriverModel> Drivers { get; set; }
 
@@ -25,7 +27,8 @@ namespace CabManagementSystem.AppContext
             order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
             Orders.Add(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true; // sets that definite user ordered taxi
-            bankAccountContext.Withdraw(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), order.Price.GetHashCode());
+            bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == order.UserID), order.Price.GetHashCode());
+            bankAccountContext.SaveChanges();
             SaveChanges();
         }
 
@@ -48,10 +51,9 @@ namespace CabManagementSystem.AppContext
         /// <param name="order"></param>
         public void DeleteOrder(OrderModel order)
         {
-            var price = decimal.Parse(order.Price.GetHashCode().ToString());
             Orders.Remove(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = false;
-            bankAccountContext.Accrual(bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID), price);
+            bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == order.UserID), order.Price.GetHashCode());
             bankAccountContext.SaveChanges();
             SaveChanges();
         }

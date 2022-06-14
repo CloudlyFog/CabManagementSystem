@@ -16,6 +16,7 @@ namespace CabManagementSystem.AppContext
         public DbSet<UserModel> Users { get; set; }
         public DbSet<BankModel> Banks { get; set; }
         public DbSet<OperationModel> Operations { get; set; }
+        public DbSet<BankAccountModel> BankAccounts { get; set; }
 
         /// <summary>
         /// creates transaction operation
@@ -47,17 +48,20 @@ namespace CabManagementSystem.AppContext
         /// <summary>
         /// accrual money to user bank account from bank's account
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="bankAccountModel"></param>
         /// <param name="bankModel"></param>
         /// <param name="operationModel"></param>
         /// <exception cref="Exception"></exception>
-        public void BankAccrual(UserModel user, BankModel bankModel, OperationModel operationModel)
+        public void BankAccrual(BankAccountModel bankAccountModel, BankModel bankModel, OperationModel operationModel)
         {
             if (operationModel.OperationStatus != StatusOperationCode.Successfull)
                 throw new Exception($"operation status is {operationModel.OperationStatus}");
+            var user = Users.FirstOrDefault(x => x.ID == bankAccountModel.UserBankAccountID);
             bankModel.AccountAmount -= operationModel.TransferAmount;
-            user.BankAccountAmount += operationModel.TransferAmount;
+            bankAccountModel.BankAccountAmount += operationModel.TransferAmount;
+            user.BankAccountAmount = bankAccountModel.BankAccountAmount;
             ChangeTracker.Clear();
+            BankAccounts.Update(bankAccountModel);
             Banks.Update(bankModel);
             Users.Update(user);
             SaveChanges();
@@ -71,12 +75,15 @@ namespace CabManagementSystem.AppContext
         /// <param name="bankModel"></param>
         /// <param name="operationModel"></param>
         /// <exception cref="Exception"></exception>
-        public void BankWithdraw(UserModel user, BankModel bankModel, OperationModel operationModel)
+        public void BankWithdraw(BankAccountModel bankAccountModel, BankModel bankModel, OperationModel operationModel)
         {
             if (operationModel.OperationStatus != StatusOperationCode.Successfull)
                 throw new Exception($"operation status is {operationModel.OperationStatus}");
+            var user = Users.FirstOrDefault(x => x.ID == bankAccountModel.UserBankAccountID);
             bankModel.AccountAmount += operationModel.TransferAmount;
-            user.BankAccountAmount -= operationModel.TransferAmount;
+            bankAccountModel.BankAccountAmount -= operationModel.TransferAmount;
+            user.BankAccountAmount = bankAccountModel.BankAccountAmount;
+            BankAccounts.Update(bankAccountModel);
             Banks.Update(bankModel);
             Users.Update(user);
             SaveChanges();
@@ -118,10 +125,10 @@ namespace CabManagementSystem.AppContext
                 operationModel.OperationStatus = StatusOperationCode.Error;
 
             if (Banks.FirstOrDefault(x => x.BankID == operationModel.SenderID)?.AccountAmount < operationModel.TransferAmount)
-                operationModel.OperationStatus = StatusOperationCode.Error;
+                operationModel.OperationStatus = StatusOperationCode.Restricted;
 
             if (Users.FirstOrDefault(x => x.ID == operationModel.ReceiverID)?.BankAccountAmount < operationModel.TransferAmount)
-                operationModel.OperationStatus = StatusOperationCode.Error;
+                operationModel.OperationStatus = StatusOperationCode.Restricted;
 
             return operationModel.OperationStatus;
         }

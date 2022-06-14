@@ -18,6 +18,13 @@
         public OperationKind OperationKind { get; set; }
 
     }
+    public class BankAccountModel
+    {
+        public Guid ID { get; set; } = Guid.NewGuid();
+        public Guid BankID { get; set; } = Guid.NewGuid();
+        public Guid UserBankAccountID { get; set; }
+        public decimal BankAccountAmount { get; set; }
+    }
     public enum StatusOperationCode
     {
         Default = 100,
