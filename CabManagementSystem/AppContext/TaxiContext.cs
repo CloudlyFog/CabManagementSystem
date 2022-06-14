@@ -46,7 +46,6 @@ namespace CabManagementSystem.AppContext
         {
             taxi = Taxi.Any(x => x.ID == taxi.ID)
                 ? Taxi.First(x => x.ID == taxi.ID) : new();
-            //
             ChangeTracker.Clear();
             DeleteBindTaxiDriver(taxi.BindTaxiDriver);
             Taxi.Remove(taxi);
@@ -72,13 +71,6 @@ namespace CabManagementSystem.AppContext
             BindTaxiDriver.Remove(bindTaxiDriver);
             SaveChanges();
         }
-
-        /// <summary>
-        /// gets an instance of definite taxi
-        /// </summary>
-        /// <param name="taxiID"></param>
-        /// <returns>instance of TaxiModel if taxi with the same ID is exist</returns>
-        public TaxiModel GetTaxi(Guid taxiID) => Taxi.Any(x => x.ID == taxiID) ? Taxi.First(x => x.ID == taxiID) : new();
 
     }
 }

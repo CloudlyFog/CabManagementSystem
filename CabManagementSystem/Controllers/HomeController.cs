@@ -67,6 +67,10 @@ namespace CabManagementSystem.Controllers
 
             user.Order.ID = HttpContext.Session.GetString("orderID") is not null
                     ? new(HttpContext.Session.GetString("orderID")) : new();
+
+            if (user.Order is null)
+                return RedirectToAction("Index", "Home");
+
             orderContext.UpdateOrder(user.Order);
             return RedirectToAction("Index", "Home");
         }
@@ -81,6 +85,10 @@ namespace CabManagementSystem.Controllers
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
             user.Order = orderContext.Orders.FirstOrDefault(x => x.UserID == user.ID);
+
+            if (user.Order is null)
+                return RedirectToAction("Index", "Home");
+
             orderContext.DeleteOrder(user.Order);
             return RedirectToAction("Index", "Home");
         }

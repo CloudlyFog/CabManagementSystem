@@ -1,4 +1,4 @@
-﻿using CabManagementSystem.Models;
+using CabManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CabManagementSystem.AppContext
@@ -13,40 +13,54 @@ namespace CabManagementSystem.AppContext
                 @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
         }
 
-        public DbSet<BankModel> Banks { get; set; }
         public DbSet<UserModel> Users { get; set; }
+        private readonly BankContext bankContext = new(new DbContextOptions<BankContext>());
 
         /// <summary>
         /// accrual money on account with the same user id
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="BankAccountModel"></param>
         /// <param name="amountAccrual"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void Accrual(UserModel user, decimal amountAccrual)
+        public void Accrual(BankAccountModel BankAccountModel, decimal amountAccrual)
         {
-            if (user is null || !Users.Any(x => x.ID == user.ID))
+            if (BankAccountModel is null || !Users.Any(x => x.ID == BankAccountModel.UserBankAccountID))
                 throw new ArgumentNullException();
-            user.BankAccountAmount += amountAccrual;
-            Users.Update(user);
-            SaveChanges();
+
+            var operation = new OperationModel()
+            {
+                BankID = BankAccountModel.BankID,
+                SenderID = BankAccountModel.BankID,
+                ReceiverID = BankAccountModel.UserBankAccountID,
+                TransferAmount = amountAccrual,
+                OperationKind = OperationKind.Accrual
+            };
+            bankContext.CreateOperation(operation, OperationKind.Accrual);
+            bankContext.BankAccrual(BankAccountModel, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation);
         }
 
         /// <summary>
         /// withdraw money from account with the same user id
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="bankAccountModel"></param>
         /// <param name="amountWithdraw"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public void Withdraw(UserModel user, decimal amountWithdraw)
+        public void Withdraw(BankAccountModel bankAccountModel, decimal amountWithdraw)
         {
-            if (user is null || !Users.Any(x => x.ID == user.ID))
+            if (bankAccountModel is null || !Users.Any(x => x.ID == bankAccountModel.UserBankAccountID))
                 throw new ArgumentNullException();
-            if (user.BankAccountAmount < amountWithdraw)
-                throw new ArgumentException();
-            user.BankAccountAmount -= amountWithdraw;
-            Users.Update(user);
-            SaveChanges();
+
+            var operation = new OperationModel()
+            {
+                BankID = bankAccountModel.BankID,
+                SenderID = bankAccountModel.UserBankAccountID,
+                ReceiverID = bankAccountModel.BankID,
+                TransferAmount = amountWithdraw,
+                OperationKind = OperationKind.Withdraw
+            };
+            bankContext.CreateOperation(operation, OperationKind.Withdraw);
+            bankContext.BankWithdraw(bankAccountModel, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation);
         }
     }
 }

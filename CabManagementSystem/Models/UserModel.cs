@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CabManagementSystem.Models
@@ -14,10 +14,8 @@ namespace CabManagementSystem.Models
         public bool Access { get; set; }
         public bool HasOrder { get; set; }
         public Guid BankAccountID { get; set; } = Guid.NewGuid();
-        public decimal BankAccountAmount { get; set; } = 0;
-
-        [NotMapped]
-        public BankModel? BankModel { get; set; } = new();
+        public Guid BankID { get; set; } = Guid.NewGuid();
+        public decimal BankAccountAmount { get; set; }
 
         [NotMapped]
         public OrderModel? Order { get; set; } = new();
@@ -27,5 +25,8 @@ namespace CabManagementSystem.Models
 
         [NotMapped]
         public DriverModel? Driver { get; set; } = new();
+
+        [NotMapped]
+        public AdminHandlingModel? AdminHandling { get; set; } = new();
     }
 }

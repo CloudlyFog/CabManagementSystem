@@ -9,11 +9,13 @@ namespace CabManagementSystem.Controllers
         private readonly TaxiContext taxiContext;
         private readonly ApplicationContext applicationContext;
         private readonly BankAccountContext bankAccountContext;
-        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext, BankAccountContext bankAccountContext)
+        private readonly BankContext bankContext;
+        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext, BankAccountContext bankAccountContext, BankContext bankContext)
         {
             this.applicationContext = applicationContext;
             this.taxiContext = taxiContext;
             this.bankAccountContext = bankAccountContext;
+            this.bankContext = bankContext;
         }
 
         public IActionResult Index(UserModel user)
@@ -101,7 +103,7 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
-            bankAccountContext.Accrual(applicationContext.Users.FirstOrDefault(x => x.ID == ID), BankAccountAmount);
+            bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
             return RedirectToAction("Index", "Admin");
         }
 
@@ -111,7 +113,7 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
-            bankAccountContext.Withdraw(applicationContext.Users.FirstOrDefault(x => x.ID == ID), BankAccountAmount);
+            bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
             return RedirectToAction("Index", "Admin");
         }
     }
