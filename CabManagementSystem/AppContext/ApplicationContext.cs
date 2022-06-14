@@ -149,6 +149,7 @@ namespace CabManagementSystem.AppContext
         /// <returns>instance of model UserModel with filled data of model TaxiModel</returns>
         public List<TaxiModel> DeserializeTaxiData(string path) => JsonConvert.DeserializeObject<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
 
+
         /// <summary>
         /// get list of definite TaxiModel's property
         /// </summary>

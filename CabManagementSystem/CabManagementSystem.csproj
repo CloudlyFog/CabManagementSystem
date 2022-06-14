@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="jQuery" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.0.0" />
