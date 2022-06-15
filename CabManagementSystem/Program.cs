@@ -10,6 +10,7 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServe
                 .AddDbContext<OrderContext>(options => options.UseSqlServer(connection))
                 .AddDbContext<TaxiContext>(options => options.UseSqlServer(connection))
                 .AddDbContext<BankAccountContext>(options => options.UseSqlServer(connection))
+                .AddDbContext<BankContext>(options => options.UseSqlServer(connection))
                 .AddSession();
 var app = builder.Build();
 

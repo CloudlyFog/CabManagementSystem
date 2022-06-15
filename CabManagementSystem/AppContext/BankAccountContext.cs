@@ -14,7 +14,16 @@ namespace CabManagementSystem.AppContext
         }
 
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<BankAccountModel> BankAccounts { get; set; }
         private readonly BankContext bankContext = new(new DbContextOptions<BankContext>());
+
+        public void AddBankAccount(BankAccountModel bankAccountModel)
+        {
+            if (bankAccountModel is null)
+                throw new ArgumentNullException();
+            BankAccounts.Add(bankAccountModel);
+            SaveChanges();
+        }
 
         /// <summary>
         /// accrual money on account with the same user id

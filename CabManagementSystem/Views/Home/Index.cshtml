@@ -5,6 +5,8 @@
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
     var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
+    var bankAccountContext = new BankAccountContext(new DbContextOptions<BankAccountContext>());
+    var bankContext = new BankContext(new DbContextOptions<BankContext>());
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;
@@ -18,7 +20,7 @@
 
 <title>Home</title>
 <div class="container">
-    @if (Model.HasOrder)
+    @if (Model.HasOrder && bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == Model.ID)?.BankID != new Guid())
     {
         <h4>
             <p>
@@ -34,6 +36,17 @@
     }
     else
     {
+        if (bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == Model.ID)?.BankID == new Guid())
+        {
+            <div>
+                <select asp-for="@Model">
+                    @foreach (var bank in bankContext.Banks.Select(x => x.BankID != new Guid()))
+                    {
+                        <option>@bank</option>
+                    }
+                </select>
+            </div>
+        }
         <form method="post" asp-controller="Home" asp-action="OrderTaxi">
             <div asp-validation-summary="ModelOnly"></div>
             <div>

@@ -26,12 +26,13 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("SignIn")]
-        public async Task<IActionResult> SignIn(UserModel user, string[] args = null)
+        public async Task<IActionResult> SignIn(UserModel user, string[]? args = null)
         {
-            user.ID = applicationContext.GetID(user);
-            HttpContext.Session.SetString("userID", user.ID.ToString());
+            user.Password = applicationContext.HashPassword(user.Password);
+            var userID = applicationContext.GetID(user);
+            HttpContext.Session.SetString("userID", userID.ToString());
 
-            if (applicationContext.IsAuthanticated(user.ID))
+            if (applicationContext.IsAuthanticated(userID))
                 return RedirectToAction("Index", "Home");
             else
                 return RedirectToAction("SignIn", "Account");
