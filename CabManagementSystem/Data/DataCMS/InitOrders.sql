@@ -13,11 +13,7 @@ CREATE TABLE Users
 	BankAccountAmount DECIMAL
 );
 INSERT INTO Users(ID, Name, Email, Password, Authenticated, Access, HasOrder, BankAccountID, BankID, BankAccountAmount) VALUES 
-('A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'Admin','maximkirichenk0.06@gmail.com','1fasdfasd4752', 1, 1, 1, '216fbfbb-07a7-434e-9eff-fbeb1bd4e087', 'bed62930-9356-477a-bed5-b84d59336122', 1000),
-('0273419B-FD78-4EEC-8CB9-097B549F8789', 'Maxim','hatemtbofferskin@gmail.com','root', 1, 1, 0, 'e1970973-91dc-41f8-8d25-bad9e12c123d', 'bed62930-9356-477a-bed5-b84d59336122', 1000),
-('B560A785-C146-465A-9EEB-A8E588BA023E', 'matvey','matvey@gmail.com','matvey', 1, 0, 0, '9e1b00eb-202c-4b18-96d2-6aed0d7e982c', 'bed62930-9356-477a-bed5-b84d59336122', 1000),
-('BABF30BF-B436-46C0-B452-39FCC16E27EC', 'msi','msi@gmail.com','msi', 1, 0, 0, 'cc01181e-0f5e-4f99-adaa-7335b475bf2e', 'e4c18139-f2c8-4a4b-a8b8-cf0d230b37fa', 10000),
-('7aec92dc-fb2a-45d2-a0db-3e6f66aa9ebb', 'Lay','sl@gmail.com','sl', 1, 0, 0, '5d2636f4-1ad1-41e6-baac-cb71acfbb947', 'b56c8051-6eee-4441-a7de-7cb4789de362', 10000)
+('A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'Admin','maximkirichenk0.06@gmail.com','erwkAsDWjzRNIZZrUawEwyd5z4r5ZGCbkTorVKuuhIw=', 1, 1, 1, '216fbfbb-07a7-434e-9eff-fbeb1bd4e087', 'bed62930-9356-477a-bed5-b84d59336122', 1000)
 
 DROP TABLE BankAccounts
 CREATE TABLE BankAccounts

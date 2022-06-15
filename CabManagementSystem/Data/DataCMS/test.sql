@@ -1,1 +1,2 @@
-SELECT * FROM Orders 
+SELECT BankID FROM BankAccounts 
+SELECT BankID FROM Users 
