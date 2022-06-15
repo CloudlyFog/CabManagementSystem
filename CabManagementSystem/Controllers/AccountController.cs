@@ -7,9 +7,11 @@ namespace CabManagementSystem.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationContext applicationContext;
-        public AccountController(ApplicationContext applicationContext)
+        private readonly BankAccountContext bankAccountContext;
+        public AccountController(ApplicationContext applicationContext, BankAccountContext bankAccountContext)
         {
             this.applicationContext = applicationContext;
+            this.bankAccountContext = bankAccountContext;
         }
 
         [Route("SignUp")]
@@ -52,6 +54,25 @@ namespace CabManagementSystem.Controllers
 
             else
                 return RedirectToAction("SignIn", "Account");
+        }
+
+        [HttpPost, Route("SelectBank")]
+        public IActionResult SelectBank(UserModel user)
+        {
+            var userID = HttpContext.Session.GetString("userID") is not null
+                    ? new Guid(HttpContext.Session.GetString("userID")) : new();
+
+            if (!applicationContext.IsAuthanticated(userID))
+                return RedirectToAction("Index", "Home");
+
+            var bankAccountModel = bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == userID);
+            bankAccountModel.BankID = user.BankID;
+            user = bankAccountContext.Users.FirstOrDefault(x => x.ID == userID);
+            user.BankID = bankAccountModel.BankID;
+
+            bankAccountContext.UpdateBankAccount(bankAccountModel, bankAccountContext.Users.FirstOrDefault(x => x.ID == user.ID));
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

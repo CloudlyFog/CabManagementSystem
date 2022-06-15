@@ -15,6 +15,7 @@
         orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
         orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
     }
+    var userBankID = bankAccountContext.BankAccounts.Any(x => x.BankID == Model.BankID);
 }
 @model UserModel
 
@@ -36,16 +37,19 @@
     }
     else
     {
-        if (bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == Model.ID)?.BankID == new Guid())
+        if (!bankAccountContext.BankAccounts.Any(x => x.BankID == Model.BankID))
         {
-            <div>
-                <select asp-for="@Model">
-                    @foreach (var bank in bankContext.Banks.Select(x => x.BankID != new Guid()))
-                    {
-                        <option>@bank</option>
-                    }
-                </select>
-            </div>
+            <form method="post" asp-controller="Account" asp-action="SelectBank"> 
+                <div>
+                    <select asp-for="@Model.BankID">
+                        @foreach (var bank in bankContext.Banks.AsEnumerable<BankModel>())
+                        {
+                            <option value="@bank.BankID">@bank.BankName</option>
+                        }
+                    </select>
+                </div>
+                <input type="submit" value="Select Bank" />
+            </form>
         }
         <form method="post" asp-controller="Home" asp-action="OrderTaxi">
             <div asp-validation-summary="ModelOnly"></div>

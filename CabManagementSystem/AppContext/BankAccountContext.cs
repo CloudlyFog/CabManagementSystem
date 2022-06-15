@@ -25,6 +25,15 @@ namespace CabManagementSystem.AppContext
             SaveChanges();
         }
 
+        public void UpdateBankAccount(BankAccountModel bankAccountModel, UserModel user)
+        {
+            if (bankAccountModel is null || user is null)
+                throw new ArgumentNullException();
+            BankAccounts.Update(bankAccountModel);
+            Users.Update(user);
+            SaveChanges();
+        }
+
         /// <summary>
         /// accrual money on account with the same user id
         /// </summary>
