@@ -67,12 +67,11 @@ CREATE TABLE Orders
 	PhoneNumber NVARCHAR(12),
 	Price INT,
 	Description NVARCHAR(1000),
-	Address NVARCHAR(1000),
-	OrderTime DATETIME
+	Address NVARCHAR(1000)
 );
 
-INSERT INTO Orders(ID, UserID, TaxiID, DriverName, PhoneNumber, Price, Description, Address, OrderTime) VALUES
-('4bc89c1a-b818-4bbf-8905-ffaae04fb9c3', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'Alex', '+79611750020', 260,  'please take some dishes', 'Baker Street 12', CURRENT_TIMESTAMP)
+INSERT INTO Orders(ID, UserID, TaxiID, DriverName, PhoneNumber, Price, Description, Address) VALUES
+('4bc89c1a-b818-4bbf-8905-ffaae04fb9c3', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'Alexey', '+79611750020', 260,  'please take some dishes', 'Baker Street 12')
 
 DROP TABLE Taxi
 CREATE TABLE Taxi
@@ -97,19 +96,21 @@ DROP TABLE Drivers
 CREATE TABLE Drivers
 (
 	DriverID UNIQUEIDENTIFIER,
+	TaxiID UNIQUEIDENTIFIER,
 	Name NVARCHAR(50),
 	PhoneNumber NVARCHAR(12),
-	Busy BIT
+	Busy BIT,
+	TaxiPrice INT
 )
-INSERT INTO Drivers(DriverID, Name, PhoneNumber, Busy) VALUES
-('bd1e063f-b343-4387-812c-e203bfaa1f65', 'Alexey', '+79611750020', 1),
-('96583972-f4f2-4c73-99b6-0708fd53aa97', 'Evgeny', '+79846438918', 1),
-('b7083c2f-2ed4-40d4-93ec-6092c87e28d2', 'Alexander', '+79311753020', 1),
-('34dcdd7f-7e0a-43a0-9322-ceb6b19ed8c6', 'Dmitriy', '+79656175080', 0),
-('994b4561-3595-4210-9ff6-49cfb9c2b973', 'Evgeny', '+79613855772', 1),
-('ea28d536-3d80-4377-84dc-eb46df64745c', 'Maxim', '+79411750020', 0),
-('b4f13237-b95a-495b-816d-07b30832ca4d', 'Denis', '+79233750020', 1),
-('a46080a4-64e1-475e-bfc5-040e6cff3613', 'Alexandr', '+79186750020', 0)
+INSERT INTO Drivers(DriverID, TaxiID, Name, PhoneNumber, Busy, TaxiPrice) VALUES
+('bd1e063f-b343-4387-812c-e203bfaa1f65', 'f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'Alexey', '+79611750020', 1, 260),
+('96583972-f4f2-4c73-99b6-0708fd53aa97', 'c2e2d9d0-7d57-42ed-9418-4ae1d4e5e60e', 'Evgeny', '+79846438918', 1, 235),
+('b7083c2f-2ed4-40d4-93ec-6092c87e28d2', '36aa4c66-fafb-44f4-911c-d8c8168b2fee', 'Alexander', '+79311753020', 1, 180),
+('34dcdd7f-7e0a-43a0-9322-ceb6b19ed8c6', '6b3ab5ec-ea13-4fa2-b5c8-57e5307a5de7', 'Dmitriy', '+79656175080', 0, 150),
+('994b4561-3595-4210-9ff6-49cfb9c2b973', 'bbabe9b8-34bc-48e5-bf53-557b88dac13d', 'Evgeny', '+79613855772', 0, 260),
+('ea28d536-3d80-4377-84dc-eb46df64745c', 'a841638e-2df9-4eb5-a7af-66ab63cd6b39', 'Maxim', '+79411750020', 0, 235),
+('b4f13237-b95a-495b-816d-07b30832ca4d', '0a4ea3da-d46e-4bd6-9dce-b1b10f365076', 'Denis', '+79233750020', 1, 180),
+('a46080a4-64e1-475e-bfc5-040e6cff3613', '99b6801d-a0ab-41e9-9a2b-42ecbdb4dddc', 'Alexandr', '+79186750020', 0, 150)
 
 DROP TABLE BindTaxiDriver
 CREATE TABLE BindTaxiDriver
