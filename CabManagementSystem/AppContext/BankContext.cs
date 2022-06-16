@@ -112,6 +112,9 @@ namespace CabManagementSystem.AppContext
                 // ReceiverID is ID of user
                 if (!Banks.Any(x => x.BankID == operationModel.SenderID) || !Users.Any(x => x.ID == operationModel.ReceiverID))
                     operationModel.OperationStatus = StatusOperationCode.Error;
+
+                if (Banks.FirstOrDefault(x => x.BankID == operationModel.SenderID)?.AccountAmount < operationModel.TransferAmount)
+                    operationModel.OperationStatus = StatusOperationCode.Restricted;
             }
             else
             {
@@ -119,16 +122,13 @@ namespace CabManagementSystem.AppContext
                 // ReceiverID is ID of bank
                 if (!Banks.Any(x => x.BankID == operationModel.ReceiverID) || !Users.Any(x => x.ID == operationModel.SenderID))
                     operationModel.OperationStatus = StatusOperationCode.Error;
+
+                if (Users.FirstOrDefault(x => x.ID == operationModel.ReceiverID)?.BankAccountAmount < operationModel.TransferAmount)
+                    operationModel.OperationStatus = StatusOperationCode.Restricted;
             }
 
             if (!Banks.Any(x => x.BankID == operationModel.BankID))
                 operationModel.OperationStatus = StatusOperationCode.Error;
-
-            if (Banks.FirstOrDefault(x => x.BankID == operationModel.SenderID)?.AccountAmount < operationModel.TransferAmount)
-                operationModel.OperationStatus = StatusOperationCode.Restricted;
-
-            if (Users.FirstOrDefault(x => x.ID == operationModel.ReceiverID)?.BankAccountAmount < operationModel.TransferAmount)
-                operationModel.OperationStatus = StatusOperationCode.Restricted;
 
             return operationModel.OperationStatus;
         }
