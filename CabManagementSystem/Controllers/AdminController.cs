@@ -100,6 +100,7 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult Accrual(Guid ID, decimal BankAccountAmount)
         {
+            var s = applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access;
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
