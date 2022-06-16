@@ -24,6 +24,9 @@ namespace CabManagementSystem.AppContext
         /// <param name="order"></param>
         public void CreateOrder(OrderModel order)
         {
+            if (order is null)
+                throw new ArgumentNullException();
+
             order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
             Orders.Add(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true; // sets that definite user ordered taxi
@@ -38,6 +41,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="order"></param>
         public void UpdateOrder(OrderModel order)
         {
+            if (order is null)
+                throw new ArgumentNullException();
             order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
             order.Price = Orders.First(x => x.ID == order.ID).Price;
             ChangeTracker.Clear();
@@ -51,6 +56,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="order"></param>
         public void DeleteOrder(OrderModel order)
         {
+            if (order is null)
+                throw new ArgumentNullException();
             Orders.Remove(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = false;
             bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == order.UserID), order.Price.GetHashCode());

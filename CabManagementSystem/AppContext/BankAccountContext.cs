@@ -17,6 +17,11 @@ namespace CabManagementSystem.AppContext
         public DbSet<BankAccountModel> BankAccounts { get; set; }
         private readonly BankContext bankContext = new(new DbContextOptions<BankContext>());
 
+        /// <summary>
+        /// adds bank account of user
+        /// </summary>
+        /// <param name="bankAccountModel"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void AddBankAccount(BankAccountModel bankAccountModel)
         {
             if (bankAccountModel is null)
@@ -25,6 +30,12 @@ namespace CabManagementSystem.AppContext
             SaveChanges();
         }
 
+        /// <summary>
+        /// updates bank account of user
+        /// </summary>
+        /// <param name="bankAccountModel"></param>
+        /// <param name="user"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void UpdateBankAccount(BankAccountModel bankAccountModel, UserModel user)
         {
             if (bankAccountModel is null || user is null)

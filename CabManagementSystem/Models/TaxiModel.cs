@@ -10,7 +10,7 @@ namespace CabManagementSystem.Models
         public Guid DriverID { get; set; } = Guid.NewGuid();
         public string TaxiNumber { get; set; } = string.Empty;
         public TaxiClass TaxiClass { get; set; }
-        public TaxiPrice Price { get; set; }
+        public bool Busy { get; set; }
 
         [NotMapped]
         public List<TaxiModel> TaxiList { get; set; } = new();
@@ -25,8 +25,8 @@ namespace CabManagementSystem.Models
     public enum TaxiClass
     {
         Buisness = 1,
-        Comfort,
         Premium,
+        Comfort,
         Economy
     }
 
