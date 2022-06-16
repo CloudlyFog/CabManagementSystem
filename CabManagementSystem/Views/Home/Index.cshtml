@@ -5,6 +5,8 @@
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
     var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
     var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
+    var bankAccountContext = new BankAccountContext(new DbContextOptions<BankAccountContext>());
+    var bankContext = new BankContext(new DbContextOptions<BankContext>());
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;
@@ -13,12 +15,13 @@
         orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
         orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
     }
+    var userBankID = bankAccountContext.BankAccounts.Any(x => x.BankID == Model.BankID);
 }
 @model UserModel
 
 <title>Home</title>
 <div class="container">
-    @if (Model.HasOrder)
+    @if (Model.HasOrder && bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == Model.ID)?.BankID != new Guid())
     {
         <h4>
             <p>
@@ -34,6 +37,20 @@
     }
     else
     {
+        if (!bankAccountContext.BankAccounts.Any(x => x.BankID == Model.BankID))
+        {
+            <form method="post" asp-controller="Account" asp-action="SelectBank"> 
+                <div>
+                    <select asp-for="@Model.BankID">
+                        @foreach (var bank in bankContext.Banks.AsEnumerable<BankModel>())
+                        {
+                            <option value="@bank.BankID">@bank.BankName</option>
+                        }
+                    </select>
+                </div>
+                <input type="submit" value="Select Bank" />
+            </form>
+        }
         <form method="post" asp-controller="Home" asp-action="OrderTaxi">
             <div asp-validation-summary="ModelOnly"></div>
             <div>

@@ -1,4 +1,5 @@
 ﻿using CabManagementSystem.Models;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace CabManagementSystem.AppContext
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<AdminHandlingModel> AdminHandling { get; set; }
+        private readonly BankAccountContext bankAccountContext = new(new DbContextOptions<BankAccountContext>());
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) => Database.EnsureCreated();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,10 +33,16 @@ namespace CabManagementSystem.AppContext
         {
             if (IsAuthanticated(receivedUser))//if user isn`t exist method will send false
                 return;
+            receivedUser.Password = HashPassword(receivedUser.Password);
             receivedUser.Authenticated = true;
             receivedUser.ID = Guid.NewGuid();
             Users.Add(receivedUser);
             SaveChanges();
+            var bankAccountModel = new BankAccountModel()
+            {
+                UserBankAccountID = receivedUser.ID
+            };
+            bankAccountContext.AddBankAccount(bankAccountModel);
         }
 
         /// <summary>
@@ -167,6 +175,21 @@ namespace CabManagementSystem.AppContext
             reader.Close();
             connection.Close();
             return newsParts;
+        }
+
+        public string HashPassword(string password)
+        {
+            // generate a 128-bit salt using a cryptographically strong random sequence of nonzero values
+            byte[] salt = new byte[128 / 8];
+
+            // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+            return hashed;
         }
     }
 }

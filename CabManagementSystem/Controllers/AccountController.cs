@@ -7,9 +7,11 @@ namespace CabManagementSystem.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationContext applicationContext;
-        public AccountController(ApplicationContext applicationContext)
+        private readonly BankAccountContext bankAccountContext;
+        public AccountController(ApplicationContext applicationContext, BankAccountContext bankAccountContext)
         {
             this.applicationContext = applicationContext;
+            this.bankAccountContext = bankAccountContext;
         }
 
         [Route("SignUp")]
@@ -26,12 +28,13 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("SignIn")]
-        public async Task<IActionResult> SignIn(UserModel user, string[] args = null)
+        public async Task<IActionResult> SignIn(UserModel user, string[]? args = null)
         {
-            user.ID = applicationContext.GetID(user);
-            HttpContext.Session.SetString("userID", user.ID.ToString());
+            user.Password = applicationContext.HashPassword(user.Password);
+            var userID = applicationContext.GetID(user);
+            HttpContext.Session.SetString("userID", userID.ToString());
 
-            if (applicationContext.IsAuthanticated(user.ID))
+            if (applicationContext.IsAuthanticated(userID))
                 return RedirectToAction("Index", "Home");
             else
                 return RedirectToAction("SignIn", "Account");
@@ -51,6 +54,25 @@ namespace CabManagementSystem.Controllers
 
             else
                 return RedirectToAction("SignIn", "Account");
+        }
+
+        [HttpPost, Route("SelectBank")]
+        public IActionResult SelectBank(UserModel user)
+        {
+            var userID = HttpContext.Session.GetString("userID") is not null
+                    ? new Guid(HttpContext.Session.GetString("userID")) : new();
+
+            if (!applicationContext.IsAuthanticated(userID))
+                return RedirectToAction("Index", "Home");
+
+            var bankAccountModel = bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == userID);
+            bankAccountModel.BankID = user.BankID;
+            user = bankAccountContext.Users.FirstOrDefault(x => x.ID == userID);
+            user.BankID = bankAccountModel.BankID;
+
+            bankAccountContext.UpdateBankAccount(bankAccountModel, bankAccountContext.Users.FirstOrDefault(x => x.ID == user.ID));
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
