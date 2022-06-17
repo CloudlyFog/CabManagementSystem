@@ -122,8 +122,7 @@ namespace CabManagementSystem.AppContext
                 // ReceiverID is ID of bank
                 if (!Banks.Any(x => x.BankID == operationModel.ReceiverID) || !Users.Any(x => x.ID == operationModel.SenderID))
                     operationModel.OperationStatus = StatusOperationCode.Error;
-
-                if (Users.FirstOrDefault(x => x.ID == operationModel.ReceiverID)?.BankAccountAmount < operationModel.TransferAmount)
+                if (BankAccounts.FirstOrDefault(x => x.UserBankAccountID == operationModel.SenderID)?.BankAccountAmount < operationModel.TransferAmount)
                     operationModel.OperationStatus = StatusOperationCode.Restricted;
             }
 

@@ -40,6 +40,7 @@ namespace CabManagementSystem.AppContext
             SaveChanges();
             var bankAccountModel = new BankAccountModel()
             {
+                ID = receivedUser.BankAccountID,
                 UserBankAccountID = receivedUser.ID
             };
             bankAccountContext.AddBankAccount(bankAccountModel);
