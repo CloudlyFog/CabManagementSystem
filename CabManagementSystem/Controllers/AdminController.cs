@@ -10,12 +10,14 @@ namespace CabManagementSystem.Controllers
         private readonly ApplicationContext applicationContext;
         private readonly BankAccountContext bankAccountContext;
         private readonly BankContext bankContext;
-        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext, BankAccountContext bankAccountContext, BankContext bankContext)
+        private readonly OrderContext orderContext;
+        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext, BankAccountContext bankAccountContext, BankContext bankContext, OrderContext orderContext)
         {
             this.applicationContext = applicationContext;
             this.taxiContext = taxiContext;
             this.bankAccountContext = bankAccountContext;
             this.bankContext = bankContext;
+            this.orderContext = orderContext;
         }
 
         public IActionResult Index(UserModel user)
@@ -24,6 +26,19 @@ namespace CabManagementSystem.Controllers
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
             user.Order.UserID = user.ID;
+            user = applicationContext.Users.FirstOrDefault(x => x.ID == user.ID) is not null
+                ? applicationContext.Users.First(x => x.ID == user.ID) : new();
+
+            var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
+            var conditionForExistingRowApplication = applicationContext.Users.Any(x => x.ID == user.ID);
+            var conditionForExistingRowDriver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName);
+
+            user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
+            user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
+
+            user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
+            user.Driver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName)
+                ? orderContext.Drivers.First(x => x.Name == orderContext.Orders.First(x => x.UserID == user.ID).DriverName) : new();
 
             return View(user);
         }
