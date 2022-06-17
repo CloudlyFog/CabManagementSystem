@@ -28,7 +28,11 @@ namespace CabManagementSystem.AppContext
             if (order is null)
                 throw new ArgumentNullException();
             var driver = Drivers.FirstOrDefault(x => !x.Busy && x.TaxiPrice == order.Price);
+            if (driver is null)
+                throw new Exception("all drivers are busy.");
             var taxi = Taxi.FirstOrDefault(x => x.ID == driver.TaxiID);
+            if (taxi is null)
+                throw new Exception("all taxi are busy.");
             driver.Busy = true;
             taxi.Busy = true;
             Drivers.Update(driver);
