@@ -83,6 +83,7 @@ namespace CabManagementSystem.AppContext
             bankModel.AccountAmount += operationModel.TransferAmount;
             bankAccountModel.BankAccountAmount -= operationModel.TransferAmount;
             user.BankAccountAmount = bankAccountModel.BankAccountAmount;
+            ChangeTracker.Clear();
             BankAccounts.Update(bankAccountModel);
             Banks.Update(bankModel);
             Users.Update(user);
