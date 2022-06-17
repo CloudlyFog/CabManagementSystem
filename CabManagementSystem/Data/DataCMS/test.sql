@@ -1,2 +1,1 @@
-
-SELECT * FROM BankAccounts 
+SELECT * FROM Users
