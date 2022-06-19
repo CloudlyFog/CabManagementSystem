@@ -52,7 +52,14 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(user.Order.UserID) || orderContext.AlreadyOrder(user.Order.UserID))
                 return RedirectToAction("Index", "Home");
 
-            orderContext.CreateOrder(user.Order);
+            try
+            {
+                orderContext.CreateOrder(user.Order);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Home");
         }
 
@@ -71,7 +78,14 @@ namespace CabManagementSystem.Controllers
             if (user.Order is null)
                 return RedirectToAction("Index", "Home");
 
-            orderContext.UpdateOrder(user.Order);
+            try
+            {
+                orderContext.UpdateOrder(user.Order);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Home");
         }
 
@@ -89,7 +103,14 @@ namespace CabManagementSystem.Controllers
             if (user.Order is null)
                 return RedirectToAction("Index", "Home");
 
-            orderContext.DeleteOrder(user.Order);
+            try
+            {
+                orderContext.DeleteOrder(user.Order);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Home");
         }
     }

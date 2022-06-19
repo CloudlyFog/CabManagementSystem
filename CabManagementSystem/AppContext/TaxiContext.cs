@@ -23,6 +23,10 @@ namespace CabManagementSystem.AppContext
         /// <param name="taxi"></param>
         public void AddTaxi(TaxiModel taxi)
         {
+            if (taxi is null)
+                throw new Exception("TaxiModel is null.");
+            if (taxi.BindTaxiDriver is null)
+                throw new Exception("BindTaxiDriver is null.");
             AddBindTaxiDriver(taxi.BindTaxiDriver);
             Taxi.Add(taxi);
             SaveChanges();
@@ -34,6 +38,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="taxi"></param>
         public void UpdateTaxi(TaxiModel taxi)
         {
+            if (taxi is null)
+                throw new Exception("TaxiModel is null.");
             Taxi.Update(taxi);
             SaveChanges();
         }
@@ -47,6 +53,11 @@ namespace CabManagementSystem.AppContext
             taxi = Taxi.Any(x => x.ID == taxi.ID)
                 ? Taxi.First(x => x.ID == taxi.ID) : new();
             ChangeTracker.Clear();
+            if (taxi == new TaxiModel())
+                throw new Exception("TaxiModel is default.");
+
+            if (taxi.BindTaxiDriver is null)
+                throw new Exception("BindTaxiDriver is null.");
             DeleteBindTaxiDriver(taxi.BindTaxiDriver);
             Taxi.Remove(taxi);
             SaveChanges();
@@ -58,6 +69,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="bindTaxiDriver"></param>
         private void AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
+            if (bindTaxiDriver is null)
+                throw new Exception("BindTaxiDriver is null.");
             BindTaxiDriver.Add(bindTaxiDriver);
             SaveChanges();
         }
@@ -68,6 +81,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="bindTaxiDriver"></param>
         private void DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
+            if (bindTaxiDriver is null)
+                throw new Exception("BindTaxiDriver is null.");
             BindTaxiDriver.Remove(bindTaxiDriver);
             SaveChanges();
         }

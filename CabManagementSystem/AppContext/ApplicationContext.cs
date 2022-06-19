@@ -32,7 +32,7 @@ namespace CabManagementSystem.AppContext
         public void AddUser([Bind] UserModel receivedUser)
         {
             if (IsAuthanticated(receivedUser))//if user isn`t exist method will send false
-                return;
+                throw new Exception("The user already was sign up.");
             receivedUser.Password = HashPassword(receivedUser.Password);
             receivedUser.Authenticated = true;
             receivedUser.ID = Guid.NewGuid();
@@ -67,6 +67,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="ID"></param>
         public void GiveAdminRights(Guid ID)
         {
+            if (!Users.Any(x => x.ID == ID))
+                throw new Exception("The user with the same ID isn't exist in the database.");
             Users.First(x => x.ID == ID).Access = true;
             SaveChanges();
         }
@@ -77,6 +79,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="ID"></param>
         public void RemoveAdminRights(Guid ID)
         {
+            if (!Users.Any(x => x.ID == ID))
+                throw new Exception("The user with the same ID isn't exist in the database.");
             Users.First(x => x.ID == ID).Access = false;
             SaveChanges();
         }
@@ -119,11 +123,11 @@ namespace CabManagementSystem.AppContext
         public string GetUserProp(UserModel receivedUser, string userProp)
         {
             string name;
-            string queryStringGetName = $"SELECT {userProp} FROM Users WHERE Email LIKE '{receivedUser.Email}' AND Password LIKE '{receivedUser.Password}'";
-            SqlConnection connection = new(QUERYCONNECTION);
-            SqlCommand command = new(queryStringGetName, connection);
+            var queryStringGetName = $"SELECT {userProp} FROM Users WHERE Email LIKE '{receivedUser.Email}' AND Password LIKE '{receivedUser.Password}'";
+            var connection = new SqlConnection(QUERYCONNECTION);
+            var command = new SqlCommand(queryStringGetName, connection);
             connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
+            var reader = command.ExecuteReader();
             if (reader.Read())
                 name = reader.GetString(0);
             else
@@ -178,6 +182,11 @@ namespace CabManagementSystem.AppContext
             return newsParts;
         }
 
+        /// <summary>
+        /// Hashing string with SHA256 algorithm
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns>hashed string</returns>
         public string HashPassword(string password)
         {
             // generate a 128-bit salt using a cryptographically strong random sequence of nonzero values

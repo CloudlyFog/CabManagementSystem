@@ -45,15 +45,17 @@ namespace CabManagementSystem.Controllers
         {
             user.ID = applicationContext.GetID(user);
             HttpContext.Session.SetString("userID", user.ID.ToString());
+            user.Password = applicationContext.HashPassword(user.Password);
 
-            if (!applicationContext.IsAuthanticated(user.ID))
+            try
             {
                 applicationContext.AddUser(user);
-                return RedirectToAction("SignIn", "Account");
             }
-
-            else
-                return RedirectToAction("SignIn", "Account");
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
+            return RedirectToAction("SignIn", "Account");
         }
 
         [HttpPost, Route("SelectBank")]

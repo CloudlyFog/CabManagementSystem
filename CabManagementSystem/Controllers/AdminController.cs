@@ -50,7 +50,14 @@ namespace CabManagementSystem.Controllers
                 return RedirectToAction("Index", "Admin");
 
 
-            taxiContext.AddTaxi(user.Taxi);
+            try
+            {
+                taxiContext.AddTaxi(user.Taxi);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Admin");
         }
 
@@ -64,7 +71,14 @@ namespace CabManagementSystem.Controllers
                 ? taxiContext.Taxi.FirstOrDefault(x => x.ID == user.Taxi.ID).DriverID : new();
             taxiContext.ChangeTracker.Clear();
 
-            taxiContext.UpdateTaxi(user.Taxi);
+            try
+            {
+                taxiContext.UpdateTaxi(user.Taxi);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Admin");
         }
 
@@ -73,8 +87,14 @@ namespace CabManagementSystem.Controllers
         {
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
-
-            taxiContext.DeleteTaxi(user.Taxi);
+            try
+            {
+                taxiContext.DeleteTaxi(user.Taxi);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Admin");
         }
 
@@ -87,7 +107,15 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(user.ID))
                 return RedirectToAction("Index", "Admin");
 
-            applicationContext.ChangeSelectMode(user.ID, selectMode);
+            try
+            {
+                applicationContext.ChangeSelectMode(user.ID, selectMode);
+            }
+            catch (Exception ex)
+            {
+
+                return Content($"Error: {ex.Message}");
+            }
 
             return RedirectToAction("Index", "Admin");
         }
@@ -98,7 +126,15 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
-            applicationContext.GiveAdminRights(ID);
+            try
+            {
+                applicationContext.GiveAdminRights(ID);
+            }
+            catch (Exception ex)
+            {
+
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Admin");
         }
 
@@ -107,8 +143,15 @@ namespace CabManagementSystem.Controllers
         {
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
+            try
+            {
+                applicationContext.RemoveAdminRights(ID);
+            }
+            catch (Exception ex)
+            {
 
-            applicationContext.RemoveAdminRights(ID);
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Admin");
         }
 
@@ -119,7 +162,14 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
-            bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+            try
+            {
+                bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Admin");
         }
 
@@ -129,7 +179,14 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
-            bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+            try
+            {
+                bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
             return RedirectToAction("Index", "Admin");
         }
     }
