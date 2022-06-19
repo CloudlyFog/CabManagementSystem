@@ -45,8 +45,6 @@ namespace CabManagementSystem.Controllers
         {
             user.ID = applicationContext.GetID(user);
             HttpContext.Session.SetString("userID", user.ID.ToString());
-            user.Password = applicationContext.HashPassword(user.Password);
-
             try
             {
                 applicationContext.AddUser(user);
@@ -72,7 +70,14 @@ namespace CabManagementSystem.Controllers
             user = bankAccountContext.Users.FirstOrDefault(x => x.ID == userID);
             user.BankID = bankAccountModel.BankID;
 
-            bankAccountContext.UpdateBankAccount(bankAccountModel, bankAccountContext.Users.FirstOrDefault(x => x.ID == user.ID));
+            try
+            {
+                bankAccountContext.UpdateBankAccount(bankAccountModel, bankAccountContext.Users.FirstOrDefault(x => x.ID == user.ID));
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+            }
 
             return RedirectToAction("Index", "Home");
         }

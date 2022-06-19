@@ -25,7 +25,7 @@ namespace CabManagementSystem.AppContext
         public void AddBankAccount(BankAccountModel bankAccountModel)
         {
             if (bankAccountModel is null)
-                throw new ArgumentNullException();
+                throw new Exception("BankAccountModel is null.");
             BankAccounts.Add(bankAccountModel);
             SaveChanges();
         }
@@ -38,8 +38,8 @@ namespace CabManagementSystem.AppContext
         /// <exception cref="ArgumentNullException"></exception>
         public void UpdateBankAccount(BankAccountModel bankAccountModel, UserModel user)
         {
-            if (bankAccountModel is null || user is null)
-                throw new ArgumentNullException();
+            if (bankAccountModel is null)
+                throw new Exception("BankAccountModel is null.");
             BankAccounts.Update(bankAccountModel);
             Users.Update(user);
             SaveChanges();
