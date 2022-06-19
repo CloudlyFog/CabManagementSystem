@@ -25,6 +25,8 @@ namespace CabManagementSystem.AppContext
         /// <param name="operationKind"></param>
         public void CreateOperation(OperationModel operationModel, OperationKind operationKind)
         {
+            if (operationModel is null)
+                throw new Exception($"OperationModel is null.");
             operationModel.OperationStatus = StatusOperation(operationModel, operationKind);
             Operations.Add(operationModel);
             SaveChanges();
@@ -38,9 +40,9 @@ namespace CabManagementSystem.AppContext
         private void DeleteOperation(OperationModel operationModel)
         {
             if (operationModel is null)
-                throw new ArgumentNullException();
+                throw new Exception($"OperationModel is null.");
             if (!Operations.Any(x => x.ID == operationModel.ID))
-                throw new ArgumentNullException();
+                throw new Exception($"The operation isn't exist in the database.");
             Operations.Remove(operationModel);
             SaveChanges();
         }
@@ -54,9 +56,17 @@ namespace CabManagementSystem.AppContext
         /// <exception cref="Exception"></exception>
         public void BankAccrual(BankAccountModel bankAccountModel, BankModel bankModel, OperationModel operationModel)
         {
+            if (bankAccountModel is null)
+                throw new Exception($"BankAccountModel is null.");
+            if (bankModel is null)
+                throw new Exception($"BankModel is null.");
             if (operationModel.OperationStatus != StatusOperationCode.Successfull)
-                throw new Exception($"operation status is {operationModel.OperationStatus}");
+                throw new Exception($"Operation status is {operationModel.OperationStatus}");
+
             var user = Users.FirstOrDefault(x => x.ID == bankAccountModel.UserBankAccountID);
+            if (user is null)
+                throw new Exception($"The user isn't exist in the database.");
+
             bankModel.AccountAmount -= operationModel.TransferAmount;
             bankAccountModel.BankAccountAmount += operationModel.TransferAmount;
             user.BankAccountAmount = bankAccountModel.BankAccountAmount;
@@ -77,9 +87,17 @@ namespace CabManagementSystem.AppContext
         /// <exception cref="Exception"></exception>
         public void BankWithdraw(BankAccountModel bankAccountModel, BankModel bankModel, OperationModel operationModel)
         {
+            if (bankAccountModel is null)
+                throw new Exception($"BankAccountModel is null.");
+            if (bankModel is null)
+                throw new Exception($"BankModel is null.");
             if (operationModel.OperationStatus != StatusOperationCode.Successfull)
-                throw new Exception($"operation status is {operationModel.OperationStatus}");
+                throw new Exception($"Operation status is {operationModel.OperationStatus}");
+
             var user = Users.FirstOrDefault(x => x.ID == bankAccountModel.UserBankAccountID);
+            if (user is null)
+                throw new Exception($"The user isn't exist in the database.");
+
             bankModel.AccountAmount += operationModel.TransferAmount;
             bankAccountModel.BankAccountAmount -= operationModel.TransferAmount;
             user.BankAccountAmount = bankAccountModel.BankAccountAmount;
