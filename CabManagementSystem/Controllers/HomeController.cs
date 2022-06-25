@@ -9,6 +9,7 @@ namespace CabManagementSystem.Controllers
     {
         private readonly ApplicationContext applicationContext;
         private readonly OrderContext orderContext;
+        public ExceptionModel Exception { get; set; }
         public HomeController(ApplicationContext applicationContext, OrderContext orderContext)
         {
             this.applicationContext = applicationContext;
@@ -43,6 +44,8 @@ namespace CabManagementSystem.Controllers
         [Route("Privacy")]
         public IActionResult Privacy() => View();
 
+        public IActionResult Error(UserModel user) => View(user);
+
         [HttpPost, Route("OrderTaxi")]
         public IActionResult OrderTaxi(UserModel user)
         {
@@ -54,11 +57,18 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                orderContext.CreateOrder(user.Order);
+                var operation = orderContext.CreateOrder(user.Order);
+                Exception = operation;
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Content($"Error: {ex.Message}");
+                user.Exception = Exception;
+                return Error(user);
             }
             return RedirectToAction("Index", "Home");
         }
@@ -75,12 +85,23 @@ namespace CabManagementSystem.Controllers
             user.Order.ID = HttpContext.Session.GetString("orderID") is not null
                     ? new(HttpContext.Session.GetString("orderID")) : new();
 
-            if (user.Order is null)
+
+            var order = orderContext.Orders.FirstOrDefault(x => x.ID == user.Order.ID);
+            order.Address = user.Order.Address;
+            order.PhoneNumber = user.Order.PhoneNumber;
+            order.Description = user.Order.Description;
+
+            if (order is null)
                 return RedirectToAction("Index", "Home");
 
             try
             {
-                orderContext.UpdateOrder(user.Order);
+                var operation = orderContext.UpdateOrder(order);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -105,7 +126,12 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                orderContext.DeleteOrder(user.Order);
+                var operation = orderContext.DeleteOrder(user.Order);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {

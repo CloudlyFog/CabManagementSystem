@@ -18,6 +18,12 @@ namespace CabManagementSystem.Models
         public decimal BankAccountAmount { get; set; }
 
         [NotMapped]
+        public ExceptionModel Exception { get; set; } = ExceptionModel.Successfull;
+
+        [NotMapped]
+        public OperationModel? OperationModel { get; set; }
+
+        [NotMapped]
         public OrderModel? Order { get; set; } = new();
 
         [NotMapped]
@@ -28,5 +34,17 @@ namespace CabManagementSystem.Models
 
         [NotMapped]
         public AdminHandlingModel? AdminHandling { get; set; } = new();
+    }
+
+    /// <summary>
+    /// defines model of possible exceptions of methods'es returns
+    /// </summary>
+    public enum ExceptionModel
+    {
+        VariableIsNull = 100,
+        Successfull = 200,
+        OperationRestricted = 300,
+        OperationFailed = 400,
+        OperationNotExist = 401
     }
 }

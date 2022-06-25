@@ -22,12 +22,13 @@ namespace CabManagementSystem.AppContext
         /// </summary>
         /// <param name="bankAccountModel"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void AddBankAccount(BankAccountModel bankAccountModel)
+        public ExceptionModel AddBankAccount(BankAccountModel bankAccountModel)
         {
             if (bankAccountModel is null)
-                throw new Exception("BankAccountModel is null.");
+                return ExceptionModel.VariableIsNull;
             BankAccounts.Add(bankAccountModel);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
@@ -36,13 +37,14 @@ namespace CabManagementSystem.AppContext
         /// <param name="bankAccountModel"></param>
         /// <param name="user"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void UpdateBankAccount(BankAccountModel bankAccountModel, UserModel user)
+        public ExceptionModel UpdateBankAccount(BankAccountModel bankAccountModel, UserModel user)
         {
             if (bankAccountModel is null)
-                throw new Exception("BankAccountModel is null.");
+                return ExceptionModel.VariableIsNull;
             BankAccounts.Update(bankAccountModel);
             Users.Update(user);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
@@ -51,10 +53,10 @@ namespace CabManagementSystem.AppContext
         /// <param name="BankAccountModel"></param>
         /// <param name="amountAccrual"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void Accrual(BankAccountModel BankAccountModel, decimal amountAccrual)
+        public ExceptionModel Accrual(BankAccountModel BankAccountModel, decimal amountAccrual)
         {
             if (BankAccountModel is null || !Users.Any(x => x.ID == BankAccountModel.UserBankAccountID))
-                throw new ArgumentNullException();
+                return ExceptionModel.VariableIsNull;
 
             var operation = new OperationModel()
             {
@@ -64,8 +66,12 @@ namespace CabManagementSystem.AppContext
                 TransferAmount = amountAccrual,
                 OperationKind = OperationKind.Accrual
             };
-            bankContext.CreateOperation(operation, OperationKind.Accrual);
-            bankContext.BankAccrual(BankAccountModel, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation);
+            if (bankContext.CreateOperation(operation, OperationKind.Accrual) != ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
+            if (bankContext.BankAccrual(BankAccountModel, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation) != ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
+
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
@@ -75,10 +81,10 @@ namespace CabManagementSystem.AppContext
         /// <param name="amountWithdraw"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public void Withdraw(BankAccountModel bankAccountModel, decimal amountWithdraw)
+        public ExceptionModel Withdraw(BankAccountModel bankAccountModel, decimal amountWithdraw)
         {
             if (bankAccountModel is null || !Users.Any(x => x.ID == bankAccountModel.UserBankAccountID))
-                throw new ArgumentNullException();
+                return ExceptionModel.VariableIsNull;
 
             var operation = new OperationModel()
             {
@@ -88,8 +94,12 @@ namespace CabManagementSystem.AppContext
                 TransferAmount = amountWithdraw,
                 OperationKind = OperationKind.Withdraw
             };
-            bankContext.CreateOperation(operation, OperationKind.Withdraw);
-            bankContext.BankWithdraw(bankAccountModel, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation);
+            if (bankContext.CreateOperation(operation, OperationKind.Withdraw) != ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
+            if (bankContext.BankWithdraw(bankAccountModel, bankContext.Banks.FirstOrDefault(x => x.BankID == operation.BankID), operation) != ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
+
+            return ExceptionModel.Successfull;
         }
     }
 }

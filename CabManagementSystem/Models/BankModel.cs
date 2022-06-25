@@ -27,7 +27,6 @@
     }
     public enum StatusOperationCode
     {
-        Default = 100,
         Successfull = 200,
         Restricted = 300,
         Error = 400,

@@ -23,16 +23,16 @@ namespace CabManagementSystem.AppContext
         /// adds data of user order and withdraw money from account
         /// </summary>
         /// <param name="order"></param>
-        public void CreateOrder(OrderModel order)
+        public ExceptionModel CreateOrder(OrderModel order)
         {
             if (order is null)
-                throw new ArgumentNullException();
+                return ExceptionModel.VariableIsNull;
             var driver = Drivers.FirstOrDefault(x => !x.Busy && x.TaxiPrice == order.Price);
             if (driver is null)
-                throw new Exception("all drivers are busy.");
+                return ExceptionModel.VariableIsNull;
             var taxi = Taxi.FirstOrDefault(x => x.ID == driver.TaxiID);
             if (taxi is null)
-                throw new Exception("all taxi are busy.");
+                return ExceptionModel.VariableIsNull;
             driver.Busy = true;
             taxi.Busy = true;
             Drivers.Update(driver);
@@ -41,34 +41,35 @@ namespace CabManagementSystem.AppContext
             order.TaxiID = taxi.ID;
             Orders.Add(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = true; // sets that definite user ordered taxi
-            bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == order.UserID), order.Price.GetHashCode());
+            if (bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == order.UserID), order.Price.GetHashCode()) != ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
             bankAccountContext.SaveChanges();
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
         /// updates data of user order
         /// </summary>
         /// <param name="order"></param>
-        public void UpdateOrder(OrderModel order)
+        public ExceptionModel UpdateOrder(OrderModel order)
         {
             if (order is null)
-                throw new ArgumentNullException();
-            order.DriverName = Drivers.FirstOrDefault(x => !x.Busy).Name;
-            order.Price = Orders.First(x => x.ID == order.ID).Price;
+                return ExceptionModel.VariableIsNull;
             ChangeTracker.Clear();
             Orders.Update(order);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
         /// removes data of user order and accrual money on account
         /// </summary>
         /// <param name="order"></param>
-        public void DeleteOrder(OrderModel order)
+        public ExceptionModel DeleteOrder(OrderModel order)
         {
             if (order is null)
-                throw new ArgumentNullException();
+                return ExceptionModel.VariableIsNull;
             var driver = Drivers.FirstOrDefault(x => x.TaxiID == order.TaxiID);
             var taxi = Taxi.FirstOrDefault(x => x.ID == driver.TaxiID);
             driver.Busy = false;
@@ -77,9 +78,11 @@ namespace CabManagementSystem.AppContext
             Taxi.Update(taxi);
             Orders.Remove(order);
             bankAccountContext.Users.FirstOrDefault(x => x.ID == order.UserID).HasOrder = false;
-            bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == order.UserID), order.Price.GetHashCode());
+            if (bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == order.UserID), order.Price.GetHashCode()) != ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
             bankAccountContext.SaveChanges();
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>

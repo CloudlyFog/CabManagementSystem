@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_LayoutHeader.cshtml";
+}
+
+<section class="u-align-center u-clearfix u-section-1" id="sec-0139">
+    <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+        <h2 class="u-text u-text-default u-text-1"><strong>Oh.. Something went wrong.</strong></h2>
+        <h3 class="u-text u-text-default u-text-2">Exception: @Model.Exception.ToString().</h3>
+    </div>
+</section>

@@ -1,6 +1,5 @@
 ﻿using CabManagementSystem.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -28,11 +27,11 @@ namespace CabManagementSystem.AppContext
         /// needed properties: ID, Name, Email, Password
         /// </summary>
         /// <param name="receivedUser"></param>
-        /// <returns><see langword="true"/> if user has been added correctly</returns>
-        public void AddUser([Bind] UserModel receivedUser)
+        /// <returns>instance of an <see cref="ExceptionModel"/></returns>
+        public ExceptionModel AddUser(UserModel receivedUser)
         {
             if (IsAuthanticated(receivedUser))//if user isn`t exist method will send false
-                throw new Exception("The user already was sign up.");
+                return ExceptionModel.OperationFailed;
             receivedUser.Password = HashPassword(receivedUser.Password);
             receivedUser.Authenticated = true;
             receivedUser.ID = Guid.NewGuid();
@@ -43,7 +42,7 @@ namespace CabManagementSystem.AppContext
                 ID = receivedUser.BankAccountID,
                 UserBankAccountID = receivedUser.ID
             };
-            bankAccountContext.AddBankAccount(bankAccountModel);
+            return bankAccountContext.AddBankAccount(bankAccountModel);
         }
 
         /// <summary>
@@ -65,24 +64,26 @@ namespace CabManagementSystem.AppContext
         /// gives admin rights to definite user
         /// </summary>
         /// <param name="ID"></param>
-        public void GiveAdminRights(Guid ID)
+        public ExceptionModel GiveAdminRights(Guid ID)
         {
             if (!Users.Any(x => x.ID == ID))
-                throw new Exception("The user with the same ID isn't exist in the database.");
+                return ExceptionModel.OperationFailed;
             Users.First(x => x.ID == ID).Access = true;
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
         /// removes admin rights from definite user
         /// </summary>
         /// <param name="ID"></param>
-        public void RemoveAdminRights(Guid ID)
+        public ExceptionModel RemoveAdminRights(Guid ID)
         {
             if (!Users.Any(x => x.ID == ID))
-                throw new Exception("The user with the same ID isn't exist in the database.");
+                return ExceptionModel.OperationFailed;
             Users.First(x => x.ID == ID).Access = false;
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
@@ -99,14 +100,14 @@ namespace CabManagementSystem.AppContext
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="mode"></param>
-        public void ChangeSelectMode(Guid userID, SelectModeEnum mode)
+        public ExceptionModel ChangeSelectMode(Guid userID, SelectModeEnum mode)
         {
             var selectMode = AdminHandling.FirstOrDefault(x => x.UserID == userID);
-            if (selectMode is not null)
-            {
-                selectMode.SelectMode = mode;
-                SaveChanges();
-            }
+            if (selectMode is null)
+                return ExceptionModel.OperationFailed;
+            selectMode.SelectMode = mode;
+            SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
@@ -135,23 +136,6 @@ namespace CabManagementSystem.AppContext
             reader.Close();
             connection.Close();
             return name;
-        }
-
-        /// <summary>
-        /// serialize taxi's data in json format
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        /// <param name="path"></param>
-        public void SerializeData(TaxiModel data, string path)
-        {
-            var jsonDes = JsonConvert.DeserializeObject<JsonTaxiModel>(File.ReadAllText(path));
-            if (jsonDes is null)
-                return;
-            jsonDes.TaxiList.Add(data);
-            var json = JsonConvert.SerializeObject(jsonDes);
-            File.Delete(path);
-            File.AppendAllText(path, json);
         }
 
         /// <summary>

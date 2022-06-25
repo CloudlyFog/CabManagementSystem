@@ -49,10 +49,14 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(user.ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).Access)
                 return RedirectToAction("Index", "Admin");
 
-
             try
             {
-                taxiContext.AddTaxi(user.Taxi);
+                var operation = taxiContext.AddTaxi(user.Taxi);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -73,7 +77,12 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                taxiContext.UpdateTaxi(user.Taxi);
+                var operation = taxiContext.UpdateTaxi(user.Taxi);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -89,7 +98,12 @@ namespace CabManagementSystem.Controllers
                 return RedirectToAction("Index", "Admin");
             try
             {
-                taxiContext.DeleteTaxi(user.Taxi);
+                var operation = taxiContext.DeleteTaxi(user.Taxi);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -109,7 +123,12 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                applicationContext.ChangeSelectMode(user.ID, selectMode);
+                var operation = applicationContext.ChangeSelectMode(user.ID, selectMode);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -128,7 +147,13 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                applicationContext.GiveAdminRights(ID);
+                var operation = applicationContext.GiveAdminRights(ID);
+                var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -145,7 +170,13 @@ namespace CabManagementSystem.Controllers
                 return RedirectToAction("Index", "Admin");
             try
             {
-                applicationContext.RemoveAdminRights(ID);
+                var operation = applicationContext.RemoveAdminRights(ID);
+                var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -158,13 +189,18 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult Accrual(Guid ID, decimal BankAccountAmount)
         {
-            var s = applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access;
+            var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             try
             {
-                bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+                var operation = bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {
@@ -176,12 +212,18 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult Withdraw(Guid ID, decimal BankAccountAmount)
         {
+            var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
             if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             try
             {
-                bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+                var operation = bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+                if (operation != ExceptionModel.Successfull)
+                {
+                    user.Exception = operation;
+                    return RedirectToAction("Error", "Home", user);
+                }
             }
             catch (Exception ex)
             {

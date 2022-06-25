@@ -21,71 +21,78 @@ namespace CabManagementSystem.AppContext
         /// adds data of taxi in the database
         /// </summary>
         /// <param name="taxi"></param>
-        public void AddTaxi(TaxiModel taxi)
+        public ExceptionModel AddTaxi(TaxiModel taxi)
         {
             if (taxi is null)
-                throw new Exception("TaxiModel is null.");
+                return ExceptionModel.VariableIsNull;
             if (taxi.BindTaxiDriver is null)
-                throw new Exception("BindTaxiDriver is null.");
-            AddBindTaxiDriver(taxi.BindTaxiDriver);
+                return ExceptionModel.VariableIsNull;
+            var operation = AddBindTaxiDriver(taxi.BindTaxiDriver);
+            if (operation != ExceptionModel.Successfull)
+                return operation;
             Taxi.Add(taxi);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
         /// updates data of taxi in the database
         /// </summary>
         /// <param name="taxi"></param>
-        public void UpdateTaxi(TaxiModel taxi)
+        public ExceptionModel UpdateTaxi(TaxiModel taxi)
         {
             if (taxi is null)
-                throw new Exception("TaxiModel is null.");
+                return ExceptionModel.VariableIsNull;
             Taxi.Update(taxi);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
         /// removes data of taxi in the database
         /// </summary>
         /// <param name="taxi"></param>
-        public void DeleteTaxi(TaxiModel taxi)
+        public ExceptionModel DeleteTaxi(TaxiModel taxi)
         {
-            taxi = Taxi.Any(x => x.ID == taxi.ID)
-                ? Taxi.First(x => x.ID == taxi.ID) : new();
+            taxi = Taxi.FirstOrDefault(x => x.ID == taxi.ID);
             ChangeTracker.Clear();
-            if (taxi == new TaxiModel())
-                throw new Exception("TaxiModel is default.");
+            if (taxi is null)
+                return ExceptionModel.VariableIsNull;
 
             if (taxi.BindTaxiDriver is null)
-                throw new Exception("BindTaxiDriver is null.");
-            DeleteBindTaxiDriver(taxi.BindTaxiDriver);
+                return ExceptionModel.VariableIsNull;
+            var operation = DeleteBindTaxiDriver(taxi.BindTaxiDriver);
+            if (operation != ExceptionModel.Successfull)
+                return operation;
             Taxi.Remove(taxi);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
         /// adds bind's data of taxi and its driver in the database
         /// </summary>
         /// <param name="bindTaxiDriver"></param>
-        private void AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
+        private ExceptionModel AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             if (bindTaxiDriver is null)
-                throw new Exception("BindTaxiDriver is null.");
+                return ExceptionModel.VariableIsNull;
             BindTaxiDriver.Add(bindTaxiDriver);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
 
         /// <summary>
         /// removes bind's data of taxi and its driver in the database
         /// </summary>
         /// <param name="bindTaxiDriver"></param>
-        private void DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
+        private ExceptionModel DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             if (bindTaxiDriver is null)
-                throw new Exception("BindTaxiDriver is null.");
+                return ExceptionModel.VariableIsNull;
             BindTaxiDriver.Remove(bindTaxiDriver);
             SaveChanges();
+            return ExceptionModel.Successfull;
         }
-
     }
 }
