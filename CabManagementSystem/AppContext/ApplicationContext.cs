@@ -92,8 +92,8 @@ namespace CabManagementSystem.AppContext
         /// </summary>
         /// <param name="user"></param>
         /// <returns>return ID of specified user</returns>
-        public Guid GetID(UserModel user) => Users.Any(x => x.Name == GetUserProp(user, "Name") && x.Email == user.Email && x.Password == user.Password)
-            ? Users.FirstOrDefault(x => x.Name == GetUserProp(user, "Name") && x.Email == user.Email && x.Password == user.Password).ID : new();
+        public Guid GetID(UserModel user) => Users.Any(x => x.Name == GetUserProperty(user.ID, "Name") && x.Email == user.Email && x.Password == user.Password)
+            ? Users.FirstOrDefault(x => x.Name == GetUserProperty(user.ID, "Name") && x.Email == user.Email && x.Password == user.Password).ID : new();
 
         /// <summary>
         /// changes property SelectMode of specified user
@@ -121,10 +121,10 @@ namespace CabManagementSystem.AppContext
         /// returns any existing property of user`s model.
         /// can return: ID, Name, Email, Password, Autenticated, Access
         /// </returns>
-        public string GetUserProp(UserModel receivedUser, string userProp)
+        public string GetUserProperty(Guid userID, string userProp)
         {
             string name;
-            var queryStringGetName = $"SELECT {userProp} FROM Users WHERE Email LIKE '{receivedUser.Email}' AND Password LIKE '{receivedUser.Password}'";
+            var queryStringGetName = $"SELECT {userProp} FROM Users WHERE ID = '{userID}'";
             var connection = new SqlConnection(QUERYCONNECTION);
             var command = new SqlCommand(queryStringGetName, connection);
             connection.Open();
