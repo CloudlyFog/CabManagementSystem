@@ -1,5 +1,4 @@
 using CabManagementSystem.AppContext;
-using Microsoft.EntityFrameworkCore;
 
 namespace CMSTest
 {
@@ -7,7 +6,7 @@ namespace CMSTest
     {
         private const string PathSerializationJsonAjax = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
         private const string pathOrderTime = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
-        private readonly ApplicationContext applicationContext = new(new DbContextOptions<ApplicationContext>());
+        private readonly ApplicationContext applicationContext = new();
         [SetUp]
         public void Setup()
         {

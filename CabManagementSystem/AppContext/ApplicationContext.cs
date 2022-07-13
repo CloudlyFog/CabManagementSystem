@@ -8,19 +8,17 @@ namespace CabManagementSystem.AppContext
 {
     public class ApplicationContext : DbContext
     {
-        public const string QUERYCONNECTION = "Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
+        public const string queryConnection = "Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<AdminHandlingModel> AdminHandling { get; set; }
         private readonly BankAccountContext bankAccountContext = new(new DbContextOptions<BankAccountContext>());
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) => Database.EnsureCreated();
+        public ApplicationContext() => Database.EnsureCreated();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlServer(
-                @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
+            optionsBuilder.UseSqlServer(queryConnection);
         }
-
 
         /// <summary>
         /// adds user`s data in context
@@ -125,7 +123,7 @@ namespace CabManagementSystem.AppContext
         {
             string name;
             var queryStringGetName = $"SELECT {userProp} FROM Users WHERE ID = '{userID}'";
-            var connection = new SqlConnection(QUERYCONNECTION);
+            var connection = new SqlConnection(queryConnection);
             var command = new SqlCommand(queryStringGetName, connection);
             connection.Open();
             var reader = command.ExecuteReader();
@@ -154,7 +152,7 @@ namespace CabManagementSystem.AppContext
         public static List<object> GetTaxiPropList(string taxiProp)
         {
             var newsParts = new List<object>();
-            var connection = new SqlConnection(QUERYCONNECTION);
+            var connection = new SqlConnection(queryConnection);
             var command = new SqlCommand($"SELECT {taxiProp} FROM Taxi", connection);
             connection.Open();
             command.ExecuteNonQuery();

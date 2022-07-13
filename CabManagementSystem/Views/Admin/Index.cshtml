@@ -6,7 +6,7 @@
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     var PathSerialization = "D:/CabManagementSystem/CabManagementSystem/Data/Json/taxi.json";
-    var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
+    var applicationContext = new ApplicationContext();
     var taxiContext = new TaxiContext(new DbContextOptions<TaxiContext>());
     var json = applicationContext.DeserializeTaxiData(PathSerialization);
     //

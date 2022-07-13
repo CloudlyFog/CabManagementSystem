@@ -3,8 +3,6 @@
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
-    var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
-    var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
     var bankAccountContext = new BankAccountContext(new DbContextOptions<BankAccountContext>());
     var bankContext = new BankContext(new DbContextOptions<BankContext>());
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
@@ -39,7 +37,7 @@
     {
         if (!bankAccountContext.BankAccounts.Any(x => x.BankID == Model.BankID))
         {
-            <form method="post" asp-controller="Account" asp-action="SelectBank"> 
+            <form method="post" asp-controller="Account" asp-action="SelectBank" id="bank-id-selector"> 
                 <div>
                     <select asp-for="@Model.BankID">
                         @foreach (var bank in bankContext.Banks.AsEnumerable<BankModel>())

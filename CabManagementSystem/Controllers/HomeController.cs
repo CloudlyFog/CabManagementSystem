@@ -28,6 +28,7 @@ namespace CabManagementSystem.Controllers
             var conditionForExistingRowApplication = applicationContext.Users.Any(x => x.ID == user.ID);
             var conditionForExistingRowDriver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName);
 
+
             user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
             user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
 
