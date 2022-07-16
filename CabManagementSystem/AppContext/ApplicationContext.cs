@@ -94,6 +94,16 @@ namespace CabManagementSystem.AppContext
             ? Users.FirstOrDefault(x => x.Name == GetUserProperty(user.ID, "Name") && x.Email == user.Email && x.Password == user.Password).ID : new();
 
         /// <summary>
+        /// determines whether user's data satisfied a condition
+        /// needed properties: Email, Password
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="email"></param>
+        /// <returns>return ID of specified user</returns>
+        public Guid GetID(string password, string email) => Users.Any(x => x.Email == email && x.Password == password)
+            ? Users.FirstOrDefault(x => x.Email == email && x.Password == password).ID : new();
+
+        /// <summary>
         /// changes property SelectMode of specified user
         /// </summary>
         /// <param name="userID"></param>

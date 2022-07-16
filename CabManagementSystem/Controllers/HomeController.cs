@@ -1,5 +1,7 @@
 using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
+using CabManagementSystem.Services.Interfaces;
+using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
@@ -9,11 +11,14 @@ namespace CabManagementSystem.Controllers
     {
         private readonly ApplicationContext applicationContext;
         private readonly OrderContext orderContext;
+        private readonly IRepository<OrderModel> orderRepository;
+        private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
         public ExceptionModel Exception { get; set; }
         public HomeController(ApplicationContext applicationContext, OrderContext orderContext)
         {
             this.applicationContext = applicationContext;
             this.orderContext = orderContext;
+            orderRepository = new OrderRepository(queryConnectionBank);
         }
 
         public IActionResult Index(UserModel user)
@@ -32,6 +37,7 @@ namespace CabManagementSystem.Controllers
             user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
             user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
 
+            user.Order = orderRepository.Get(x => x.UserID == user.ID);
             user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
             user.Driver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName)
                 ? orderContext.Drivers.First(x => x.Name == orderContext.Orders.First(x => x.UserID == user.ID).DriverName) : new();

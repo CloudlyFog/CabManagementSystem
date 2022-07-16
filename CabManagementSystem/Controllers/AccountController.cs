@@ -1,5 +1,7 @@
 ﻿using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
+using CabManagementSystem.Services.Interfaces;
+using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CabManagementSystem.Controllers
@@ -8,30 +10,32 @@ namespace CabManagementSystem.Controllers
     {
         private readonly ApplicationContext applicationContext;
         private readonly BankAccountContext bankAccountContext;
+        private readonly IRepository<UserModel> repository;
         public AccountController(ApplicationContext applicationContext, BankAccountContext bankAccountContext)
         {
             this.applicationContext = applicationContext;
             this.bankAccountContext = bankAccountContext;
+            repository = new UserRepository();
         }
 
         [Route("SignUp")]
-        public IActionResult SignUp() => View();
+        public ActionResult SignUp() => View();
 
         [Route("SignIn")]
-        public IActionResult SignIn() => View();
+        public ActionResult SignIn() => View();
 
         [Route("SignOut")]
-        public IActionResult Logout()
+        public ActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost, Route("SignIn")]
-        public async Task<IActionResult> SignIn(UserModel user, string[]? args = null)
+        public ActionResult SignIn(UserModel user, string[]? args = null)
         {
             user.Password = applicationContext.HashPassword(user.Password);
-            var userID = applicationContext.GetID(user);
+            var userID = repository.Get(x => x.Password == user.Password && x.Email == user.Email);
             HttpContext.Session.SetString("userID", userID.ToString());
 
             if (applicationContext.IsAuthanticated(userID))
@@ -41,7 +45,7 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("SignUp")]
-        public async Task<IActionResult> SignUp(UserModel user)
+        public ActionResult SignUp(UserModel user)
         {
             user.ID = applicationContext.GetID(user);
             HttpContext.Session.SetString("userID", user.ID.ToString());
@@ -62,7 +66,7 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("SelectBank")]
-        public IActionResult SelectBank(UserModel user)
+        public ActionResult SelectBank(UserModel? user)
         {
             var userID = HttpContext.Session.GetString("userID") is not null
                     ? new Guid(HttpContext.Session.GetString("userID")) : new();
@@ -70,13 +74,13 @@ namespace CabManagementSystem.Controllers
             if (!applicationContext.IsAuthanticated(userID))
                 return RedirectToAction("Index", "Home");
 
-            var bankAccountModel = bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == userID);
-            bankAccountModel.BankID = user.BankID;
-            user = bankAccountContext.Users.FirstOrDefault(x => x.ID == userID);
-            user.BankID = bankAccountModel.BankID;
-            var operation = bankAccountContext.UpdateBankAccount(bankAccountModel, user);
             try
             {
+                var bankAccountModel = bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == userID);
+                bankAccountModel.BankID = user.BankID;
+                user = bankAccountContext.Users.FirstOrDefault(x => x.ID == userID);
+                user.BankID = bankAccountModel.BankID;
+                var operation = bankAccountContext.UpdateBankAccount(bankAccountModel, user);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;

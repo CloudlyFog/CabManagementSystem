@@ -33,4 +33,10 @@
     <Folder Include="wwwroot\json\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="BankSystem">
+      <HintPath>..\..\BankSystem\BankSystem\bin\Debug\net6.0\BankSystem.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

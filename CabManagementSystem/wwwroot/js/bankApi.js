@@ -9,7 +9,7 @@ async function GetBankIDs() {
         const banks = await response.json();
         let rows = document.getElementById('bank-id-selector');
         banks.forEach(bank => {
-            rows.append(row(bank));
+            rows.append(bank);
         });
     }
 }
@@ -19,7 +19,7 @@ async function GetBankID(id){
         headers: { "Accept": "application/json" }
     });
     if (response.ok === true){
-
+        return response;
     }
 }
 
