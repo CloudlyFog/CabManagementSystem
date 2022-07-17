@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace CabManagementSystem.Services.Repositories
 {
-    public class UserRepository : IRepository<UserModel>
+    public class UserRepository : IUserRepository<UserModel>
     {
         private readonly ApplicationContext applicationContext;
         private readonly BankSystem.AppContext.BankAccountContext bankAccountContext;
@@ -50,7 +50,7 @@ namespace CabManagementSystem.Services.Repositories
 
         public UserModel Get(Guid id) => applicationContext.Users.Any(x => x.ID == id) ? applicationContext.Users.First(x => x.ID == id) : new UserModel();
 
-        public UserModel Get(Expression<Func<UserModel, bool>> predicate) => applicationContext.Users.FirstOrDefault(predicate);
+        public UserModel? Get(Expression<Func<UserModel, bool>> predicate) => applicationContext.Users.FirstOrDefault(predicate);
 
         public ExceptionModel Update(UserModel item)
         {
@@ -62,5 +62,6 @@ namespace CabManagementSystem.Services.Repositories
             applicationContext.SaveChanges();
             return ExceptionModel.Successfull;
         }
+        public string HashPassword(string password) => applicationContext.HashPassword(password);
     }
 }

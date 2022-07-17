@@ -25,6 +25,7 @@ namespace CabManagementSystem.Services.Repositories
             bankAccountContext = new(queryConnectionBank);
             bankContext = new(queryConnectionBank);
         }
+
         public ExceptionModel Create(OrderModel item)
         {
             if (item is null)
@@ -49,6 +50,7 @@ namespace CabManagementSystem.Services.Repositories
             orderContext.SaveChanges();
             return ExceptionModel.Successfull;
         }
+
         public ExceptionModel Delete(OrderModel item)
         {
             if (item is null)
@@ -67,9 +69,13 @@ namespace CabManagementSystem.Services.Repositories
             orderContext.SaveChanges();
             return ExceptionModel.Successfull;
         }
+
         public bool Exist(Guid id) => orderContext.Orders.Any(x => x.UserID == id);
+
         public IEnumerable<OrderModel> Get() => orderContext.Orders.ToList();
+
         public OrderModel Get(Guid id) => orderContext.Orders.Any(x => x.ID == id) ? orderContext.Orders.First(x => x.ID == id) : new();
+
         public OrderModel Get(Expression<Func<object, bool>> predicate) => (OrderModel)orderContext.Orders.FirstOrDefault(predicate);
 
         public OrderModel Get(Expression<Func<OrderModel, bool>> predicate) => orderContext.Orders.FirstOrDefault(predicate);

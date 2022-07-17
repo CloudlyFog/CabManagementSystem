@@ -13,4 +13,8 @@ namespace CabManagementSystem.Services.Interfaces
         ExceptionModel Delete(T item);
         bool Exist(Guid id);
     }
+    public interface IUserRepository<T> : IRepository<T> where T : class
+    {
+        string HashPassword(string password);
+    }
 }

@@ -1,21 +1,20 @@
-﻿using CabManagementSystem.AppContext;
-using CabManagementSystem.Models;
-using CabManagementSystem.Services.Interfaces;
+﻿using CabManagementSystem.Services.Interfaces;
 using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using BankAccountModel = BankSystem.Models.BankAccountModel;
+using ExceptionModel = CabManagementSystem.Models.ExceptionModel;
+using UserModel = CabManagementSystem.Models.UserModel;
 
 namespace CabManagementSystem.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApplicationContext applicationContext;
-        private readonly BankAccountContext bankAccountContext;
-        private readonly IRepository<UserModel> repository;
-        public AccountController(ApplicationContext applicationContext, BankAccountContext bankAccountContext)
+        private readonly IUserRepository<UserModel> userRepository;
+        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        public AccountController()
         {
-            this.applicationContext = applicationContext;
-            this.bankAccountContext = bankAccountContext;
-            repository = new UserRepository();
+            userRepository = new UserRepository();
+            bankAccountRepository = new BankAccountRepository();
         }
 
         [Route("SignUp")]
@@ -34,11 +33,14 @@ namespace CabManagementSystem.Controllers
         [HttpPost, Route("SignIn")]
         public ActionResult SignIn(UserModel user, string[]? args = null)
         {
-            user.Password = applicationContext.HashPassword(user.Password);
-            var userID = repository.Get(x => x.Password == user.Password && x.Email == user.Email).ID;
+            if (user is null)
+                return RedirectToAction("Index", "Home");
+
+            user.Password = userRepository.HashPassword(user.Password);
+            var userID = userRepository.Get(x => x.Password == user.Password && x.Email == user.Email).ID;
             HttpContext.Session.SetString("userID", userID.ToString());
 
-            if (applicationContext.IsAuthanticated(userID))
+            if (userRepository.Exist(userID))
                 return RedirectToAction("Index", "Home");
             else
                 return RedirectToAction("SignIn", "Account");
@@ -47,11 +49,14 @@ namespace CabManagementSystem.Controllers
         [HttpPost, Route("SignUp")]
         public ActionResult SignUp(UserModel user)
         {
-            user.ID = applicationContext.GetID(user);
+            if (user is null)
+                return RedirectToAction("Index", "Home");
+
+            user.ID = userRepository.Get(x => x.Password == user.Password && x.Email == user.Email).ID;
             HttpContext.Session.SetString("userID", user.ID.ToString());
             try
             {
-                var operation = applicationContext.AddUser(user);
+                var operation = userRepository.Create(user);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -71,16 +76,16 @@ namespace CabManagementSystem.Controllers
             var userID = HttpContext.Session.GetString("userID") is not null
                     ? new Guid(HttpContext.Session.GetString("userID")) : new();
 
-            if (!applicationContext.IsAuthanticated(userID))
+            if (!userRepository.Exist(userID))
                 return RedirectToAction("Index", "Home");
 
             try
             {
-                var bankAccountModel = bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == userID);
+                var bankAccountModel = bankAccountRepository.Get(x => x.UserBankAccountID == userID);
                 bankAccountModel.BankID = user.BankID;
-                user = bankAccountContext.Users.FirstOrDefault(x => x.ID == userID);
+                user = userRepository.Get(x => x.ID == userID);
                 user.BankID = bankAccountModel.BankID;
-                var operation = bankAccountContext.UpdateBankAccount(bankAccountModel, user);
+                var operation = bankAccountRepository.Update(bankAccountModel);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;

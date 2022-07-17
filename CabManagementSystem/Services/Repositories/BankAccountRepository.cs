@@ -10,7 +10,7 @@ namespace CabManagementSystem.Services.Repositories
         private readonly BankAccountContext bankAccountContext;
         private const string queryConnection = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=BankSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
         public BankAccountRepository() => bankAccountContext = new(queryConnection);
-        public BankAccountRepository(string queryConnectionUser) => bankAccountContext = new(queryConnectionUser);
+        public BankAccountRepository(string connection) => bankAccountContext = new(connection);
 
         public ExceptionModel Accrual(BankAccountModel item, decimal amountAccrual) => bankAccountContext.Accrual(item, amountAccrual);
 
