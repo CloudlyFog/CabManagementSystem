@@ -35,7 +35,7 @@ namespace CabManagementSystem.Controllers
         public ActionResult SignIn(UserModel user, string[]? args = null)
         {
             user.Password = applicationContext.HashPassword(user.Password);
-            var userID = repository.Get(x => x.Password == user.Password && x.Email == user.Email);
+            var userID = repository.Get(x => x.Password == user.Password && x.Email == user.Email).ID;
             HttpContext.Session.SetString("userID", userID.ToString());
 
             if (applicationContext.IsAuthanticated(userID))
