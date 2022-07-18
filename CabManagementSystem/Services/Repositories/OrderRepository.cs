@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace CabManagementSystem.Services.Repositories
 {
-    public class OrderRepository : IRepository<OrderModel>
+    public class OrderRepository : OrderContext, IOrderRepository<OrderModel>, IDriverRepository<DriverModel>
     {
         private readonly ApplicationContext applicationContext;
         private readonly OrderContext orderContext;
@@ -26,6 +26,13 @@ namespace CabManagementSystem.Services.Repositories
             bankContext = new(queryConnectionBank);
         }
 
+        public bool Condition(Expression<Func<OrderModel, bool>> predicate) => orderContext.Orders.Any(predicate);
+
+        /// <summary>
+        /// adds data of user order and withdraw money from account
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public ExceptionModel Create(OrderModel item)
         {
             if (item is null)
@@ -51,6 +58,10 @@ namespace CabManagementSystem.Services.Repositories
             return ExceptionModel.Successfull;
         }
 
+        /// <summary>
+        /// removes data of user order and accrual money on account
+        /// </summary>
+        /// <param name="order"></param>
         public ExceptionModel Delete(OrderModel item)
         {
             if (item is null)
@@ -76,10 +87,12 @@ namespace CabManagementSystem.Services.Repositories
 
         public OrderModel Get(Guid id) => orderContext.Orders.Any(x => x.ID == id) ? orderContext.Orders.First(x => x.ID == id) : new();
 
-        public OrderModel Get(Expression<Func<object, bool>> predicate) => (OrderModel)orderContext.Orders.FirstOrDefault(predicate);
+        public OrderModel? Get(Expression<Func<OrderModel, bool>> predicate) => orderContext.Orders.FirstOrDefault(predicate);
 
-        public OrderModel Get(Expression<Func<OrderModel, bool>> predicate) => orderContext.Orders.FirstOrDefault(predicate);
-
+        /// <summary>
+        /// updates data of user order
+        /// </summary>
+        /// <param name="order"></param>
         public ExceptionModel Update(OrderModel item)
         {
             if (item is null)
@@ -89,5 +102,11 @@ namespace CabManagementSystem.Services.Repositories
             orderContext.SaveChanges();
             return ExceptionModel.Successfull;
         }
+
+        public DriverModel? Get(Expression<Func<DriverModel, bool>> predicate) => orderContext.Drivers.FirstOrDefault(predicate);
+
+        IEnumerable<DriverModel> IDriverRepository<DriverModel>.Get() => orderContext.Drivers.ToList();
+
+        DriverModel IDriverRepository<DriverModel>.Get(Guid id) => orderContext.Drivers.Any(x => x.DriverID == id) ? orderContext.Drivers.First(x => x.DriverID == id) : new();
     }
 }

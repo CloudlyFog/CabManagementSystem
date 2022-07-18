@@ -17,4 +17,14 @@ namespace CabManagementSystem.Services.Interfaces
     {
         string HashPassword(string password);
     }
+    public interface IOrderRepository<T> : IRepository<T> where T : class
+    {
+        bool AlreadyOrder(Guid id);
+    }
+    public interface IDriverRepository<T> where T : class
+    {
+        IEnumerable<T> Get();
+        T Get(Guid id);
+        T Get(Expression<Func<T, bool>> predicate);
+    }
 }

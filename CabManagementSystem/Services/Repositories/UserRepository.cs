@@ -15,22 +15,7 @@ namespace CabManagementSystem.Services.Repositories
             applicationContext = new();
             bankAccountContext = new();
         }
-        public ExceptionModel Create(UserModel item)
-        {
-            if (Get(item.ID) is null)//if user isn`t exist method will exit with exception OperationFailed
-                return ExceptionModel.OperationFailed;
-            item.Password = applicationContext.HashPassword(item.Password);
-            item.Authenticated = true;
-            item.ID = Guid.NewGuid();
-            applicationContext.Users.Add(item);
-            applicationContext.SaveChanges();
-            var bankAccountModel = new BankSystem.Models.BankAccountModel()
-            {
-                ID = item.BankAccountID,
-                UserBankAccountID = item.ID
-            };
-            return (ExceptionModel)bankAccountContext.AddBankAccount(bankAccountModel);
-        }
+        public ExceptionModel Create(UserModel item) => applicationContext.AddUser(item);
 
         public ExceptionModel Delete(UserModel item)
         {
@@ -62,6 +47,7 @@ namespace CabManagementSystem.Services.Repositories
             applicationContext.SaveChanges();
             return ExceptionModel.Successfull;
         }
-        public string HashPassword(string password) => applicationContext.HashPassword(password);
+
+        string IUserRepository<UserModel>.HashPassword(string password) => applicationContext.HashPassword(password);
     }
 }

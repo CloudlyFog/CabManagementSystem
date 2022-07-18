@@ -26,7 +26,7 @@ namespace CabManagementSystem.AppContext
         /// </summary>
         /// <param name="receivedUser"></param>
         /// <returns>instance of an <see cref="ExceptionModel"/></returns>
-        public ExceptionModel AddUser(UserModel receivedUser)
+        internal protected ExceptionModel AddUser(UserModel receivedUser)
         {
             if (IsAuthanticated(receivedUser))//if user isn`t exist method will send false
                 return ExceptionModel.OperationFailed;
@@ -49,7 +49,7 @@ namespace CabManagementSystem.AppContext
         /// </summary>
         /// <param name="receivedUser"></param>
         /// <returns><see langword="true"/> if user was authenticate</returns>
-        public bool IsAuthanticated(UserModel receivedUser) => Users.Any(user => user.Email == receivedUser.Email && user.Password == receivedUser.Password && user.Authenticated);
+        internal protected bool IsAuthanticated(UserModel receivedUser) => Users.Any(user => user.Email == receivedUser.Email && user.Password == receivedUser.Password && user.Authenticated);
 
         /// <summary>
         /// determines whether user is authanticated in the database
@@ -90,7 +90,7 @@ namespace CabManagementSystem.AppContext
         /// </summary>
         /// <param name="user"></param>
         /// <returns>return ID of specified user</returns>
-        public Guid GetID(UserModel user) => Users.Any(x => x.Name == GetUserProperty(user.ID, "Name") && x.Email == user.Email && x.Password == user.Password)
+        internal protected Guid GetID(UserModel user) => Users.Any(x => x.Name == GetUserProperty(user.ID, "Name") && x.Email == user.Email && x.Password == user.Password)
             ? Users.FirstOrDefault(x => x.Name == GetUserProperty(user.ID, "Name") && x.Email == user.Email && x.Password == user.Password).ID : new();
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace CabManagementSystem.AppContext
         /// <param name="password"></param>
         /// <param name="email"></param>
         /// <returns>return ID of specified user</returns>
-        public Guid GetID(string password, string email) => Users.Any(x => x.Email == email && x.Password == password)
+        internal protected Guid GetID(string password, string email) => Users.Any(x => x.Email == email && x.Password == password)
             ? Users.FirstOrDefault(x => x.Email == email && x.Password == password).ID : new();
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace CabManagementSystem.AppContext
         /// returns any existing property of user`s model.
         /// can return: ID, Name, Email, Password, Autenticated, Access
         /// </returns>
-        public string GetUserProperty(Guid userID, string userProp)
+        private string GetUserProperty(Guid userID, string userProp)
         {
             string name;
             var queryStringGetName = $"SELECT {userProp} FROM Users WHERE ID = '{userID}'";
@@ -179,7 +179,7 @@ namespace CabManagementSystem.AppContext
         /// </summary>
         /// <param name="password"></param>
         /// <returns>hashed string</returns>
-        public string HashPassword(string password)
+        internal protected string HashPassword(string password)
         {
             // generate a 128-bit salt using a cryptographically strong random sequence of nonzero values
             byte[] salt = new byte[128 / 8];
