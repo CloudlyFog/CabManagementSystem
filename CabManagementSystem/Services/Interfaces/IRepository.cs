@@ -27,4 +27,8 @@ namespace CabManagementSystem.Services.Interfaces
         T Get(Guid id);
         T Get(Expression<Func<T, bool>> predicate);
     }
+    public interface ITaxiRepository<T> : IRepository<T> where T : class
+    {
+        void ChangeTracker();
+    }
 }

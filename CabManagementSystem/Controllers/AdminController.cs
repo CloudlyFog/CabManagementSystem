@@ -1,23 +1,28 @@
-﻿using CabManagementSystem.AppContext;
-using CabManagementSystem.Models;
+﻿using CabManagementSystem.Models;
+using CabManagementSystem.Services.Interfaces;
+using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using BankAccountModel = BankSystem.Models.BankAccountModel;
+
 
 namespace CabManagementSystem.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly TaxiContext taxiContext;
-        private readonly ApplicationContext applicationContext;
-        private readonly BankAccountContext bankAccountContext;
-        private readonly BankContext bankContext;
-        private readonly OrderContext orderContext;
-        public AdminController(TaxiContext taxiContext, ApplicationContext applicationContext, BankAccountContext bankAccountContext, BankContext bankContext, OrderContext orderContext)
+        private readonly IOrderRepository<OrderModel> orderRepository;
+        private readonly IDriverRepository<DriverModel> driverRepository;
+        private readonly IUserRepository<UserModel> userRepository;
+        private readonly ITaxiRepository<TaxiModel> taxiRepository;
+        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        readonly AdminRepository adminRepository = new AdminRepository();
+        private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
+        public AdminController()
         {
-            this.applicationContext = applicationContext;
-            this.taxiContext = taxiContext;
-            this.bankAccountContext = bankAccountContext;
-            this.bankContext = bankContext;
-            this.orderContext = orderContext;
+            orderRepository = new OrderRepository(queryConnectionBank);
+            driverRepository = new OrderRepository(queryConnectionBank);
+            userRepository = new UserRepository();
+            taxiRepository = new TaxiRepository();
+            bankAccountRepository = new BankAccountRepository();
         }
 
         public IActionResult Index(UserModel user)
@@ -25,20 +30,13 @@ namespace CabManagementSystem.Controllers
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            user.Order.UserID = user.ID;
-            user = applicationContext.Users.FirstOrDefault(x => x.ID == user.ID) is not null
-                ? applicationContext.Users.First(x => x.ID == user.ID) : new();
+            user = userRepository.Get(user.ID);
 
-            var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
-            var conditionForExistingRowApplication = applicationContext.Users.Any(x => x.ID == user.ID);
-            var conditionForExistingRowDriver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName);
+            user.Order = orderRepository.Get(x => x.UserID == user.ID);
+            user.Driver = driverRepository.Get(user.Order.Driver.DriverID);
 
-            user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
-            user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
-
-            user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
-            user.Driver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName)
-                ? orderContext.Drivers.First(x => x.Name == orderContext.Orders.First(x => x.UserID == user.ID).DriverName) : new();
+            HttpContext.Session.SetString("orderID", user.Order.ID.ToString());
+            HttpContext.Session.SetString("DriverName", user.Order.DriverName);
 
             return View(user);
         }
@@ -46,12 +44,12 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult AddTaxi(UserModel user)
         {
-            if (!applicationContext.IsAuthanticated(user.ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == user.ID).Access)
+            if (!userRepository.Exist(user.ID) && !userRepository.Get(user.ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             try
             {
-                var operation = taxiContext.AddTaxi(user.Taxi);
+                var operation = taxiRepository.Create(user.Taxi);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -68,16 +66,15 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult EditTaxi(UserModel user)
         {
-            if (!applicationContext.IsAuthanticated(user.ID))
+            if (!userRepository.Exist(user.ID))
                 return RedirectToAction("Index", "Admin");
 
-            user.Taxi.DriverID = taxiContext.Taxi.Any(x => x.ID == user.Taxi.ID)
-                ? taxiContext.Taxi.FirstOrDefault(x => x.ID == user.Taxi.ID).DriverID : new();
-            taxiContext.ChangeTracker.Clear();
+            user.Taxi.DriverID = taxiRepository.Get(x => x.ID == user.Taxi.ID).DriverID;
+            taxiRepository.ChangeTracker();
 
             try
             {
-                var operation = taxiContext.UpdateTaxi(user.Taxi);
+                var operation = taxiRepository.Update(user.Taxi);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -94,11 +91,11 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult DeleteTaxi(UserModel user)
         {
-            if (!applicationContext.IsAuthanticated(user.ID))
+            if (!userRepository.Exist(user.ID))
                 return RedirectToAction("Index", "Admin");
             try
             {
-                var operation = taxiContext.DeleteTaxi(user.Taxi);
+                var operation = taxiRepository.Delete(user.Taxi);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -118,12 +115,12 @@ namespace CabManagementSystem.Controllers
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            if (!applicationContext.IsAuthanticated(user.ID))
+            if (!userRepository.Exist(user.ID))
                 return RedirectToAction("Index", "Admin");
 
             try
             {
-                var operation = applicationContext.ChangeSelectMode(user.ID, selectMode);
+                var operation = adminRepository.ChangeSelectMode(user.ID, selectMode);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -142,13 +139,13 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult GiveAdmin(Guid ID)
         {
-            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
+            if (!userRepository.Exist(ID) && !userRepository.Get(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             try
             {
-                var operation = applicationContext.GiveAdminRights(ID);
-                var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
+                var operation = adminRepository.GiveAdminRights(ID);
+                var user = userRepository.Get(x => x.ID == ID);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -166,12 +163,12 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult RemoveAdmin(Guid ID)
         {
-            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
+            if (!userRepository.Exist(ID) && !userRepository.Get(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
             try
             {
-                var operation = applicationContext.RemoveAdminRights(ID);
-                var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
+                var operation = adminRepository.RemoveAdminRights(ID);
+                var user = userRepository.Get(x => x.ID == ID);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -189,13 +186,13 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult Accrual(Guid ID, decimal BankAccountAmount)
         {
-            var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
-            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
+            var user = userRepository.Get(x => x.ID == ID);
+            if (!userRepository.Exist(ID) && !userRepository.Get(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             try
             {
-                var operation = bankAccountContext.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+                var operation = (ExceptionModel)bankAccountRepository.Accrual(bankAccountRepository.Get(x => x.UserBankAccountID == ID), BankAccountAmount);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -212,13 +209,13 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public IActionResult Withdraw(Guid ID, decimal BankAccountAmount)
         {
-            var user = applicationContext.Users.FirstOrDefault(x => x.ID == ID);
-            if (!applicationContext.IsAuthanticated(ID) && !applicationContext.Users.FirstOrDefault(x => x.ID == ID).Access)
+            var user = userRepository.Get(x => x.ID == ID);
+            if (!userRepository.Exist(ID) && !userRepository.Get(x => x.ID == ID).Access)
                 return RedirectToAction("Index", "Admin");
 
             try
             {
-                var operation = bankAccountContext.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == ID), BankAccountAmount);
+                var operation = (ExceptionModel)bankAccountRepository.Withdraw(bankAccountRepository.Get(x => x.UserBankAccountID == ID), BankAccountAmount);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;

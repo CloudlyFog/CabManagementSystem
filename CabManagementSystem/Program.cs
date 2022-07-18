@@ -8,7 +8,7 @@ string connection = builder.Configuration.GetConnectionString("ConnectionToDbCab
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationContext>()
                 .AddDbContext<OrderContext>()
-                .AddDbContext<TaxiContext>(options => options.UseSqlServer(connection))
+                .AddDbContext<TaxiContext>()
                 .AddDbContext<BankAccountContext>(options => options.UseSqlServer(connection))
                 .AddDbContext<BankContext>(options => options.UseSqlServer(connection))
                 .AddSession();

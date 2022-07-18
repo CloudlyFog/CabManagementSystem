@@ -3,19 +3,35 @@ using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
 using CabManagementSystem.Services.Interfaces;
 using System.Linq.Expressions;
+using BankAccountModel = BankSystem.Models.BankAccountModel;
 
 namespace CabManagementSystem.Services.Repositories
 {
     public class UserRepository : IUserRepository<UserModel>
     {
         private readonly ApplicationContext applicationContext;
-        private readonly BankSystem.AppContext.BankAccountContext bankAccountContext;
+        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
         public UserRepository()
         {
             applicationContext = new();
-            bankAccountContext = new();
+            bankAccountRepository = new BankAccountRepository();
         }
-        public ExceptionModel Create(UserModel item) => applicationContext.AddUser(item);
+        public ExceptionModel Create(UserModel item)
+        {
+            if (Exist(item.ID))//if user isn`t exist method will send false
+                return ExceptionModel.OperationFailed;
+            item.Password = applicationContext.HashPassword(item.Password);
+            item.Authenticated = true;
+            item.ID = Guid.NewGuid();
+            applicationContext.Users.Add(item);
+            applicationContext.SaveChanges();
+            var bankAccountModel = new BankAccountModel()
+            {
+                ID = item.BankAccountID,
+                UserBankAccountID = item.ID
+            };
+            return bankAccountRepository.Create(bankAccountModel);
+        }
 
         public ExceptionModel Delete(UserModel item)
         {
