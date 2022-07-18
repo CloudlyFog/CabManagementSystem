@@ -26,8 +26,6 @@ namespace CabManagementSystem.Services.Repositories
             bankContext = new(queryConnectionBank);
         }
 
-        public bool Condition(Expression<Func<OrderModel, bool>> predicate) => orderContext.Orders.Any(predicate);
-
         /// <summary>
         /// adds data of user order and withdraw money from account
         /// </summary>
@@ -81,12 +79,31 @@ namespace CabManagementSystem.Services.Repositories
             return ExceptionModel.Successfull;
         }
 
+        /// <summary>
+        /// checks on existing in the database definite order
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool Exist(Guid id) => orderContext.Orders.Any(x => x.UserID == id);
 
+        /// <summary>
+        /// gets sequence of orders from database
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<OrderModel> Get() => orderContext.Orders.ToList();
 
+        /// <summary>
+        /// gets order with definite id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public OrderModel Get(Guid id) => orderContext.Orders.Any(x => x.ID == id) ? orderContext.Orders.First(x => x.ID == id) : new();
 
+        /// <summary>
+        /// gets order with user condition
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public OrderModel? Get(Expression<Func<OrderModel, bool>> predicate) => orderContext.Orders.FirstOrDefault(predicate);
 
         /// <summary>
@@ -103,10 +120,24 @@ namespace CabManagementSystem.Services.Repositories
             return ExceptionModel.Successfull;
         }
 
+        /// <summary>
+        /// gets driver with user condition
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public DriverModel? Get(Expression<Func<DriverModel, bool>> predicate) => orderContext.Drivers.FirstOrDefault(predicate);
 
+        /// <summary>
+        /// gets sequence of drivers from the database
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<DriverModel> IDriverRepository<DriverModel>.Get() => orderContext.Drivers.ToList();
 
+        /// <summary>
+        /// gets driver with definite id from the database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         DriverModel IDriverRepository<DriverModel>.Get(Guid id) => orderContext.Drivers.Any(x => x.DriverID == id) ? orderContext.Drivers.First(x => x.DriverID == id) : new();
     }
 }
