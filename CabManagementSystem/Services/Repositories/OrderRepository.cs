@@ -12,12 +12,14 @@ namespace CabManagementSystem.Services.Repositories
         private readonly IUserRepository<UserModel> userRepository;
         private readonly ITaxiRepository<TaxiModel> taxiRepository;
         private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private readonly IDriverRepository<DriverModel> driverRepository;
         public OrderRepository()
         {
             bankContext = new();
             userRepository = new UserRepository();
             bankAccountRepository = new BankAccountRepository();
             taxiRepository = new TaxiRepository();
+            driverRepository = new OrderRepository();
         }
         public OrderRepository(string queryConnectionBank)
         {
@@ -25,6 +27,7 @@ namespace CabManagementSystem.Services.Repositories
             userRepository = new UserRepository();
             bankAccountRepository = new BankAccountRepository();
             taxiRepository = new TaxiRepository();
+            driverRepository = new OrderRepository();
         }
 
         /// <summary>
@@ -49,8 +52,10 @@ namespace CabManagementSystem.Services.Repositories
             item.DriverName = driver.Name;
             item.TaxiID = taxi.ID;
             Orders.Add(item);
-            userRepository.Get(x => x.ID == item.UserID).HasOrder = false; // sets that definite user ordered taxi
-            if (bankAccountRepository.Withdraw(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == item.UserID), item.Price.GetHashCode()) != BankSystem.Models.ExceptionModel.Successfull)
+            var user = userRepository.Get(x => x.ID == item.UserID);  // sets that definite user ordered taxi
+            user.HasOrder = true;
+            userRepository.Update(user);
+            if (bankAccountRepository.Withdraw(bankAccountRepository.Get(x => x.UserBankAccountID == item.UserID), item.Price.GetHashCode()) != BankSystem.Models.ExceptionModel.Successfull)
                 return ExceptionModel.OperationFailed;
             SaveChanges();
             return ExceptionModel.Successfull;
@@ -64,7 +69,7 @@ namespace CabManagementSystem.Services.Repositories
         {
             if (item is null)
                 return ExceptionModel.VariableIsNull;
-            var driver = Get(x => !x.Busy && x.TaxiPrice == item.Price);
+            var driver = driverRepository.Get(x => x.Name == item.DriverName);
             if (driver is null)
                 return ExceptionModel.VariableIsNull;
             var taxi = taxiRepository.Get(x => x.ID == driver.TaxiID);
@@ -73,8 +78,10 @@ namespace CabManagementSystem.Services.Repositories
             Drivers.Update(driver);
             Taxi.Update(taxi);
             Orders.Remove(item);
-            userRepository.Get(x => x.ID == item.UserID).HasOrder = false; // sets that definite user ordered taxi
-            if (bankAccountRepository.Accrual(bankContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == item.UserID), item.Price.GetHashCode()) != BankSystem.Models.ExceptionModel.Successfull)
+            var user = userRepository.Get(x => x.ID == item.UserID); // sets that definite user ordered taxi
+            user.HasOrder = false;
+            userRepository.Update(user);
+            if (bankAccountRepository.Accrual(bankAccountRepository.Get(x => x.UserBankAccountID == item.UserID), item.Price.GetHashCode()) != BankSystem.Models.ExceptionModel.Successfull)
                 return ExceptionModel.OperationFailed;
             SaveChanges();
             return ExceptionModel.Successfull;
