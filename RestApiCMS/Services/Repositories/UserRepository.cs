@@ -1,34 +1,34 @@
 ﻿
 using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
-using RestApiCMS.Services.Interfaces;
+using CabManagementSystem.Services.Interfaces;
+using System.Linq.Expressions;
+using BankAccountModel = BankSystem.Models.BankAccountModel;
 
 namespace RestApiCMS.Services.Repositories
 {
-    public class UserRepository : IRepository<UserModel>
+    public class UserRepository : ApplicationContext, IRepository<UserModel>
     {
-        private readonly ApplicationContext applicationContext;
-        private readonly BankSystem.AppContext.BankAccountContext bankAccountContext;
+        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
         public UserRepository()
         {
-            applicationContext = new();
-            bankAccountContext = new();
+            bankAccountRepository = new CabManagementSystem.Services.Repositories.BankAccountRepository();
         }
         public ExceptionModel Create(UserModel item)
         {
             if (Get(item.ID) is null)//if user isn`t exist method will exit with exception OperationFailed
                 return ExceptionModel.OperationFailed;
-            item.Password = applicationContext.HashPassword(item.Password);
+            item.Password = HashPassword(item.Password);
             item.Authenticated = true;
             item.ID = Guid.NewGuid();
-            applicationContext.Users.Add(item);
-            applicationContext.SaveChanges();
-            var bankAccountModel = new BankSystem.Models.BankAccountModel()
+            Users.Add(item);
+            SaveChanges();
+            var bankAccountModel = new BankAccountModel()
             {
                 ID = item.BankAccountID,
                 UserBankAccountID = item.ID
             };
-            return (ExceptionModel)bankAccountContext.AddBankAccount(bankAccountModel);
+            return bankAccountRepository.Create(bankAccountModel);
         }
 
         public ExceptionModel Delete(UserModel item)
@@ -37,17 +37,21 @@ namespace RestApiCMS.Services.Repositories
                 return ExceptionModel.OperationFailed;
             if (Get(item.ID) is null)
                 return ExceptionModel.OperationFailed;
-            applicationContext.Users.Remove(item);
-            applicationContext.SaveChanges();
-            var bankAccountModel = bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == item.ID);
-            return (ExceptionModel)bankAccountContext.RemoveBankAccount(bankAccountModel);
+            Users.Remove(item);
+            SaveChanges();
+            var bankAccountModel = bankAccountRepository.Get(x => x.ID == item.ID);
+            return bankAccountRepository.Delete(bankAccountModel);
         }
 
-        public bool Exist(Guid id) => applicationContext.Users.Any(user => user.ID == id && user.Authenticated);
+        public bool Exist(Guid id) => Users.Any(user => user.ID == id && user.Authenticated);
 
-        public IEnumerable<UserModel> Get() => applicationContext.Users.Any() ? applicationContext.Users.AsEnumerable() : new List<UserModel>();
+        public bool Exist(Expression<Func<UserModel, bool>> predicate) => Users.Any(predicate);
 
-        public UserModel Get(Guid id) => applicationContext.Users.Any(x => x.ID == id) ? applicationContext.Users.First(x => x.ID == id) : new UserModel();
+        public IEnumerable<UserModel> Get() => Users.Any() ? Users.AsEnumerable() : new List<UserModel>();
+
+        public UserModel Get(Guid id) => Users.Any(x => x.ID == id) ? Users.First(x => x.ID == id) : new UserModel();
+
+        public UserModel? Get(Expression<Func<UserModel, bool>> predicate) => Users.FirstOrDefault(predicate);
 
         public ExceptionModel Update(UserModel item)
         {
@@ -55,8 +59,8 @@ namespace RestApiCMS.Services.Repositories
                 return ExceptionModel.OperationFailed;
             if (Get(item.ID) is null)
                 return ExceptionModel.OperationFailed;
-            applicationContext.Users.Update(item);
-            applicationContext.SaveChanges();
+            Users.Update(item);
+            SaveChanges();
             return ExceptionModel.Successfull;
         }
     }

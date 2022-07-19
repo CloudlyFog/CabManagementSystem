@@ -41,7 +41,7 @@ namespace CabManagementSystem.Services.Repositories
             Users.Remove(item);
             SaveChanges();
             var bankAccountModel = bankAccountRepository.Get(x => x.UserBankAccountID == item.ID);
-            return (ExceptionModel)bankAccountRepository.Delete(bankAccountModel);
+            return bankAccountRepository.Delete(bankAccountModel);
         }
 
         public bool Exist(Guid id) => Users.Any(user => user.ID == id && user.Authenticated);
