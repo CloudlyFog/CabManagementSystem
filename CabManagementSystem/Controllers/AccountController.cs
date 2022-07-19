@@ -11,10 +11,12 @@ namespace CabManagementSystem.Controllers
     {
         private readonly IUserRepository<UserModel> userRepository;
         private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
+
         public AccountController()
         {
             userRepository = new UserRepository();
-            bankAccountRepository = new BankAccountRepository();
+            bankAccountRepository = new BankAccountRepository(queryConnectionBank);
         }
 
         [Route("SignUp")]

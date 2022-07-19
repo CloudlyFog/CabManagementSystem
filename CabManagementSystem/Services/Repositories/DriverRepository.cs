@@ -21,6 +21,11 @@ namespace CabManagementSystem.Services.Repositories
             throw new NotImplementedException();
         }
 
+        public bool Exist(Expression<Func<DriverModel, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<DriverModel> Get()
         {
             throw new NotImplementedException();

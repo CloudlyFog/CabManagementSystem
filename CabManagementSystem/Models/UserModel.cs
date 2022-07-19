@@ -21,9 +21,6 @@ namespace CabManagementSystem.Models
         public ExceptionModel Exception { get; set; } = ExceptionModel.Successfull;
 
         [NotMapped]
-        public OperationModel? OperationModel { get; set; }
-
-        [NotMapped]
         public OrderModel? Order { get; set; } = new();
 
         [NotMapped]
@@ -33,7 +30,7 @@ namespace CabManagementSystem.Models
         public DriverModel? Driver { get; set; } = new();
 
         [NotMapped]
-        public AdminHandlingModel? AdminHandling { get; set; } = new();
+        public BankAccountModel? BankAccount { get; set; } = new();
     }
 
     /// <summary>

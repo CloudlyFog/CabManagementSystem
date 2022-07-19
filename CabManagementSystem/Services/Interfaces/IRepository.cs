@@ -12,6 +12,7 @@ namespace CabManagementSystem.Services.Interfaces
         ExceptionModel Update(T item);
         ExceptionModel Delete(T item);
         bool Exist(Guid id);
+        bool Exist(Expression<Func<T, bool>> predicate);
     }
     public interface IUserRepository<T> : IRepository<T> where T : class
     {

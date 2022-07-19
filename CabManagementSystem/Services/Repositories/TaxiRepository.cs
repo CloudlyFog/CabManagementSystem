@@ -49,11 +49,13 @@ namespace CabManagementSystem.Services.Repositories
 
         public bool Exist(Guid id) => Taxi.Any(x => x.ID == id);
 
+        public bool Exist(Expression<Func<TaxiModel, bool>> predicate) => Taxi.Any(predicate);
+
         public IEnumerable<TaxiModel> Get() => Taxi;
 
-        public TaxiModel Get(Guid id) => Get(id);
+        public TaxiModel? Get(Guid id) => Taxi.FirstOrDefault(x => x.ID == id);
 
-        public TaxiModel Get(Expression<Func<TaxiModel, bool>> predicate) => Get(predicate);
+        public TaxiModel Get(Expression<Func<TaxiModel, bool>> predicate) => Taxi.FirstOrDefault(predicate);
 
         /// <summary>
         /// updates data of taxi in the database
