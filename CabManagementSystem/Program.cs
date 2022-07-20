@@ -1,8 +1,6 @@
 using CabManagementSystem.AppContext;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-string connection = builder.Configuration.GetConnectionString("ConnectionToDbCabManagementSystem");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
