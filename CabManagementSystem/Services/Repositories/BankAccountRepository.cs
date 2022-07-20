@@ -12,9 +12,9 @@ namespace CabManagementSystem.Services.Repositories
         public BankAccountRepository() => bankAccountContext = new(queryConnection);
         public BankAccountRepository(string connection) => bankAccountContext = new(connection);
 
-        public ExceptionModel Accrual(BankAccountModel item, decimal amountAccrual) => Accrual(item, amountAccrual);
+        public ExceptionModel Accrual(BankAccountModel item, decimal amountAccrual) => bankAccountContext.Accrual(item, amountAccrual);
 
-        public ExceptionModel Withdraw(BankAccountModel item, decimal amountAccrual) => Withdraw(item, amountAccrual);
+        public ExceptionModel Withdraw(BankAccountModel item, decimal amountAccrual) => bankAccountContext.Withdraw(item, amountAccrual);
 
         public ExceptionModel Update(BankAccountModel item, UserModel user) => UpdateBankAccount(item, user);
 
