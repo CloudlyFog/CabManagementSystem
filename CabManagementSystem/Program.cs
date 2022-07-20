@@ -9,8 +9,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationContext>()
                 .AddDbContext<OrderContext>()
                 .AddDbContext<TaxiContext>()
-                .AddDbContext<BankAccountContext>(options => options.UseSqlServer(connection))
-                .AddDbContext<BankContext>(options => options.UseSqlServer(connection))
                 .AddSession();
 var app = builder.Build();
 

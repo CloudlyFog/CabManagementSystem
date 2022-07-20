@@ -6,10 +6,9 @@
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
-    var bankAccountContext = new BankAccountContext(new DbContextOptions<BankAccountContext>());
-    var bankContext = new BankContext(new DbContextOptions<BankContext>());
-    var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var bankAccountRepository = new BankAccountRepository();
+    var bankRepository = new BankRepository();
+    var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;
     if (orderTimeModel is not null)
@@ -43,7 +42,7 @@
             <form method="post" asp-controller="Account" asp-action="SelectBank" id="bank-id-selector"> 
                 <div>
                     <select asp-for="@Model.BankID">
-                        @foreach (var bank in bankContext.Banks.AsEnumerable<BankModel>())
+                        @foreach (var bank in bankRepository.Get())
                         {
                             <option value="@bank.BankID">@bank.BankName</option>
                         }

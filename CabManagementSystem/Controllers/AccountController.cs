@@ -15,7 +15,7 @@ namespace CabManagementSystem.Controllers
 
         public AccountController()
         {
-            userRepository = new UserRepository();
+            userRepository = new UserRepository(queryConnectionBank);
             bankAccountRepository = new BankAccountRepository(queryConnectionBank);
         }
 
@@ -87,10 +87,10 @@ namespace CabManagementSystem.Controllers
                 bankAccountModel.BankID = user.BankID;
                 user = userRepository.Get(x => x.ID == userID);
                 user.BankID = bankAccountModel.BankID;
-                var operation = bankAccountRepository.Update(bankAccountModel);
-                if (operation != ExceptionModel.Successfull)
+                var operation = bankAccountRepository.Update(bankAccountModel, ConvertUserModel(user));
+                if (operation != (BankSystem.Models.ExceptionModel)ExceptionModel.Successfull)
                 {
-                    user.Exception = operation;
+                    user.Exception = (ExceptionModel)operation;
                     return RedirectToAction("Error", "Home", user);
                 }
             }
@@ -101,5 +101,18 @@ namespace CabManagementSystem.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        private static BankSystem.Models.UserModel ConvertUserModel(UserModel user) => new()
+        {
+            ID = user.ID,
+            Name = user.Name,
+            Email = user.Email,
+            Password = user.Password,
+            Authenticated = user.Authenticated,
+            Access = user.Access,
+            BankAccountID = user.BankAccountID,
+            BankID = user.BankID,
+            BankAccountAmount = user.BankAccountAmount
+        };
     }
 }

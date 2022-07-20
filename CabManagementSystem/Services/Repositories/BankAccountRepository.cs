@@ -12,17 +12,17 @@ namespace CabManagementSystem.Services.Repositories
         public BankAccountRepository() => bankAccountContext = new(queryConnection);
         public BankAccountRepository(string connection) => bankAccountContext = new(connection);
 
-        public ExceptionModel Accrual(BankAccountModel item, decimal amountAccrual) => Accrual(item, amountAccrual);
+        public ExceptionModel Accrual(BankAccountModel item, decimal amountAccrual) => bankAccountContext.Accrual(item, amountAccrual);
 
-        public ExceptionModel Withdraw(BankAccountModel item, decimal amountAccrual) => Withdraw(item, amountAccrual);
+        public ExceptionModel Withdraw(BankAccountModel item, decimal amountAccrual) => bankAccountContext.Withdraw(item, amountAccrual);
 
-        public ExceptionModel Update(BankAccountModel item, UserModel user) => UpdateBankAccount(item, user);
+        public ExceptionModel Update(BankAccountModel item, UserModel user) => bankAccountContext.UpdateBankAccount(item, user);
 
-        public Models.ExceptionModel Create(BankAccountModel item) => (Models.ExceptionModel)AddBankAccount(item);
+        public Models.ExceptionModel Create(BankAccountModel item) => (Models.ExceptionModel)bankAccountContext.AddBankAccount(item);
 
         public IEnumerable<BankAccountModel> Get() => BankAccounts;
 
-        public BankAccountModel? Get(Guid id) => BankAccounts.FirstOrDefault(x => x.ID == id);
+        public BankAccountModel? Get(Guid id) => BankAccounts.Any(x => x.ID == id) ? BankAccounts.FirstOrDefault(x => x.ID == id) : new();
 
         public Models.ExceptionModel Update(BankAccountModel item)
         {
@@ -35,11 +35,11 @@ namespace CabManagementSystem.Services.Repositories
             return Models.ExceptionModel.Successfull;
         }
 
-        Models.ExceptionModel IRepository<BankAccountModel>.Delete(BankAccountModel item) => (Models.ExceptionModel)RemoveBankAccount(item);
+        Models.ExceptionModel IRepository<BankAccountModel>.Delete(BankAccountModel item) => (Models.ExceptionModel)bankAccountContext.RemoveBankAccount(item);
 
         public bool Exist(Guid id) => BankAccounts.Any(x => x.ID == id);
 
-        public BankAccountModel? Get(Expression<Func<BankAccountModel, bool>> predicate) => BankAccounts.FirstOrDefault(predicate);
+        public BankAccountModel? Get(Expression<Func<BankAccountModel, bool>> predicate) => BankAccounts.Any(predicate) ? BankAccounts.FirstOrDefault(predicate) : new();
 
         public bool Exist(Expression<Func<BankAccountModel, bool>> predicate) => BankAccounts.Any(predicate);
     }
