@@ -2,9 +2,9 @@ DROP TABLE Users
 CREATE TABLE Users
 (
 	ID UNIQUEIDENTIFIER,
-	Name VARCHAR(40),
-	Email VARCHAR(100),
-	Password VARCHAR(100),
+	Name VARCHAR(40) NOT NULL,
+	Email VARCHAR(100) NOT NULL,
+	Password VARCHAR(100) NOT NULL,
 	Authenticated BIT,
 	Access BIT,
 	HasOrder BIT,

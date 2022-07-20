@@ -6,9 +6,9 @@ string connection = builder.Configuration.GetConnectionString("ConnectionToDbCab
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection))
-                .AddDbContext<OrderContext>(options => options.UseSqlServer(connection))
-                .AddDbContext<TaxiContext>(options => options.UseSqlServer(connection))
+builder.Services.AddDbContext<ApplicationContext>()
+                .AddDbContext<OrderContext>()
+                .AddDbContext<TaxiContext>()
                 .AddDbContext<BankAccountContext>(options => options.UseSqlServer(connection))
                 .AddDbContext<BankContext>(options => options.UseSqlServer(connection))
                 .AddSession();

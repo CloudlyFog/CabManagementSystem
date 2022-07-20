@@ -1,1 +1,3 @@
+SELECT * FROM BankAccounts
+SELECT * FROM Banks
 SELECT * FROM Users

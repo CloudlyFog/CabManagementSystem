@@ -1,13 +1,15 @@
+@using CabManagementSystem.Services.Interfaces
+@using CabManagementSystem.Services.Repositories
 @using Microsoft.EntityFrameworkCore;
 @using CabManagementSystem.AppContext;
+@using BankAccountModel = BankSystem.Models.BankAccountModel;
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
-    var orderContext = new OrderContext(new DbContextOptions<OrderContext>());
-    var applicationContext = new ApplicationContext(new DbContextOptions<ApplicationContext>());
     var bankAccountContext = new BankAccountContext(new DbContextOptions<BankAccountContext>());
     var bankContext = new BankContext(new DbContextOptions<BankContext>());
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
+    var bankAccountRepository = new BankAccountRepository();
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;
     if (orderTimeModel is not null)
@@ -15,13 +17,12 @@
         orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;
         orderTimeLeftSeconds = orderTimeModel.ArrivingTime.Second;
     }
-    var userBankID = bankAccountContext.BankAccounts.Any(x => x.BankID == Model.BankID);
 }
 @model UserModel
 
 <title>Home</title>
 <div class="container">
-    @if (Model.HasOrder && bankAccountContext.BankAccounts.FirstOrDefault(x => x.UserBankAccountID == Model.ID)?.BankID != new Guid())
+    @if (Model.HasOrder && bankAccountRepository.Get(x => x.UserBankAccountID == Model.ID)?.BankID != new Guid())
     {
         <h4>
             <p>
@@ -37,9 +38,9 @@
     }
     else
     {
-        if (!bankAccountContext.BankAccounts.Any(x => x.BankID == Model.BankID))
+        if (!bankAccountRepository.Exist(x => x.BankID == Model.BankID))
         {
-            <form method="post" asp-controller="Account" asp-action="SelectBank"> 
+            <form method="post" asp-controller="Account" asp-action="SelectBank" id="bank-id-selector"> 
                 <div>
                     <select asp-for="@Model.BankID">
                         @foreach (var bank in bankContext.Banks.AsEnumerable<BankModel>())
@@ -118,7 +119,4 @@
 }
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/script.js"></script>
-<script>
-    getTimes(@orderTimeLeftMinutes, @orderTimeLeftSeconds);
-    asyncReloadOrderTime();
-</script>
+<script src="~/js/bankApi.js"></script>

@@ -1,19 +1,27 @@
-using CabManagementSystem.AppContext;
 using CabManagementSystem.Models;
+using CabManagementSystem.Services.Interfaces;
+using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using BankAccountModel = BankSystem.Models.BankAccountModel;
+using UserModel = CabManagementSystem.Models.UserModel;
 
 namespace CabManagementSystem.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationContext applicationContext;
-        private readonly OrderContext orderContext;
+        private readonly IOrderRepository<OrderModel> orderRepository;
+        private readonly IDriverRepository<DriverModel> driverRepository;
+        private readonly IUserRepository<UserModel> userRepository;
+        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
         public ExceptionModel Exception { get; set; }
-        public HomeController(ApplicationContext applicationContext, OrderContext orderContext)
+        public HomeController()
         {
-            this.applicationContext = applicationContext;
-            this.orderContext = orderContext;
+            orderRepository = new OrderRepository(queryConnectionBank);
+            driverRepository = new OrderRepository(queryConnectionBank);
+            bankAccountRepository = new BankAccountRepository(queryConnectionBank);
+            userRepository = new UserRepository();
         }
 
         public IActionResult Index(UserModel user)
@@ -21,19 +29,10 @@ namespace CabManagementSystem.Controllers
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            user = applicationContext.Users.FirstOrDefault(x => x.ID == user.ID) is not null
-                ? applicationContext.Users.First(x => x.ID == user.ID) : new();
+            user = userRepository.Get(user.ID);
 
-            var conditionForExistingRowOrder = orderContext.Orders.Any(x => x.UserID == user.ID);
-            var conditionForExistingRowApplication = applicationContext.Users.Any(x => x.ID == user.ID);
-            var conditionForExistingRowDriver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName);
-
-            user.HasOrder = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).HasOrder;
-            user.Access = conditionForExistingRowApplication && applicationContext.Users.First(x => x.ID == user.ID).Access;
-
-            user.Order = conditionForExistingRowOrder ? orderContext.Orders.First(x => x.UserID == user.ID) : new();
-            user.Driver = orderContext.Drivers.Any(x => x.Name == user.Order.DriverName)
-                ? orderContext.Drivers.First(x => x.Name == orderContext.Orders.First(x => x.UserID == user.ID).DriverName) : new();
+            user.Order = orderRepository.Get(x => x.UserID == user.ID);
+            user.Driver = driverRepository.Get(user.Order.Driver.DriverID);
 
             HttpContext.Session.SetString("orderID", user.Order.ID.ToString());
             HttpContext.Session.SetString("DriverName", user.Order.DriverName);
@@ -52,12 +51,14 @@ namespace CabManagementSystem.Controllers
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            if (!applicationContext.IsAuthanticated(user.Order.UserID) || orderContext.AlreadyOrder(user.Order.UserID))
+            user = userRepository.Get(user.Order.ID);
+
+            if (!userRepository.Exist(user.ID) || orderRepository.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
 
             try
             {
-                var operation = orderContext.CreateOrder(user.Order);
+                var operation = orderRepository.Create(user.Order);
                 Exception = operation;
                 if (operation != ExceptionModel.Successfull)
                 {
@@ -76,7 +77,7 @@ namespace CabManagementSystem.Controllers
         [HttpPost, Route("EditOrder")]
         public IActionResult EditOrder(UserModel user)
         {
-            if (!applicationContext.IsAuthanticated(user.ID) && orderContext.AlreadyOrder(user.ID))
+            if (!userRepository.Exist(user.ID) && orderRepository.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
 
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
@@ -86,7 +87,7 @@ namespace CabManagementSystem.Controllers
                     ? new(HttpContext.Session.GetString("orderID")) : new();
 
 
-            var order = orderContext.Orders.FirstOrDefault(x => x.ID == user.Order.ID);
+            var order = orderRepository.Get(x => x.ID == user.Order.ID);
             order.Address = user.Order.Address;
             order.PhoneNumber = user.Order.PhoneNumber;
             order.Description = user.Order.Description;
@@ -96,7 +97,7 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                var operation = orderContext.UpdateOrder(order);
+                var operation = orderRepository.Update(order);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
@@ -113,20 +114,20 @@ namespace CabManagementSystem.Controllers
         [HttpPost, Route("OrderCancellation")]
         public IActionResult OrderCancellation(UserModel user)
         {
-            if (!applicationContext.IsAuthanticated(user.ID) && orderContext.AlreadyOrder(user.ID))
+            if (!userRepository.Exist(user.ID) && orderRepository.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
 
             user.ID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            user.Order = orderContext.Orders.FirstOrDefault(x => x.UserID == user.ID);
+            user.Order = orderRepository.Get(x => x.UserID == user.ID);
 
             if (user.Order is null)
                 return RedirectToAction("Index", "Home");
 
             try
             {
-                var operation = orderContext.DeleteOrder(user.Order);
+                var operation = orderRepository.Delete(user.Order);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
