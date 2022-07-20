@@ -51,9 +51,7 @@ namespace CabManagementSystem.Controllers
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
-            user = userRepository.Get(user.Order.ID);
-
-            if (!userRepository.Exist(user.ID) || orderRepository.AlreadyOrder(user.ID))
+            if (!userRepository.Exist(user.Order.UserID) || orderRepository.AlreadyOrder(user.Order.UserID))
                 return RedirectToAction("Index", "Home");
 
             try
