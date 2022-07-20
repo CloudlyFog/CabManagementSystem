@@ -9,8 +9,8 @@
     var bankAccountRepository = new BankAccountRepository();
     var bankRepository = new BankRepository();
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
-    var orderTimeLeftMinutes = 0;
-    var orderTimeLeftSeconds = 0;
+    int orderTimeLeftMinutes;
+    int orderTimeLeftSeconds;
     if (orderTimeModel is not null)
     {
         orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;

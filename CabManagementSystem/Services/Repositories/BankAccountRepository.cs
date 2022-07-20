@@ -22,7 +22,7 @@ namespace CabManagementSystem.Services.Repositories
 
         public IEnumerable<BankAccountModel> Get() => BankAccounts;
 
-        public BankAccountModel? Get(Guid id) => BankAccounts.Any(x => x.ID == id) ? BankAccounts.FirstOrDefault(x => x.ID == id) : new();
+        public BankAccountModel Get(Guid id) => BankAccounts.Any(x => x.ID == id) ? BankAccounts.First(x => x.ID == id) : new();
 
         public Models.ExceptionModel Update(BankAccountModel item)
         {
@@ -39,7 +39,7 @@ namespace CabManagementSystem.Services.Repositories
 
         public bool Exist(Guid id) => BankAccounts.Any(x => x.ID == id);
 
-        public BankAccountModel? Get(Expression<Func<BankAccountModel, bool>> predicate) => BankAccounts.Any(predicate) ? BankAccounts.FirstOrDefault(predicate) : new();
+        public BankAccountModel Get(Expression<Func<BankAccountModel, bool>> predicate) => BankAccounts.Any(predicate) ? BankAccounts.First(predicate) : new();
 
         public bool Exist(Expression<Func<BankAccountModel, bool>> predicate) => BankAccounts.Any(predicate);
     }
