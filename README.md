@@ -34,7 +34,7 @@ You can catch exception like "There isn't database which has been specified." be
             optionsBuilder.UseSqlServer(queryConnection);
         }
 ````
- you write something like this
+ you'll write something like this
  ````
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -53,4 +53,4 @@ You change and complament buisness logic on your own discretion!
 ## Conclusion
 CabManagementSystem - in first time is project for learning framework and adjacent technologies.
 If you have some suggestions or critics about this project you may either write me to socials or create pull request. 
-Sincerelly, CloudlyFog.
+Sincerely, CloudlyFog.
