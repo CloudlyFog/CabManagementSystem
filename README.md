@@ -52,5 +52,5 @@ You change and complament buisness logic on your own discretion!
 
 ## Conclusion
 CabManagementSystem - in first time is project for learning framework and adjacent technologies.
-If you have some suggestions or critics about this project you may either write me to socials or create pull request. 
-Sincerely, CloudlyFog.
+If you have some suggestions or critics about this project you may either write me to socials or create pull request. <Br>
+**Sincerely, CloudlyFog.**
