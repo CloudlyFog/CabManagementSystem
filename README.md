@@ -1,6 +1,4 @@
 
-
-
 # Project CabManagementSystem
 
 # Documentation for API
@@ -21,7 +19,7 @@ Developer can interact with database using variables queryConnection in repo-cla
 If you'll not change connection string to database in repo-classes program may don't work correctly.
 You can catch exception like "There isn't database which has been specified." because databases which was used in developing project may doesn't exist on your machine.
 
-## API
+## API documentation
 ### AppContext
 There are 3 classes context:
 
@@ -78,8 +76,18 @@ Here located interfaces which describes behavior of inherited repo-classes.
  4.  Interface `IOrderRepository<T> : IRepository<T>` - describes implementation for orders.<br>**Methods:**<br>- `bool  AlreadyOrder(Guid id);` - implements checking user already order taxi or not.<br> <br>
  5.  Interface `IDriverRepository<T>` - describes implementations for handling resources of drivers. Needs for implementation `DriverRepository<T>`.<br>**Methods:**<br>- `IEnumerable<T> Get();` - implements getting a sequence of the objects from database.<br>- `T  Get(Guid id);` - implements getting an object from database with definite ID.<br>- `T  Get(Expression<Func<T, bool>> predicate);` - implements getting an object from database with func-condition.<br> <br>
  6.  Interface `ITaxiRepository<T> : IRepository<T>` - describes implementations for handling resources of taxis. Being that `ITaxiRepository<T>` is inherited from `IRepository<T>`, `ITaxiRepository<T>` not needed in own implemantation and internal methods thats why it contains only method<br> `void  ChangeTracker();` - implements method `ChangeTracker(...)` from class `DbContext`.
- 
 
+### Repositories
+Repositories are implementation of various interfaces and working with context classes for interracting with database. 
+
+ 1. `UserRepository` - implements interface `IUserRepository<T>`
+ 2. `OrderRepository` - implements interface `IOrderRepository<T>`
+ 3. `TaxiRepository` - implements interface `ITaxiRepository<T>`
+ 4. `DriverRepository` - implements interface `IDriverRepository<T>`
+ 5. `AdminRepository` - doesn't implement any repositories but has logic.<br>**Methods:**<br>- `public  ExceptionModel  GiveAdminRights(Guid ID)` - gives admin rights to definite user.<br>- `public  ExceptionModel  RemoveAdminRights(Guid ID)` - removes admin rights from definite user.<br>- `public  ExceptionModel  ChangeSelectMode(Guid userID, SelectModeEnum mode)` - changes property SelectMode of specified user.
+ 
+ <br><br>
+ 
 ### When can cause exceptions and errors?
 
  1. You didn't specify your database in connection string.
