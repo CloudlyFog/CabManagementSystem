@@ -41,7 +41,6 @@ There are 3 classes context:
 
  1. `public  DbSet<UserModel> Users { get; set; }` - an instance of the table `Users` in database.
  2. `public  DbSet<AdminHandlingModel> AdminHandling { get; set; }` - property for handling operatoins in admin panel.
-<br>
 
 #### API OrderContext
 **Methods:**
@@ -53,7 +52,6 @@ There are 3 classes context:
  1. `public  DbSet<OrderModel> Orders { get; set; }` - an instance of the table `Orders` in database.
  2. `public  DbSet<DriverModel> Drivers { get; set; }` - an instance of the table `Drivers` in database.
  3. `public  DbSet<TaxiModel> Taxi { get; set; }` - an instance of the table `Taxi` in database.
-<br>
 
 #### API TaxiContext
 **Methods:**
@@ -70,11 +68,17 @@ There are 3 classes context:
 ### Services
 Services are dividing on 2 sub-folders:
 
- 1. Interfaces
- 2. Repositories
+ 1. **Interfaces**
+ 2. **Repositories**
 
 ### Interfaces
 Here located interfaces which describes behavior of inherited repo-classes.
+ 1. Interface `IRepository<T>` - parent interface from which will inherite other interfaces and repo-classes. Describes main logic and structure of the project.<br>**Methods**:  <br>- `ExceptionModel  Create(T item);` - implements creating item and adding it in database. <br>- `ExceptionModel  Update(T item);` -implements updating item in database.<br>- `ExceptionModel  Delete(T item);` - implements deleting item from database.<br>- `IEnumerable<T> Get();` - implements getting a sequence of the objects from database.<br>- `T Get(Guid id);` - implements getting an object from database with definite ID.<br> - `T  Get(Expression<Func<T, bool>> predicate);` - implements getting an object from database with func-condition.<br>- `bool  Exist(Guid id);` - implements checking exist object with definite ID in database or not.<br>- `bool  Exist(Expression<Func<T, bool>> predicate);` - implements checking exist object with func-condition in database.<br><br>
+ 3.  Interface `IUserRepository<T> : IRepository<T>` - describes implementations for handling user's resources.<br>**Methods:**<br> -`string  HashPassword(string password);` - implements hashing of user's password.<br> <br>
+ 4.  Interface `IOrderRepository<T> : IRepository<T>` - describes implementation for orders.<br>**Methods:**<br>- `bool  AlreadyOrder(Guid id);` - implements checking user already order taxi or not.<br> <br>
+ 5.  Interface `IDriverRepository<T>` - describes implementations for handling resources of drivers. Needs for implementation `DriverRepository<T>`.<br>**Methods:**<br>- `IEnumerable<T> Get();` - implements getting a sequence of the objects from database.<br>- `T  Get(Guid id);` - implements getting an object from database with definite ID.<br>- `T  Get(Expression<Func<T, bool>> predicate);` - implements getting an object from database with func-condition.<br> <br>
+ 6.  Interface `ITaxiRepository<T> : IRepository<T>` - describes implementations for handling resources of taxis. Being that `ITaxiRepository<T>` is inherited from `IRepository<T>`, `ITaxiRepository<T>` not needed in own implemantation and internal methods thats why it contains only method<br> `void  ChangeTracker();` - implements method `ChangeTracker(...)` from class `DbContext`.
+ 
 
 ### When can cause exceptions and errors?
 
