@@ -9,9 +9,9 @@ namespace CabManagementSystem.Services.Repositories
 {
     public class UserRepository : ApplicationContext, IUserRepository<UserModel>
     {
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
-        public UserRepository() => bankAccountRepository = new BankAccountRepository();
-        public UserRepository(string connection) => bankAccountRepository = new BankAccountRepository(connection);
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        public UserRepository() => bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
+        public UserRepository(string connection) => bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(connection);
 
         public ExceptionModel Create(UserModel item)
         {
@@ -27,7 +27,7 @@ namespace CabManagementSystem.Services.Repositories
                 ID = item.BankAccountID,
                 UserBankAccountID = item.ID
             };
-            return bankAccountRepository.Create(bankAccountModel);
+            return (ExceptionModel)bankAccountRepository.Create(bankAccountModel);
         }
 
         public ExceptionModel Delete(UserModel item)
@@ -39,7 +39,7 @@ namespace CabManagementSystem.Services.Repositories
             Users.Remove(item);
             SaveChanges();
             var bankAccountModel = bankAccountRepository.Get(x => x.UserBankAccountID == item.ID);
-            return bankAccountRepository.Delete(bankAccountModel);
+            return (ExceptionModel)bankAccountRepository.Delete(bankAccountModel);
         }
 
         public bool Exist(Guid id) => Users.Any(user => user.ID == id && user.Authenticated);
@@ -64,5 +64,10 @@ namespace CabManagementSystem.Services.Repositories
         }
 
         string IUserRepository<UserModel>.HashPassword(string password) => HashPassword(password);
+
+        Models.ExceptionModel IRepository<UserModel>.Update(UserModel item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

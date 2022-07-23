@@ -8,24 +8,21 @@ namespace CabManagementSystem.Services.Repositories
 {
     public class OrderRepository : OrderContext, IOrderRepository<OrderModel>, IDriverRepository<DriverModel>
     {
-        private readonly BankSystem.AppContext.BankContext bankContext;
         private readonly IUserRepository<UserModel> userRepository;
         private readonly ITaxiRepository<TaxiModel> taxiRepository;
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
         private readonly IDriverRepository<DriverModel> driverRepository;
         public OrderRepository()
         {
-            bankContext = new();
             userRepository = new UserRepository();
-            bankAccountRepository = new BankAccountRepository();
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
             taxiRepository = new TaxiRepository();
             driverRepository = new OrderRepository();
         }
         public OrderRepository(string queryConnectionBank)
         {
-            bankContext = new(queryConnectionBank);
-            userRepository = new UserRepository();
-            bankAccountRepository = new BankAccountRepository();
+            userRepository = new UserRepository(queryConnectionBank);
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
             taxiRepository = new TaxiRepository();
             driverRepository = new OrderRepository();
         }

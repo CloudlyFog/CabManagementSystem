@@ -6,8 +6,8 @@
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
-    var bankAccountRepository = new BankAccountRepository();
-    var bankRepository = new BankRepository();
+    var bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
+    var bankRepository = new BankSystem.Services.Repositories.BankRepository();
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;

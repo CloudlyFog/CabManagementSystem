@@ -13,8 +13,8 @@ namespace CabManagementSystem.Controllers
         private readonly IDriverRepository<DriverModel> driverRepository;
         private readonly IUserRepository<UserModel> userRepository;
         private readonly ITaxiRepository<TaxiModel> taxiRepository;
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
-        readonly AdminRepository adminRepository = new();
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private readonly AdminRepository adminRepository = new();
         private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
         public AdminController()
         {
@@ -22,7 +22,7 @@ namespace CabManagementSystem.Controllers
             driverRepository = new OrderRepository(queryConnectionBank);
             userRepository = new UserRepository();
             taxiRepository = new TaxiRepository();
-            bankAccountRepository = new BankAccountRepository();
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
         }
 
         public IActionResult Index(UserModel user)
