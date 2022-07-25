@@ -10,13 +10,13 @@ namespace CabManagementSystem.Controllers
     public class AccountController : Controller
     {
         private readonly IUserRepository<UserModel> userRepository;
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
         private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
 
         public AccountController()
         {
             userRepository = new UserRepository();
-            bankAccountRepository = new BankAccountRepository(queryConnectionBank);
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
         }
 
         [Route("SignUp")]
@@ -88,9 +88,9 @@ namespace CabManagementSystem.Controllers
                 user = userRepository.Get(x => x.ID == userID);
                 user.BankID = bankAccountModel.BankID;
                 var operation = bankAccountRepository.Update(bankAccountModel);
-                if (operation != ExceptionModel.Successfull)
+                if ((ExceptionModel)operation != ExceptionModel.Successfull)
                 {
-                    user.Exception = operation;
+                    user.Exception = (ExceptionModel)operation;
                     return RedirectToAction("Error", "Home", user);
                 }
             }

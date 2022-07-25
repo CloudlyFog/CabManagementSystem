@@ -6,28 +6,25 @@ using BankAccountModel = BankSystem.Models.BankAccountModel;
 
 namespace CabManagementSystem.Services.Repositories
 {
-    public class OrderRepository : OrderContext, IOrderRepository<OrderModel>, IDriverRepository<DriverModel>
+    public class OrderRepository : OrderContext, IOrderRepository<OrderModel>
     {
-        private readonly BankSystem.AppContext.BankContext bankContext;
         private readonly IUserRepository<UserModel> userRepository;
         private readonly ITaxiRepository<TaxiModel> taxiRepository;
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
         private readonly IDriverRepository<DriverModel> driverRepository;
         public OrderRepository()
         {
-            bankContext = new();
             userRepository = new UserRepository();
-            bankAccountRepository = new BankAccountRepository();
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
             taxiRepository = new TaxiRepository();
-            driverRepository = new OrderRepository();
+            driverRepository = new DriverRepository();
         }
         public OrderRepository(string queryConnectionBank)
         {
-            bankContext = new(queryConnectionBank);
             userRepository = new UserRepository();
-            bankAccountRepository = new BankAccountRepository();
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
+            driverRepository = new DriverRepository();
             taxiRepository = new TaxiRepository();
-            driverRepository = new OrderRepository();
         }
 
         /// <summary>
@@ -39,7 +36,7 @@ namespace CabManagementSystem.Services.Repositories
         {
             if (item is null)
                 return ExceptionModel.VariableIsNull;
-            var driver = Get(x => !x.Busy && x.TaxiPrice == item.Price);
+            var driver = driverRepository.Get(x => !x.Busy && x.TaxiPrice == item.Price);
             if (driver is null)
                 return ExceptionModel.VariableIsNull;
             var taxi = taxiRepository.Get(x => x.ID == driver.TaxiID);
@@ -72,7 +69,7 @@ namespace CabManagementSystem.Services.Repositories
             var driver = driverRepository.Get(x => x.Name == item.DriverName);
             if (driver is null)
                 return ExceptionModel.VariableIsNull;
-            var taxi = taxiRepository.Get(x => x.ID == driver.TaxiID);
+            var taxi = taxiRepository.Get(x => x.ID == item.TaxiID);
             driver.Busy = false;
             taxi.Busy = false;
             Drivers.Update(driver);
@@ -135,25 +132,6 @@ namespace CabManagementSystem.Services.Repositories
         /// <returns></returns>
         public bool Exist(Expression<Func<OrderModel, bool>> predicate) => Orders.Any(predicate);
 
-        /// <summary>
-        /// gets driver with user condition
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public DriverModel? Get(Expression<Func<DriverModel, bool>> predicate) => Drivers.Any(predicate) ? Drivers.First(predicate) : new();
-
-        /// <summary>
-        /// gets sequence of drivers from the database
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<DriverModel> IDriverRepository<DriverModel>.Get() => Drivers.ToList();
-
-        /// <summary>
-        /// gets driver with definite id from the database
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        DriverModel IDriverRepository<DriverModel>.Get(Guid id) => Drivers.Any(x => x.DriverID == id) ? Drivers.First(x => x.DriverID == id) : new();
 
     }
 }

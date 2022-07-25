@@ -1,6 +1,4 @@
 ﻿using BankSystem.Models;
-using CabManagementSystem.Services.Interfaces;
-using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CabManagementSystem.Controllers
@@ -9,10 +7,10 @@ namespace CabManagementSystem.Controllers
     [ApiController]
     public class BanksController : ControllerBase
     {
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
         public BanksController()
         {
-            bankAccountRepository = new BankAccountRepository();
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
         }
         // GET: api/<BanksController>
         [HttpGet]
@@ -26,7 +24,7 @@ namespace CabManagementSystem.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] BankAccountModel value)
         {
-            if (bankAccountRepository.Create(value) != Models.ExceptionModel.Successfull)
+            if (bankAccountRepository.Create(value) != ExceptionModel.Successfull)
                 return BadRequest();
             return Ok();
         }
@@ -35,7 +33,7 @@ namespace CabManagementSystem.Controllers
         [HttpPut("{id}")]
         public ActionResult Put([FromBody] BankAccountModel value)
         {
-            if (bankAccountRepository.Update(value) != Models.ExceptionModel.Successfull)
+            if (bankAccountRepository.Update(value) != ExceptionModel.Successfull)
                 return BadRequest();
             return Ok();
         }
@@ -44,7 +42,7 @@ namespace CabManagementSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
-            if (bankAccountRepository.Delete(bankAccountRepository.Get(id)) != Models.ExceptionModel.Successfull)
+            if (bankAccountRepository.Delete(bankAccountRepository.Get(id)) != ExceptionModel.Successfull)
                 return BadRequest();
             return Ok();
         }

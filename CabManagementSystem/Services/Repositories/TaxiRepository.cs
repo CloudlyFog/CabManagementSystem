@@ -55,7 +55,7 @@ namespace CabManagementSystem.Services.Repositories
 
         public TaxiModel? Get(Guid id) => Taxi.FirstOrDefault(x => x.ID == id);
 
-        public TaxiModel Get(Expression<Func<TaxiModel, bool>> predicate) => Taxi.FirstOrDefault(predicate);
+        public TaxiModel? Get(Expression<Func<TaxiModel, bool>> predicate) => Taxi.FirstOrDefault(predicate);
 
         /// <summary>
         /// updates data of taxi in the database
