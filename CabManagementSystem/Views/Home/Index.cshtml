@@ -1,5 +1,3 @@
-@using CabManagementSystem.Services.Interfaces
-@using CabManagementSystem.Services.Repositories
 @using Microsoft.EntityFrameworkCore;
 @using CabManagementSystem.AppContext;
 @using BankAccountModel = BankSystem.Models.BankAccountModel;
@@ -39,7 +37,7 @@
     {
         if (!bankAccountRepository.Exist(x => x.BankID == Model.BankID))
         {
-            <form method="post" asp-controller="Account" asp-action="SelectBank" id="bank-id-selector"> 
+            <form method="post" asp-controller="Account" asp-action="SelectBank" id="bank-id-selector">
                 <div>
                     <select asp-for="@Model.BankID">
                         @foreach (var bank in bankRepository.Get())

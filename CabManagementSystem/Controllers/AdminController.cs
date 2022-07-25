@@ -19,7 +19,7 @@ namespace CabManagementSystem.Controllers
         public AdminController()
         {
             orderRepository = new OrderRepository(queryConnectionBank);
-            driverRepository = new OrderRepository(queryConnectionBank);
+            driverRepository = new DriverRepository();
             userRepository = new UserRepository();
             taxiRepository = new TaxiRepository();
             bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();

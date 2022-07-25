@@ -1,49 +1,30 @@
-﻿using CabManagementSystem.Models;
+﻿using CabManagementSystem.AppContext;
+using CabManagementSystem.Models;
 using CabManagementSystem.Services.Interfaces;
 using System.Linq.Expressions;
 
 namespace CabManagementSystem.Services.Repositories
 {
-    public class DriverRepository : IRepository<DriverModel>
+    public class DriverRepository : OrderContext, IDriverRepository<DriverModel>
     {
-        public ExceptionModel Create(DriverModel item)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// gets driver with user condition
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public DriverModel? Get(Expression<Func<DriverModel, bool>> predicate) => Drivers.Any(predicate) ? Drivers.First(predicate) : new();
 
-        public ExceptionModel Delete(DriverModel item)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// gets sequence of drivers from the database
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<DriverModel> IDriverRepository<DriverModel>.Get() => Drivers.ToList();
 
-        public bool Exist(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Exist(Expression<Func<DriverModel, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<DriverModel> Get()
-        {
-            throw new NotImplementedException();
-        }
-
-        public DriverModel Get(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DriverModel Get(Expression<Func<DriverModel, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ExceptionModel Update(DriverModel item)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// gets driver with definite id from the database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        DriverModel IDriverRepository<DriverModel>.Get(Guid id) => Drivers.Any(x => x.DriverID == id) ? Drivers.First(x => x.DriverID == id) : new();
     }
 }
