@@ -15,8 +15,13 @@ namespace CabManagementSystem.Controllers
 
         public AccountController()
         {
+<<<<<<< HEAD
             userRepository = new UserRepository();
             bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
+=======
+            userRepository = new UserRepository(queryConnectionBank);
+            bankAccountRepository = new BankAccountRepository(queryConnectionBank);
+>>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
         }
 
         [Route("SignUp")]
@@ -87,8 +92,13 @@ namespace CabManagementSystem.Controllers
                 bankAccountModel.BankID = user.BankID;
                 user = userRepository.Get(x => x.ID == userID);
                 user.BankID = bankAccountModel.BankID;
+<<<<<<< HEAD
                 var operation = bankAccountRepository.Update(bankAccountModel);
                 if ((ExceptionModel)operation != ExceptionModel.Successfull)
+=======
+                var operation = bankAccountRepository.Update(bankAccountModel, ConvertUserModel(user));
+                if (operation != (BankSystem.Models.ExceptionModel)ExceptionModel.Successfull)
+>>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
                 {
                     user.Exception = (ExceptionModel)operation;
                     return RedirectToAction("Error", "Home", user);
@@ -101,5 +111,18 @@ namespace CabManagementSystem.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        private static BankSystem.Models.UserModel ConvertUserModel(UserModel user) => new()
+        {
+            ID = user.ID,
+            Name = user.Name,
+            Email = user.Email,
+            Password = user.Password,
+            Authenticated = user.Authenticated,
+            Access = user.Access,
+            BankAccountID = user.BankAccountID,
+            BankID = user.BankID,
+            BankAccountAmount = user.BankAccountAmount
+        };
     }
 }
