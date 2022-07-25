@@ -65,9 +65,15 @@ namespace CabManagementSystem.Services.Repositories
 
         string IUserRepository<UserModel>.HashPassword(string password) => HashPassword(password);
 
-        Models.ExceptionModel IRepository<UserModel>.Update(UserModel item)
+        ExceptionModel IRepository<UserModel>.Update(UserModel item)
         {
-            throw new NotImplementedException();
+            if (item is null)
+                return ExceptionModel.OperationFailed;
+            if (Get(item.ID) is null)
+                return ExceptionModel.OperationFailed;
+            Users.Update(item);
+            SaveChanges();
+            return ExceptionModel.Successfull;
         }
     }
 }

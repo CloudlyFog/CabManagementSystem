@@ -21,10 +21,10 @@ namespace CabManagementSystem.Services.Repositories
         }
         public OrderRepository(string queryConnectionBank)
         {
-            userRepository = new UserRepository(queryConnectionBank);
+            userRepository = new UserRepository();
             bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
-            taxiRepository = new TaxiRepository();
             driverRepository = new DriverRepository();
+            taxiRepository = new TaxiRepository();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace CabManagementSystem.Services.Repositories
             var driver = driverRepository.Get(x => x.Name == item.DriverName);
             if (driver is null)
                 return ExceptionModel.VariableIsNull;
-            var taxi = taxiRepository.Get(x => x.ID == driver.TaxiID);
+            var taxi = taxiRepository.Get(x => x.ID == item.TaxiID);
             driver.Busy = false;
             taxi.Busy = false;
             Drivers.Update(driver);

@@ -15,7 +15,7 @@ namespace CabManagementSystem.Controllers
 
         public AccountController()
         {
-            userRepository = new UserRepository(queryConnectionBank);
+            userRepository = new UserRepository();
             bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
         }
 
