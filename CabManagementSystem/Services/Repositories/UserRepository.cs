@@ -9,9 +9,17 @@ namespace CabManagementSystem.Services.Repositories
 {
     public class UserRepository : ApplicationContext, IUserRepository<UserModel>
     {
+<<<<<<< HEAD
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        public UserRepository()
+        {
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
+        }
+=======
         private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
         public UserRepository() => bankAccountRepository = new BankAccountRepository();
         public UserRepository(string connection) => bankAccountRepository = new BankAccountRepository(connection);
+>>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
 
         public ExceptionModel Create(UserModel item)
         {
@@ -27,7 +35,7 @@ namespace CabManagementSystem.Services.Repositories
                 ID = item.BankAccountID,
                 UserBankAccountID = item.ID
             };
-            return bankAccountRepository.Create(bankAccountModel);
+            return (ExceptionModel)bankAccountRepository.Create(bankAccountModel);
         }
 
         public ExceptionModel Delete(UserModel item)
@@ -39,7 +47,7 @@ namespace CabManagementSystem.Services.Repositories
             Users.Remove(item);
             SaveChanges();
             var bankAccountModel = bankAccountRepository.Get(x => x.UserBankAccountID == item.ID);
-            return bankAccountRepository.Delete(bankAccountModel);
+            return (ExceptionModel)bankAccountRepository.Delete(bankAccountModel);
         }
 
         public bool Exist(Guid id) => Users.Any(user => user.ID == id && user.Authenticated);
@@ -64,5 +72,16 @@ namespace CabManagementSystem.Services.Repositories
         }
 
         string IUserRepository<UserModel>.HashPassword(string password) => HashPassword(password);
+
+        ExceptionModel IRepository<UserModel>.Update(UserModel item)
+        {
+            if (item is null)
+                return ExceptionModel.OperationFailed;
+            if (Get(item.ID) is null)
+                return ExceptionModel.OperationFailed;
+            Users.Update(item);
+            SaveChanges();
+            return ExceptionModel.Successfull;
+        }
     }
 }

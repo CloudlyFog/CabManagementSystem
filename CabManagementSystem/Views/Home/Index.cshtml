@@ -3,14 +3,23 @@
 @using Microsoft.EntityFrameworkCore;
 @using CabManagementSystem.AppContext;
 @using BankAccountModel = BankSystem.Models.BankAccountModel;
+@using BankModel = BankSystem.Models.BankModel;
 @{
     Layout = "~/Views/Shared/_LayoutHeader.cshtml";
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
+<<<<<<< HEAD
+    var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
+    var bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
+    var bankRepository = new BankSystem.Services.Repositories.BankRepository();
+    var orderTimeLeftMinutes = 0;
+    var orderTimeLeftSeconds = 0;
+=======
     var bankAccountRepository = new BankAccountRepository();
     var bankRepository = new BankRepository();
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     int orderTimeLeftMinutes;
     int orderTimeLeftSeconds;
+>>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
     if (orderTimeModel is not null)
     {
         orderTimeLeftMinutes = orderTimeModel.ArrivingTime.Minute;

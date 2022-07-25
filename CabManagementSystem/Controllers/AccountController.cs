@@ -10,13 +10,18 @@ namespace CabManagementSystem.Controllers
     public class AccountController : Controller
     {
         private readonly IUserRepository<UserModel> userRepository;
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
+        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
         private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
 
         public AccountController()
         {
+<<<<<<< HEAD
+            userRepository = new UserRepository();
+            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
+=======
             userRepository = new UserRepository(queryConnectionBank);
             bankAccountRepository = new BankAccountRepository(queryConnectionBank);
+>>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
         }
 
         [Route("SignUp")]
@@ -87,8 +92,13 @@ namespace CabManagementSystem.Controllers
                 bankAccountModel.BankID = user.BankID;
                 user = userRepository.Get(x => x.ID == userID);
                 user.BankID = bankAccountModel.BankID;
+<<<<<<< HEAD
+                var operation = bankAccountRepository.Update(bankAccountModel);
+                if ((ExceptionModel)operation != ExceptionModel.Successfull)
+=======
                 var operation = bankAccountRepository.Update(bankAccountModel, ConvertUserModel(user));
                 if (operation != (BankSystem.Models.ExceptionModel)ExceptionModel.Successfull)
+>>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
                 {
                     user.Exception = (ExceptionModel)operation;
                     return RedirectToAction("Error", "Home", user);
