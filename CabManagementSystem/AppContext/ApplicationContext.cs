@@ -10,8 +10,8 @@ namespace CabManagementSystem.AppContext
     {
         public const string queryConnection = "Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
 
-        public DbSet<UserModel> Users { get; set; }
-        public DbSet<AdminHandlingModel> AdminHandling { get; set; }
+        internal protected DbSet<UserModel> Users { get; set; }
+        internal protected DbSet<AdminHandlingModel> AdminHandling { get; set; }
         public ApplicationContext() => Database.EnsureCreated();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,14 +25,14 @@ namespace CabManagementSystem.AppContext
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
         /// <returns>instance of model UserModel with filled data of model TaxiModel</returns>
-        public List<TaxiModel> DeserializeTaxiData(string path) => JsonConvert.DeserializeObject<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
+        internal protected List<TaxiModel> DeserializeTaxiData(string path) => JsonConvert.DeserializeObject<JsonTaxiModel>(File.ReadAllText(path)).TaxiList;
 
         /// <summary>
         /// get list of definite TaxiModel's property
         /// </summary>
         /// <param name="nameNewsPart"></param>
         /// <returns>list of: ID, DriverID, TaxiNumber, TaxiClass, Price, SpecialName<returns>
-        public static List<object> GetTaxiPropList(string taxiProp)
+        internal protected static List<object> GetTaxiPropList(string taxiProp)
         {
             var newsParts = new List<object>();
             var connection = new SqlConnection(queryConnection);

@@ -12,15 +12,15 @@ namespace CabManagementSystem.AppContext
             optionsBuilder.UseSqlServer(
                 @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
         }
-        public DbSet<OrderModel> Orders { get; set; }
-        public DbSet<DriverModel> Drivers { get; set; }
-        public DbSet<TaxiModel> Taxi { get; set; }
+        internal protected DbSet<OrderModel> Orders { get; set; }
+        internal protected DbSet<DriverModel> Drivers { get; set; }
+        internal protected DbSet<TaxiModel> Taxi { get; set; }
 
         /// <summary>
         /// defines user already has order or not
         /// </summary>
         /// <param name="userID"></param>
         /// <returns><see langword="true"/> if the database there's order with the same user id</returns>
-        public bool AlreadyOrder(Guid userID) => Orders.Any(x => x.UserID == userID);
+        internal protected bool AlreadyOrder(Guid userID) => Orders.Any(x => x.UserID == userID);
     }
 }

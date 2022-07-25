@@ -22,29 +22,14 @@ namespace CabManagementSystem.Controllers
 
         // POST api/<BanksController>
         [HttpPost]
-        public ActionResult Post([FromBody] BankAccountModel value)
-        {
-            if (bankAccountRepository.Create(value) != ExceptionModel.Successfull)
-                return BadRequest();
-            return Ok();
-        }
+        public ActionResult Post([FromBody] BankAccountModel value) => bankAccountRepository.Create(value) != ExceptionModel.Successfull ? BadRequest() : Ok();
 
         // PUT api/<BanksController>/5
         [HttpPut("{id}")]
-        public ActionResult Put([FromBody] BankAccountModel value)
-        {
-            if (bankAccountRepository.Update(value) != ExceptionModel.Successfull)
-                return BadRequest();
-            return Ok();
-        }
+        public ActionResult Put([FromBody] BankAccountModel value) => bankAccountRepository.Update(value) != ExceptionModel.Successfull ? BadRequest() : Ok();
 
         // DELETE api/<BanksController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
-        {
-            if (bankAccountRepository.Delete(bankAccountRepository.Get(id)) != ExceptionModel.Successfull)
-                return BadRequest();
-            return Ok();
-        }
+        public ActionResult Delete(Guid id) => bankAccountRepository.Delete(bankAccountRepository.Get(id)) != ExceptionModel.Successfull ? BadRequest() : Ok();
     }
 }

@@ -132,6 +132,6 @@ namespace CabManagementSystem.Services.Repositories
         /// <returns></returns>
         public bool Exist(Expression<Func<OrderModel, bool>> predicate) => Orders.Any(predicate);
 
-
+        bool IOrderRepository<OrderModel>.AlreadyOrder(Guid id) => AlreadyOrder(id);
     }
 }

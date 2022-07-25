@@ -14,14 +14,14 @@ namespace CabManagementSystem.AppContext
                 @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False");
         }
 
-        public DbSet<TaxiModel> Taxi { get; set; }
-        public DbSet<BindTaxiDriver> BindTaxiDriver { get; set; }
+        internal protected DbSet<TaxiModel> Taxi { get; set; }
+        internal protected DbSet<BindTaxiDriver> BindTaxiDriver { get; set; }
 
         /// <summary>
         /// adds bind's data of taxi and its driver in the database
         /// </summary>
         /// <param name="bindTaxiDriver"></param>
-        protected ExceptionModel AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
+        internal protected ExceptionModel AddBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             if (bindTaxiDriver is null)
                 return ExceptionModel.VariableIsNull;
@@ -34,7 +34,7 @@ namespace CabManagementSystem.AppContext
         /// removes bind's data of taxi and its driver in the database
         /// </summary>
         /// <param name="bindTaxiDriver"></param>
-        protected ExceptionModel DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
+        internal protected ExceptionModel DeleteBindTaxiDriver(BindTaxiDriver bindTaxiDriver)
         {
             if (bindTaxiDriver is null)
                 return ExceptionModel.VariableIsNull;

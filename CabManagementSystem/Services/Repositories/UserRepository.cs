@@ -9,17 +9,9 @@ namespace CabManagementSystem.Services.Repositories
 {
     public class UserRepository : ApplicationContext, IUserRepository<UserModel>
     {
-<<<<<<< HEAD
         private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
-        public UserRepository()
-        {
-            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
-        }
-=======
-        private readonly IBankAccountRepository<BankAccountModel> bankAccountRepository;
-        public UserRepository() => bankAccountRepository = new BankAccountRepository();
-        public UserRepository(string connection) => bankAccountRepository = new BankAccountRepository(connection);
->>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
+        public UserRepository() => bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
+        public UserRepository(string connection) => bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(connection);
 
         public ExceptionModel Create(UserModel item)
         {

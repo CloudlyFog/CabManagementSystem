@@ -1,8 +1,6 @@
 using CabManagementSystem.AppContext;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationContext>()
                 .AddDbContext<OrderContext>()

@@ -14,7 +14,7 @@ namespace CabManagementSystem.Controllers
         private readonly IUserRepository<UserModel> userRepository;
         private readonly ITaxiRepository<TaxiModel> taxiRepository;
         private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
-        readonly AdminRepository adminRepository = new();
+        private readonly AdminRepository adminRepository = new();
         private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
         public AdminController()
         {

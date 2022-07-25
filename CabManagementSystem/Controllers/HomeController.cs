@@ -3,6 +3,7 @@ using CabManagementSystem.Services.Interfaces;
 using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using BankAccountModel = BankSystem.Models.BankAccountModel;
 using UserModel = CabManagementSystem.Models.UserModel;
 
 namespace CabManagementSystem.Controllers
@@ -12,21 +13,14 @@ namespace CabManagementSystem.Controllers
         private readonly IOrderRepository<OrderModel> orderRepository;
         private readonly IDriverRepository<DriverModel> driverRepository;
         private readonly IUserRepository<UserModel> userRepository;
-<<<<<<< HEAD
         private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
-=======
->>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
         private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
         public ExceptionModel Exception { get; set; }
         public HomeController()
         {
             orderRepository = new OrderRepository(queryConnectionBank);
-<<<<<<< HEAD
             driverRepository = new DriverRepository();
             bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
-=======
-            driverRepository = new OrderRepository(queryConnectionBank);
->>>>>>> 2a8999de2f8e1524e53d22323eae746fbc609fa8
             userRepository = new UserRepository();
         }
 
