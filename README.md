@@ -81,7 +81,7 @@ Here located interfaces which describes behavior of inherited repo-classes.
 Repositories are implementation of various interfaces and working with context classes for interracting with database. 
 
  1. `UserRepository` - implements interface `IUserRepository<T>`
- 2. `OrderRepository` - implements interface `IOrderRepository<T>`
+ 2. `OrderRepository` - implements interface `IOrderRepository<T>`<br>**Methods:**<br>- `public IEnumerable<TaxiPrice> Filter()` - filters available taxis for ordering and returns list of `TaxiClass`<br><br>
  3. `TaxiRepository` - implements interface `ITaxiRepository<T>`
  4. `DriverRepository` - implements interface `IDriverRepository<T>`
  5. `AdminRepository` - doesn't implement any repositories but has logic.<br>**Methods:**<br>- `public  ExceptionModel  GiveAdminRights(Guid ID)` - gives admin rights to definite user.<br>- `public  ExceptionModel  RemoveAdminRights(Guid ID)` - removes admin rights from definite user.<br>- `public  ExceptionModel  ChangeSelectMode(Guid userID, SelectModeEnum mode)` - changes property SelectMode of specified user.
