@@ -1,3 +1,4 @@
+@using CabManagementSystem.Services.Repositories
 @using Microsoft.EntityFrameworkCore;
 @using CabManagementSystem.AppContext;
 @using BankAccountModel = BankSystem.Models.BankAccountModel;
@@ -7,6 +8,8 @@
     var path = "D:/CabManagementSystem/CabManagementSystem/Data/Json/time.json";
     var bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository();
     var bankRepository = new BankSystem.Services.Repositories.BankRepository();
+    var orderRepository = new OrderRepository
+    ();
     var orderTimeModel = OrderTimeModel.DeserializeTimeModelJson(path).FirstOrDefault(x => x.UserID == Model.ID);
     var orderTimeLeftMinutes = 0;
     var orderTimeLeftSeconds = 0;
@@ -69,10 +72,10 @@
             </div>
             <div>
                 <select asp-for="@Model.Order.Price">
-                    <option value="@TaxiPrice.Buisness">Buisness</option>
-                    <option value="@TaxiPrice.Premium">Premium</option>
-                    <option value="@TaxiPrice.Comfort">Comfort</option>
-                    <option value="@TaxiPrice.Economy">Economy</option>
+                    @foreach (var taxiClass in orderRepository.Filter())
+                    {
+                        <option value="@taxiClass">@taxiClass</option>
+                    }
                 </select>
             </div>
             <div>
