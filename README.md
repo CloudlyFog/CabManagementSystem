@@ -1,7 +1,7 @@
 
 # Project CabManagementSystem
 
-# Documentation for API
+# Documentation
 ## Structure of project
 
  1. Folder **AppContext** is folder where contain context classes for interaction with database without buisness logic.
