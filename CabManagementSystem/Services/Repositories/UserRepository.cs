@@ -50,7 +50,7 @@ namespace CabManagementSystem.Services.Repositories
 
         public UserModel Get(Guid id) => Users.Any(x => x.ID == id) ? Users.First(x => x.ID == id) : new UserModel();
 
-        public UserModel? Get(Expression<Func<UserModel, bool>> predicate) => Users.Any(predicate) ? Users.FirstOrDefault(predicate) : new();
+        public UserModel? Get(Expression<Func<UserModel, bool>> predicate) => Users.Any(predicate) ? Users.First(predicate) : new();
 
         public ExceptionModel Update(UserModel item)
         {

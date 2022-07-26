@@ -133,5 +133,18 @@ namespace CabManagementSystem.Services.Repositories
         public bool Exist(Expression<Func<OrderModel, bool>> predicate) => Orders.Any(predicate);
 
         bool IOrderRepository<OrderModel>.AlreadyOrder(Guid id) => AlreadyOrder(id);
+
+        public IEnumerable<TaxiPrice> Filter()
+        {
+            var drivers = driverRepository.Get().ToList();
+            var driverPrices = new List<TaxiPrice>();
+            var prices = (TaxiPrice[])Enum.GetValues(typeof(TaxiPrice));
+            for (int i = 0; i < drivers.Count; i++)
+            {
+                if (!drivers[i].Busy)
+                    driverPrices.Add(drivers[i].TaxiPrice);
+            }
+            return driverPrices.Distinct().ToList();
+        }
     }
 }
