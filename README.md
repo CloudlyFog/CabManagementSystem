@@ -20,6 +20,7 @@ If you'll not change connection string to database in repo-classes program may d
 You can catch exception like "There isn't database which has been specified." because databases which was used in developing project may doesn't exist on your machine.
 
 ## API documentation
+API documentation for external package **[BankSystem](https://github.com/CloudlyFog/BankSystem/blob/main/README.md)**
 ### AppContext
 There are 3 classes context:
 
@@ -29,7 +30,7 @@ There are 3 classes context:
 
 
 #### API for ApplicatonContext
- 
+
 **Methods:**
  1. `public  List<TaxiModel> DeserializeTaxiData(string path)` - method for deserializing of taxi's data from json file which of file path specified in parameters.
  2. `public  static  List<object> GetTaxiPropList(string taxiProp)` - method for getting list of definite taxi's property (ID,  TaxiClass etc.).
