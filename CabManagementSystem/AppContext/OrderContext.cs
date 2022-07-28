@@ -1,5 +1,4 @@
 ﻿using CabManagementSystem.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace CabManagementSystem.AppContext
 {
