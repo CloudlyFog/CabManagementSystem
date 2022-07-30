@@ -1,7 +1,6 @@
 ﻿using CabManagementSystem.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace CabManagementSystem.AppContext

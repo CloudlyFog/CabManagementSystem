@@ -1,7 +1,7 @@
 
 # Project CabManagementSystem
 
-# Documentation for API
+# Documentation
 ## Structure of project
 
  1. Folder **AppContext** is folder where contain context classes for interaction with database without buisness logic.
@@ -20,6 +20,7 @@ If you'll not change connection string to database in repo-classes program may d
 You can catch exception like "There isn't database which has been specified." because databases which was used in developing project may doesn't exist on your machine.
 
 ## API documentation
+API documentation for external package **[BankSystem](https://github.com/CloudlyFog/BankSystem/blob/main/README.md)**
 ### AppContext
 There are 3 classes context:
 
@@ -29,7 +30,7 @@ There are 3 classes context:
 
 
 #### API for ApplicatonContext
- 
+
 **Methods:**
  1. `public  List<TaxiModel> DeserializeTaxiData(string path)` - method for deserializing of taxi's data from json file which of file path specified in parameters.
  2. `public  static  List<object> GetTaxiPropList(string taxiProp)` - method for getting list of definite taxi's property (ID,  TaxiClass etc.).
@@ -81,7 +82,7 @@ Here located interfaces which describes behavior of inherited repo-classes.
 Repositories are implementation of various interfaces and working with context classes for interracting with database. 
 
  1. `UserRepository` - implements interface `IUserRepository<T>`
- 2. `OrderRepository` - implements interface `IOrderRepository<T>`
+ 2. `OrderRepository` - implements interface `IOrderRepository<T>`<br>**Methods:**<br>- `public IEnumerable<TaxiPrice> Filter()` - filters available taxis for ordering and returns list of `TaxiClass`<br><br>
  3. `TaxiRepository` - implements interface `ITaxiRepository<T>`
  4. `DriverRepository` - implements interface `IDriverRepository<T>`
  5. `AdminRepository` - doesn't implement any repositories but has logic.<br>**Methods:**<br>- `public  ExceptionModel  GiveAdminRights(Guid ID)` - gives admin rights to definite user.<br>- `public  ExceptionModel  RemoveAdminRights(Guid ID)` - removes admin rights from definite user.<br>- `public  ExceptionModel  ChangeSelectMode(Guid userID, SelectModeEnum mode)` - changes property SelectMode of specified user.
