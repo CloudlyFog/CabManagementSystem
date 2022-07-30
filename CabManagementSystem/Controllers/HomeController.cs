@@ -3,7 +3,6 @@ using CabManagementSystem.Services.Interfaces;
 using CabManagementSystem.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
-using BankAccountModel = BankSystem.Models.BankAccountModel;
 using UserModel = CabManagementSystem.Models.UserModel;
 
 namespace CabManagementSystem.Controllers
@@ -13,15 +12,13 @@ namespace CabManagementSystem.Controllers
         private readonly IOrderRepository<OrderModel> orderRepository;
         private readonly IDriverRepository<DriverModel> driverRepository;
         private readonly IUserRepository<UserModel> userRepository;
-        private readonly BankSystem.Services.Interfaces.IBankAccountRepository<BankAccountModel> bankAccountRepository;
-        private const string queryConnectionBank = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
-        public ExceptionModel Exception { get; set; }
+        private const string queryConnection = @"Server=localhost\\SQLEXPRESS;Data Source=maxim;Initial Catalog=CabManagementSystem;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False";
+        public ExceptionModel Exception { get; private set; }
         public HomeController()
         {
-            orderRepository = new OrderRepository(queryConnectionBank);
+            orderRepository = new OrderRepository(queryConnection);
             driverRepository = new DriverRepository();
-            bankAccountRepository = new BankSystem.Services.Repositories.BankAccountRepository(queryConnectionBank);
-            userRepository = new UserRepository();
+            userRepository = new UserRepository(queryConnection);
         }
 
         public IActionResult Index(UserModel user)
@@ -30,7 +27,6 @@ namespace CabManagementSystem.Controllers
                 ? new(HttpContext.Session.GetString("userID")) : new();
 
             user = userRepository.Get(user.ID);
-
             user.Order = orderRepository.Get(x => x.UserID == user.ID);
             user.Driver = driverRepository.Get(user.Order.Driver.DriverID);
 
@@ -47,7 +43,7 @@ namespace CabManagementSystem.Controllers
         public IActionResult Error(UserModel user) => View(user);
 
         [HttpPost, Route("OrderTaxi")]
-        public IActionResult OrderTaxi(UserModel user)
+        public async Task<IActionResult> OrderTaxi(UserModel user)
         {
             user.Order.UserID = HttpContext.Session.GetString("userID") is not null
                 ? new(HttpContext.Session.GetString("userID")) : new();
@@ -57,7 +53,7 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                var operation = orderRepository.Create(user.Order);
+                var operation = await orderRepository.CreateAsync(user.Order);
                 Exception = operation;
                 if (operation != ExceptionModel.Successfull)
                 {
@@ -87,7 +83,8 @@ namespace CabManagementSystem.Controllers
 
 
             var order = orderRepository.Get(x => x.ID == user.Order.ID);
-            order.Address = user.Order.Address;
+            order.AddressFrom = user.Order.AddressFrom;
+            order.AddressTo = user.Order.AddressTo;
             order.PhoneNumber = user.Order.PhoneNumber;
             order.Description = user.Order.Description;
 
@@ -111,7 +108,7 @@ namespace CabManagementSystem.Controllers
         }
 
         [HttpPost, Route("OrderCancellation")]
-        public IActionResult OrderCancellation(UserModel user)
+        public async Task<IActionResult> OrderCancellation(UserModel user)
         {
             if (!userRepository.Exist(user.ID) && orderRepository.AlreadyOrder(user.ID))
                 return RedirectToAction("Index", "Home");
@@ -126,7 +123,7 @@ namespace CabManagementSystem.Controllers
 
             try
             {
-                var operation = orderRepository.Delete(user.Order);
+                var operation = await orderRepository.DeleteAsync(user.Order);
                 if (operation != ExceptionModel.Successfull)
                 {
                     user.Exception = operation;
