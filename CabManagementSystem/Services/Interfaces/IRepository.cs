@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace CabManagementSystem.Services.Interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<T> : IDisposable
     {
         ExceptionModel Create(T item);
         IEnumerable<T> Get();
@@ -14,11 +14,16 @@ namespace CabManagementSystem.Services.Interfaces
         bool Exist(Guid id);
         bool Exist(Expression<Func<T, bool>> predicate);
     }
+    public interface IRepositoryAsync<T> : IDisposable
+    {
+        Task<ExceptionModel> CreateAsync(T item);
+        Task<ExceptionModel> DeleteAsync(T item);
+    }
     public interface IUserRepository<T> : IRepository<T>
     {
         string HashPassword(string password);
     }
-    public interface IOrderRepository<T> : IRepository<T>
+    public interface IOrderRepository<T> : IRepository<T>, IRepositoryAsync<T>
     {
         bool AlreadyOrder(Guid id);
     }

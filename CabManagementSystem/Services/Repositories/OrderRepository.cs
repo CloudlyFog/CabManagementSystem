@@ -32,6 +32,37 @@ namespace CabManagementSystem.Services.Repositories
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
+        public async Task<ExceptionModel> CreateAsync(OrderModel item)
+        {
+            if (item is null)
+                return ExceptionModel.VariableIsNull;
+            var driver = driverRepository.Get(x => !x.Busy && x.TaxiPrice == item.Price);
+            if (driver is null)
+                return ExceptionModel.VariableIsNull;
+            var taxi = taxiRepository.Get(x => x.ID == driver.TaxiID);
+            if (taxi is null)
+                return ExceptionModel.VariableIsNull;
+            driver.Busy = true;
+            taxi.Busy = true;
+            Drivers.Update(driver);
+            Taxi.Update(taxi);
+            item.DriverName = driver.Name;
+            item.TaxiID = taxi.ID;
+            Orders.Add(item);
+            var user = userRepository.Get(x => x.ID == item.UserID);  // sets that definite user ordered taxi
+            user.HasOrder = true;
+            userRepository.Update(user);
+            if (await bankAccountRepository.WithdrawAsync(bankAccountRepository.Get(x => x.UserBankAccountID == item.UserID), item.Price.GetHashCode()) != BankSystem.Models.ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
+            SaveChanges();
+            return ExceptionModel.Successfull;
+        }
+
+        /// <summary>
+        /// asynchronously adds data of user order and withdraw money from account
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public ExceptionModel Create(OrderModel item)
         {
             if (item is null)
@@ -85,6 +116,32 @@ namespace CabManagementSystem.Services.Repositories
         }
 
         /// <summary>
+        /// asynchronously removes data of user order and accrual money on account
+        /// </summary>
+        /// <param name="order"></param>
+        public async Task<ExceptionModel> DeleteAsync(OrderModel item)
+        {
+            if (item is null)
+                return ExceptionModel.VariableIsNull;
+            var driver = driverRepository.Get(x => x.Name == item.DriverName);
+            if (driver is null)
+                return ExceptionModel.VariableIsNull;
+            var taxi = taxiRepository.Get(x => x.ID == item.TaxiID);
+            driver.Busy = false;
+            taxi.Busy = false;
+            Drivers.Update(driver);
+            Taxi.Update(taxi);
+            Orders.Remove(item);
+            var user = userRepository.Get(x => x.ID == item.UserID); // sets that definite user ordered taxi
+            user.HasOrder = false;
+            userRepository.Update(user);
+            if (await bankAccountRepository.AccrualAsync(bankAccountRepository.Get(x => x.UserBankAccountID == item.UserID), item.Price.GetHashCode()) != BankSystem.Models.ExceptionModel.Successfull)
+                return ExceptionModel.OperationFailed;
+            SaveChanges();
+            return ExceptionModel.Successfull;
+        }
+
+        /// <summary>
         /// updates data of user order
         /// </summary>
         /// <param name="order"></param>
@@ -116,7 +173,7 @@ namespace CabManagementSystem.Services.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public OrderModel? Get(Expression<Func<OrderModel, bool>> predicate) => Orders.Any(predicate) ? Orders.First(predicate) : new();
+        public OrderModel Get(Expression<Func<OrderModel, bool>> predicate) => Orders.Any(predicate) ? Orders.First(predicate) : new();
 
         /// <summary>
         /// checks on existing in the database definite order

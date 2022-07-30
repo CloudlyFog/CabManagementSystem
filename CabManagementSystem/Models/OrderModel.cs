@@ -13,7 +13,8 @@ namespace CabManagementSystem.Models
         public string DriverName { get; set; } = string.Empty;
         public TaxiPrice Price { get; set; }
         public string Description { get; set; } = string.Empty;
-        public string Address { get; set; } = string.Empty;
+        public string AddressFrom { get; set; } = string.Empty;
+        public string AddressTo { get; set; } = string.Empty;
 
         [NotMapped]
         public DriverModel? Driver { get; set; } = new();

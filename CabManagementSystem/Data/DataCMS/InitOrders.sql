@@ -67,11 +67,12 @@ CREATE TABLE Orders
 	PhoneNumber NVARCHAR(12),
 	Price INT,
 	Description NVARCHAR(1000),
-	Address NVARCHAR(1000)
+	AddressFrom NVARCHAR(1000) NOT NULL,
+	AddressTo NVARCHAR(1000) NOT NULL
 );
 
-INSERT INTO Orders(ID, UserID, TaxiID, DriverName, PhoneNumber, Price, Description, Address) VALUES
-('4bc89c1a-b818-4bbf-8905-ffaae04fb9c3', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'Alexey', '+79611750020', 260,  'please take some dishes', 'Baker Street 12')
+INSERT INTO Orders(ID, UserID, TaxiID, DriverName, PhoneNumber, Price, Description, AddressFrom, AddressTo) VALUES
+('4bc89c1a-b818-4bbf-8905-ffaae04fb9c3', 'A08AB3E5-E3EC-47CD-84EF-C0EB75045A70', 'f6c6ed2d-86b4-41b4-af23-4f1f0915b665', 'Alexey', '+79611750020', 260,  'please take some dishes', 'Baker Street 12', 'lizukova street 78')
 
 DROP TABLE Taxi
 CREATE TABLE Taxi
